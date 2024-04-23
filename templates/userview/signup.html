@@ -1,0 +1,101 @@
+
+{% extends 'userview/base.html' %}
+{% load static %}
+{% block content %}
+        <!-- Breadcrumb Start -->
+<html>
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'userindex' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Products</a></li>
+                    <li class="breadcrumb-item active">Login & Register</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="register-form">
+                              <form action="" method="POST">
+                             {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>First Name</label>
+                                    <input class="form-control" type="text" placeholder="First Name" name="firstname" pattern="[A-Za-z -]+" title="Please enter a valid name" required>
+                                    <span id="firstname" class="text-danger" style="color:red"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Last Name"</label>
+                                    <input class="form-control" type="text" placeholder="Last Name" name="lastname" required pattern="[A-Za-z -]+" title="Please enter a valid name">
+                                     <span id="lastname" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>E-mail</label>
+                                    <input class="form-control" type="email" placeholder="E-mail" name =email  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address" required>
+                                     <span id="email" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Mobile No</label>
+                                    <input class="form-control" type="text" placeholder="Mobile No" name="mobile"  pattern="[7-9]{1}[0-9]{9}|6[0-9]{9}" title="Please enter a valid mobile number starting with 7, 8, 9, or 6"required>
+                                    <span id="mobile" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Password</label>
+                                    <input class="form-control" type="password" placeholder="Password" name="password" required >
+                                       <span id="password" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Confirm Password</label>
+                                    <input class="form-control" type="password" placeholder="Confirm Password" name="cpassword" required>
+                                     <span id="confirmpassword" class="text-danger"></span>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    <button class="btn" type="submit" onclick="return signupform()">Submit</button>
+                                </div>
+                            </div>
+
+                                                           <div class="messages" style="color:red;text-align:center">
+                                                                 {% for message in messages %}
+                                                                                        {{ message }}
+                                                                                    {% endfor %}
+                                                             </div>
+                        </form>
+                                 <script src="{% static 'js/validation.js' %}"></script>
+                    </div>
+<!--                    <div class="col-lg-6">-->
+<!--                        <div class="login-form">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>E-mail / Username</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="E-mail / Username">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>Password</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="Password">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="custom-control custom-checkbox">-->
+<!--                                        <input type="checkbox" class="custom-control-input" id="newaccount">-->
+<!--                                        <label class="custom-control-label" for="newaccount">Keep me signed in</label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-12">-->
+<!--                                    <button class="btn">Submit</button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        </div>
+</html>
+        {% endblock %}

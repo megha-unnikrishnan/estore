@@ -1,0 +1,173 @@
+{% extends 'userview/base.html' %}
+{% load static %}
+{% block content %}
+
+        <div class="cart-page">
+                 <div id="error-message" style="color:red;">
+         {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+     </div>
+
+
+
+
+
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="cart-page-inner">
+                            <div class="table-responsive">
+                                                    <div class="mx-auto">
+    <p style="font-size:24px;padding-top:11px"><a class="anchor" href="{% url 'userindex' %}">HOME</a>|<a class="anchor" href="" >orders</a></p>
+  </div>
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="align-middle">
+                                    {% if items %}
+                                     {% for item in items %}
+                                        <tr data-item-id="{{ item.id }}">
+                                         <td><a href="#"><img src="{{item.product.product.product_image.url}}" width="50" height="50" alt="Image"></a></td>
+                                            <td>
+
+                                                <div class="img" style="text-align:center;font-size:24px;color:black">
+
+                                                    <small
+                                                    >{{item.product.variant_name}}</small>
+                                                </div>
+                                            </td>
+                                            <td>{{item.product.discounted_price|floatformat:"0"}}</td>
+                                            <td>
+<!--                                                <div class="cart-item" style="display:flex">-->
+<!--                                                    <button class="btn-minus" data-item-id="{{ item.id }}"><i class="fa fa-minus"></i></button>-->
+<!--                                                        <input type="text" value="{{ item.quantity }}" id="quantity-1" class="quantity-input">-->
+<!--                                                     {-->
+<!--                                                    <button class="btn-plus" data-item-id="{{ item.id }}" onclick="updateQuantity({{ item.id }})"><i class="fa fa-plus"></i></button>-->
+<!--                                                </div>-->
+                                                       <div class="cart-item" style="display: flex">
+                                                    <button class="btn-minus quantity-minus" data-item-id="{{ item.id }}"><i class="fa fa-minus"></i></button>
+                                                    {% if item.product.stock < item.quantity %}
+                                                        <!-- Hide the input field if the stock level has been exceeded -->
+                                                    {% else %}
+                                                        <input type="text" value="{{ item.quantity }}" id="quantity-{{ item.id }}" class="quantity-input">
+                                                    {% endif %}
+                                                    {% if item.product.stock < item.quantity %}
+                                                        <!-- Hide the plus button if the stock level has been exceeded -->
+                                                    {% else %}
+                                                        <button class="btn-plus quantity-plus" data-item-id="{{ item.id }}"><i class="fa fa-plus"></i></button>
+                                                    {% endif %}
+                                                </div>
+                                              </td>
+<!--                                            <td id="subtotal" data-item-id="{{ item.id }}">{{ item.sub_total|floatformat }}</td>-->
+                                            <td id="subtotal-{{ item.id }}">{{item.sub_total | floatformat:0}} </td>
+                                             <!-- Display quantity -->
+                                         <!-- Display price -->
+
+<!--                                            <td><button type="submit"><i class="fa fa-trash"></i></button></td>-->
+                                             <td><a class="btn btn-danger" href="{% url 'deletecart' item.id %}" ><i class="fa fa-trash"></i></a></td>
+
+                                        </tr>
+                                         {% endfor %}
+                                    {% endif %}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="cart-page-inner">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="cart-summary">
+                                        <div class="cart-content">
+                                            <h1>Cart Summary</h1>
+                                            <p>MRP<span id="total"><i class="fas fa-rupee-sign"></i>{{ total| floatformat:0 }}</span></p>
+                                            <p>Discount<span id="offer"><i class="fas fa-rupee-sign"></i>{{ offer| floatformat:0 }}</span></p>
+                                            <p>Coupon<span id="coupon"><i class="fas fa-rupee-sign"></i>{{coupon_offer}}</span></p>
+                                            <p>Tax<span id="tax"><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
+                                            <p>Shipping Cost<span id="shipping-cost"><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
+
+                                            <h2>Grand Total<span id="grand_total"><i class="fas fa-rupee-sign"></i>{{grand_total}}</span></h2>
+                                        </div>
+                                        <div class="cart-btn">
+
+                                            <button> <a class="nav-link"  href="{% url 'checkout' %}" ></i>CHECKOUT</a></button>
+                                        </div><br><br>
+                                    </div>
+                                </div><br><br>
+                                <div class="col-md-12">
+                                    <div class="coupon">
+                                        <input  id="coupon-code-input"  type="text" placeholder="Coupon Code">
+                                        <button id="coupon-button">Apply Code</button><br><br>
+                                        <h5 id="coupon-applied-msg" style="color:green">{{message}}</h5>
+
+                                    </div>
+                                </div>
+
+<!--                          <div class="container mt-5">-->
+<!--                        <h2>Available Coupons</h2>-->
+<!--                        <div class="card" style="max-height: 300px;">-->
+<!--                            <div class="card-body" style="overflow-y: auto;">-->
+<!--                                <h4 class="card-title">Coupons</h4>-->
+<!--                                <div class="list-group">-->
+<!--                                    {% for i in coupon %}-->
+
+<!--                                        <h5 class="mb-1"  class="list-group-item list-group-item-action" value="{{coupon.id}}">{{ i.coupon_code }}</h5>-->
+<!--&lt;!&ndash;                    <p class="mb-1">Coupon Details: Min Amount: {{ i.min_amount }}, Off Percent: {{ i.off_percent }}, Max Discount: {{ i.max_discount }}</p>&ndash;&gt;-->
+
+<!--                {% endfor %}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+                        <div class="container mt-5">
+                            <h2>Available Coupons</h2>
+                            <div class="card" style="max-height: 300px;">
+                                <div class="card-body overflow-auto">
+                                    <ul class="list-group">
+                                        {% for coupon_item in coupon %}
+                                        <li class="list-group-item" value="{{coupon.id}}">{{ coupon_item.coupon_code }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<div id="update-cart-url" data-url="{% url 'update_cart_quantity' %}"></div>
+<script src="{% static 'js/cart.js' %}">
+
+
+</script>
+<script>
+
+</script>
+
+        <!-- Cart End -->
+{% endblock %}
+

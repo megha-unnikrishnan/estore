@@ -1,0 +1,70 @@
+
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+ <div class="container mt-5">
+<div class="container mt-5">
+  <a href="{% url 'adminaddoffer' %}" class="btn btn-primary" data-toggle="modal" style="    float: inline-end;">
+    Add Author
+  </a>
+</div>
+     <div class="messages" style="color:red;">
+         {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+     </div>
+
+        <h2 class="mb-4">Offer Details</h2>
+<table class="table table-bordered">
+   <thead class="table-body">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">OFFER NAME</th>
+                                <th scope="col">OFF PERCENTAGE</th>
+                                <th scope="col">START DATE</th>
+                                 <th scope="col">ENDDATE</th>
+                                  <th scope="col">STATUS</th>
+                                <th scope="col" colspan="2">ACTION</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody class="table-body">
+                            {% for i in offer %}
+
+                            <tr class="data">
+                                <td>{{i.id}}</td>
+
+                                <td>{{ i.name }}</td>
+                                <td>{{ i.off_percent }}</td>
+                              <td>{{i.start_date}}</td>
+                              <td>{{i.end_date}}</td>
+
+                                 <td>{% if i.is_active %}<span class="text-success">ACTIVE</span>{% else %}<span class="text-danger">BLOCK</span>{% endif %}</td>
+        <td>
+              <a class="btn btn-info"  href="{% url 'admineditoffer' i.id %}">UPDATE</a>
+          <a href="{% url 'adminofferoraction' i.id %}">
+            {% if i.is_active %}
+            <span class="text-danger"> BLOCK </span>
+            {% else %}
+            <span class="text-success"> UNBLOCK </span>
+            {% endif %}
+          </a>
+        </td>
+
+
+
+                            </tr>
+
+
+
+                            {% endfor %}
+                            </tbody>
+  </table>
+    </div>
+
+
+
+{% endblock %}
+    <!-- Bootstrap JS -->

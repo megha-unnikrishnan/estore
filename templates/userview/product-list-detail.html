@@ -1,0 +1,132 @@
+{% extends 'userview/base.html' %}
+{% load static %}
+{% block content %}
+<html>
+<body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Include jQuery Zoom plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
+ <div class="container">
+<div class="my-prod-row-class">
+  <div class="mx-auto">
+    <p style="font-size:24px;padding-top:11px"><a class="anchor" href="{% url 'userindex' %}">Home</a>|<a class="anchor" href="{% url 'productlist' %}">products</a>|{{product.product.product_name}}</p>
+  </div>
+
+</div>
+  <div class="container"></div>
+<br>
+        {% if product %}
+<div class="row">
+
+  <div class="col-md-12 col-sm-12 col-md-12 col-lg-6 text-center">
+    <div style="min-width:18rem;" class="xzoom">
+      <img  height="400" width="400" src="{{product.product.product_image.url}}" id="zoom" data-zoom-image="{{product.product.product_image.url}}" style="transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.4)'" onmouseout="this.style.transform='scale(1)'">
+
+
+         <div class="product-slider-single-nav normal-slider" style="padding-top: 14px;">
+        {% if image %}
+        {% for image in image %}
+          <img src="{{image.images.url}}" width="100" height="100" style="transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.4)'" onmouseout="this.style.transform='scale(1)'">
+        {% endfor %}
+        {% endif %}
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col 12 col-sm-12 col-md-12 col-lg-6">
+      <h1 class="prod_title"><b>{{product.product.product_name}}</b></h1>
+            <div>
+             <h4>{{product.variant_name}}</h4>
+      </div>
+        <div class="rating-star">
+            <span title="{{ product.rating }}/5">
+            <!-- By default the star is full else it is empty otherwise it is half -->
+                <i style="color:yellow" class="fa fa-star{% if product.rating < 0.5%}-o{% elif product.rating >= 0.5 and product.rating < 1 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i  style="color:yellow" class="fa fa-star{% if product.rating < 1.5%}-o{% elif product.rating >= 1.5 and product.rating < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i  style="color:yellow" class="fa fa-star{% if product.rating < 2.5%}-o{% elif product.rating >= 2.5 and product.rating < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i style="color:yellow" class="fa fa-star{% if product.rating < 3.5%}-o{% elif product.rating >= 3.5 and product.rating < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i style="color:yellow" class="fa fa-star{% if product.rating < 4.5%}-o{% elif product.rating >= 4.5 and product.rating < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
+            </span>
+            <span><strong>( {{ review.rating }}/5 )</strong></span>
+        </div>
+          <small class="prod_title_desc text-justify">{{product.product.product_desc}} </small>
+
+             <h2><i class="fas fa-rupee-sign"></i>{{product.discounted_price|floatformat:"0"}}</h2>
+
+         <div>
+
+            <div class="offer text-danger" style="font-weight: bold;    font-size: 171%;">
+                -{{ product.offer.off_percent }}%
+            </div>
+        {% if product.offer %}
+              <h6> M.R.P:<i class="fas fa-rupee-sign"></i><del> {{product.product_price|floatformat:"0"}}</del></h6>
+
+        {% endif %}
+          </div>
+
+    <div>
+
+            {% if product.stock <= 0 %}
+        <h1>Sold Out</h1>
+            <p class="text-justify prod-text"><h4>This item is currently <br>out of stock</h4></p>
+            {% else %}
+            <p><b>In stock</b></p>
+            <a href="" class="btn btn-secondary">Add to cart</a>
+            {% endif %}
+
+            </div>
+              <div style="    float: right;    border: 1px solid black;" >
+           <ul style=" inline-end;margin-top: -164px;
+}
+        }">Highlights
+                <li>Publisher:{{product.edition.publisher}}</li>
+               <li>Year:{{product.edition.year}}</li>
+               <li>Edition:{{product.edition.edition_name}}</li>
+               <li>Category:{{product.category.category_name}}</li>
+               <li>Author:{{product.author.author_name}}</li>
+           </ul>
+        </div>
+
+
+    </div>
+  </div>
+     <!-- Include jQuery -->
+
+ </div>
+        <br>
+        <div class="row" style="margin:5%">
+            <div><h1 >Product Description</h1>
+            <h2>Book Description</h2>
+            <h6 class="prod_title_desc text-justify">{{product.product.product_desc}} </h6>
+            <h2>Book review</h2>
+            <h6>{{product.product.review}}</h6>
+             <div>
+                    <h2>Book Author</h2>
+                 <h3>{{product.author.author_name}}</h3>
+                  <img src="{{product.author.author_image.url}}" width="100" height="100"> <br><br>
+            <h6>{{product.author.author_desc}}</h6>
+
+
+             </div>
+        </div>
+        </div>
+        <div> <h1 style="text-align:center">Related Products</h1></div><br>
+        <div class="row" style="    justify-content: space-evenly;">
+
+            {% for i in related_products %}
+            <p><img src="{{i.product.product_image.url}}" style="width: 222px;
+    height: 222px;
+}"> </p>
+            {% endfor%}
+        </div>
+
+{% endif %}
+
+{% endblock%}
+</body>
+</html>

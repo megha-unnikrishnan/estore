@@ -1,0 +1,178 @@
+
+
+
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div  style="background-color: white;">
+        <div class="table-title" style="background-color: white;">
+            <div class="row">
+                <div class="col-md-3 mt-5"></div>
+                <div >
+                    <h2>ORDER UPDATE</h2>
+                </div>
+            </div>
+        </div>
+        <div style="background-color: white;">
+            <div class="card-body" style="font-size: 1rem">
+<!--              <h5 class="card-title mb-5">ORDER UPDATE</h5>-->
+
+              <!-- Edit product form  -->
+                {% if order %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                        </div>
+
+              <div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th scope="row">Order Id</th>
+                    <td>{{ order.order_id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Customer</th>
+                    <td>{{ order.user.email }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Payment</th>
+                    <td>{{ order.payment.payment_method }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Delivery Address</th>
+                    <td>{{ order.address.name }}, {{ order.address.alt_mobile }}, {{ order.address.address }}, {{ order.address.nearby_location }}, {{ order.address.town }}, {{ order.address.zip_code }}, {{ order.address.district }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Paid Amount</th>
+                     <td>{{ order.order_total }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Order Total</th>
+                    <td>{{ order.subtotal }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Discount</th>
+                    <td>{{ order.discount_amount }}</td>
+                </tr>
+                 <tr>
+                    <th scope="row">Shipping Cost</th>
+                    <td>{{ order.shipping }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Coupon</th>
+                    <td>{{ order.coupon_mount }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Tax</th>
+                    <td>{{ order.tax }}</td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Status</th>
+                    <td>
+                        <select class="form-select" aria-label="Default select example" name="orderStatus">
+                            {% for value, label in order.STATUS %}
+                            <option value="{{ value }}" {% if value == order.status %} selected {% endif %}>  {{ label }} </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Is Ordered</th>
+                    <td>{{ order.is_ordered }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Coupon</th>
+                    <td>{% if order.coupon %} {{ order.coupon.coupon_code }} {% else %} No coupon {% endif %}</td>
+                </tr>
+                {% for item in order_items %}
+                <tr>
+                    <th scope="row">Order Items</th>
+                    <td>{{ item.variant }} <a href="" class="text-info" type="button" data-bs-toggle="modal" data-bs-target="#orderItemModal-{{ item.id }}">Details</a> &nbsp {% if item.return_request %} {% if item.is_returned %}<span class="text-primary">Item Returned</span> {% else %}<a href="" class="text-warning" type="button" data-bs-toggle="modal" data-bs-target="#returnRequest-{{ item.id }}">request</a> {% endif %} {% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+                  <!-- Description input -->
+<!--                  <div class="form-outline mb-4">-->
+<!--                    <textarea class="form-control bg-grey text-color" id="productDesc" rows="4"> {{ product.product_description|safe }}</textarea>-->
+<!--                    <label class="form-label" for="productDesc">Admin Notes</label>-->
+<!--                  </div>-->
+
+                  <!-- Submit button -->
+                  <div class="text-end">
+                      <button type="submit" class="btn-lg border-0 btn-success btn-block mb-4">Save Product</button>
+                  </div>
+                </form>
+                {% endif %}
+                <!-- Edit product form end -->
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% for item in order_items %}
+  <!-- Modal -->
+  <div class="modal fade" id="orderItemModal-{{ item.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Order Item</h5>
+        </div>
+        <div class="modal-body">
+    <div class="row mb-4">
+        <div class="col-md-12 text-left">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">Product:</th>
+                        <td>{{ item.product.variant_name}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Quantity:</th>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Price:</th>
+                        <td>{{ item.product_price }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Return request:</th>
+                        <td>{{ item.return_request }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Return reason:</th>
+                        <td>{{ item.return_reason }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+
+
+
+{% endblock %}

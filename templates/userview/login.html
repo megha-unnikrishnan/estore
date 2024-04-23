@@ -1,0 +1,101 @@
+
+{% extends 'userview/base.html' %}
+{% load static %}
+{% block content %}
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'userindex' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Products</a></li>
+                    <li class="breadcrumb-item active">Login & Register</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+<!--                    <div class="col-lg-6">    -->
+<!--                        <div class="register-form">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>First Name</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="First Name">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>Last Name"</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="Last Name">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>E-mail</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="E-mail">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>Mobile No</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="Mobile No">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>Password</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="Password">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <label>Retype Password</label>-->
+<!--                                    <input class="form-control" type="text" placeholder="Password">-->
+<!--                                </div>-->
+<!--                                <div class="col-md-12">-->
+<!--                                    <button class="btn">Submit</button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div style="display: flex;justify-content:center" class="col-lg-12">
+                        <div style="width: 50%;" class="login-form">
+                            <form action="" method="post">
+                                 {% csrf_token %}
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <label>E-mail / Username</label>
+                                    <input class="form-control" type="text" placeholder="E-mail / Username" name="email">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Password</label>
+                                    <input class="form-control" type="password" placeholder="Password" name="password">
+                                </div>
+                                <div class="col-md-6">
+                                   <a href="{% url 'forgot-password' %}">Forgot password?</a>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="newaccount">
+                                        <label class="custom-control-label" for="newaccount">Keep me signed in</label>
+                                    </div>
+                                </div>
+<!--                                        <div style="text-align:center" class="col-md-12">-->
+
+<!--                                    <button class="btn google-btn social-btn" type="button"><span><i class="fab fa-google-plus-g"></i> Sign in with Google+</span> </button>-->
+<!--                                </div>-->
+                                <div  class="col-md-12 text-center">
+                                    <button style="width: 33%;margin-top: 20px;" class="btn" type="submit">Submit</button>
+                                </div>
+                            </div><br>
+                                                           <div class="messages" style="color:red;text-align:center">
+                                                                 {% for message in messages %}
+                                                                                        {{ message }}
+                                                                                    {% endfor %}
+                                                             </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        
+
+        {% endblock %}

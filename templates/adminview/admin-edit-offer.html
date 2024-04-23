@@ -1,0 +1,73 @@
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body col-12">
+            <h4 class="card-title">Edit offer</h4>
+            <p class="card-description">Add new os here</p>
+            <form class="forms-sample" method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-12">
+
+                        <div class="d-flex">
+                            <div class="form-group col-6">
+                                <label for="exampleInputName1">Offer Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="offer_name"
+                                    name ="offer_name"
+                                    placeholder="{{ offer.name }}"
+                                    value="{{ offer.name }}"
+                                required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="exampleInputName1">Offer percentage</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id ="off_percent"
+                                    name ="off_percent"
+                                    placeholder="{{ offer.off_percent }}"
+                                    value="{{ offer.off_percent }}"
+                                required>
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="form-group col-6">
+                                <label >Start Date</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="start_date"
+                                    name ="start_date"
+                                    value="{{ offer.start_date| date:'Y-m-d' }}"
+                                required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label >End date</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id ="end_date"
+                                    name ="end_date"
+                                    value="{{ offer.end_date | date:'Y-m-d' }}"
+                                required>
+                            </div>
+                        </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+    <!-- Bootstrap JS -->
+
+{% endblock %}

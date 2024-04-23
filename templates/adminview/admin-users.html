@@ -1,0 +1,45 @@
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>Bootstrap Table Example</h2>
+  <table class="table table-bordered">
+   <thead class="table-body">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">FIRST NAME</th>
+                                <th scope="col">LAST NAME</th>
+                                <th scope="col">EMAIL</th>
+                                <th scope="col">PHONE</th>
+                                <th scope="col">STATUS</th>
+                                <th scope="col" colspan="2">ACTION</th>
+                            </tr>
+                            </thead>
+                            <tbody class="table-body">
+                            {% for i in user %}
+                            {% if i.is_superuser == False %}
+                            <tr class="data">
+                                <td>{{i.id}}</td>
+
+                                <td>{{ i.first_name }}</td>
+                                <td>{{ i.last_name }}</td>
+                                <td>{{ i.email }}</td>
+                                <td>{{ i.phone }}</td>
+                                 <td>{% if i.is_active %}<span class="text-success">ACTIVE</span>{% else %}<span class="text-danger">BLOCK</span>{% endif %}</td>
+        <td>
+          <a href="{% url 'adminaction' i.id %}">
+            {% if i.is_active %}
+            <span class="text-danger"> BLOCK </span>
+            {% else %}
+            <span class="text-success"> UNBLOCK </span>
+            {% endif %}
+          </a>
+        </td>
+                            {% endif %}
+                            {% endfor %}
+                            </tbody>
+  </table>
+</div>
+
+{% endblock %}

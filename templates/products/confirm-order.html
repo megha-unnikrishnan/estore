@@ -1,0 +1,25 @@
+{% extends 'userview/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="my-prod-row-class">
+  <div class="mx-auto">
+    <p style="font-size:24px;padding-top:11px"><a class="anchor" href="{% url 'userindex' %}">Home</a>|<a class="anchor" href="" ></a></p>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Success Alert -->
+  <div class="alert alert-success mt-3" role="alert">
+    <h4 class="alert-heading">Order Placed Successfully!</h4>
+    <p>Your order has been successfully placed. Thank you for your purchase!</p>
+    <hr>
+<!--    <p class="mb-0">You will receive a confirmation email shortly.</p>-->
+    <!-- Anchor tag for View Summary -->
+    <p class="mb-0">View <a href="{% url 'orderslist' %}">order summary</a></p>
+  </div>
+</div>
+
+{% endblock %}

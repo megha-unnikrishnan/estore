@@ -1,0 +1,74 @@
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="table-wrapper bg-light border">
+        <div class="table-title bg-light">
+            <div class="row">
+                <div class="col-md-3 mt-5"></div>
+                <div class="col-md-6 text-center mt-5">
+                    <h2>EDIT AUTHOR </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-grey p-5">
+            <div class="card-body" style="font-size: 1rem">
+                <h5 class="card-title text-white mb-5">EDITION  TABLE</h5>
+
+                <!-- Edit category form  -->
+
+                <form enctype="multipart/form-data" method="post" style="border:1px solid black">
+                    {% csrf_token %}
+                    <div class="row mb-4">
+                        <div class="col">
+                          <div class="form-outline">
+                                  <label class="form-label" for="form6Example1">Edition Name</label>
+                              <input type="text" id="form6Example1" value="{{ edition.edition_name }}" class="form-control bg-grey text-black" name="name" required/>
+
+                          </div>
+                        </div>
+                           <div class="form-outline mb-4">
+                        <label class="form-label" for="productDesc"> Description</label>
+                        <textarea class="form-control bg-grey text-black" id="productDesc" rows="4" name="description"> {{  edition.edition_desc }} </textarea>
+
+                    </div>
+                        <div class="col">
+                          <div class="form-outline">
+                                  <label class="form-label" for="form6Example1">Edition Publisher</label>
+                              <input type="text" id="form6Example2" value="{{ edition.publisher }}" class="form-control bg-grey text-black" name="publisher" required/>
+
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-outline">
+                                  <label class="form-label" for="form6Example1">Edition year</label>
+                              <input type="text" id="form6Example3" value="{{ edition.year }}" class="form-control bg-grey text-black" name="year" required/>
+
+                          </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- Description input -->
+
+
+                    <!-- Submit button -->
+                    <div class="text-end">
+                        <button type="submit" class="btn-lg border-0 btn-success btn-block mb-4">Update</button>
+                    </div>
+                </form>
+              <!-- Edit product form end -->
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Bootstrap JS -->
+
+{% endblock %}

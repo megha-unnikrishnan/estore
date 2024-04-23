@@ -1,0 +1,72 @@
+
+
+
+
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="table-wrapper border">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-md-3 mt-5"></div>
+                <div class="col-md-6 text-center mt-5 mb-5">
+                    <h1>ORDERS</h1>
+                </div>
+            </div>
+        </div>
+        <div class="card bg-white">
+            <div>
+                <div>
+
+                    {% if messages %}
+                    <p>
+                        {% for message in messages %}
+                        <span class="text-success">{{ message }}</span>
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Table -->
+                <div class="col-12">
+
+                        <div class="table-responsive">
+                            <table class="table text-start align-middle table-bordered table-hover mb-0 p-2" id="sortTable">
+                                <thead>
+                                    <tr class="text-center fw-bold" style="font-size: 18px;">
+                                        <th scope="col">Sr No.</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Order Id</th>
+                                        <th scope="col">Customer</th>
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Payment</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr class="text-center" style="font-size: 18px;">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ order.created }}</td>
+                                        <td>{{ order.order_id }}</td>
+                                        <td>{{ order.user.email }}</td>
+                                        <td>{{ order.order_total }}</td>
+                                        <td>{% if order.payment.is_paid %}Paid{% else %}Pending{% endif %}</td>
+                                        <td>{% if order.status %}{{ order.status }}{% else %}Pending{% endif %}</td>
+                                        <td><a class="btn btn-sm btn-success" href="{% url 'adminorderupdate' order.id %}">Detail</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

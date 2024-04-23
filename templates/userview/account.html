@@ -1,0 +1,102 @@
+{% extends 'userview/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <section class="mt-5">
+        <div class="container py-5">
+          <div class="row">
+            <div class="col">
+              <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                <ol class="breadcrumb mb-0">
+                  <li class="breadcrumb-item"><a href="{% url 'userindex' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="#">User</a></li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card mb-4">
+
+                <div class="card-body text-center">
+                  {% if user.image %}
+                    <img src="{{ user.image.url }}" id="image" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                  {% else %}
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                  {% endif %}
+                  <h5 class="my-3"> {{ user.first_name }} </h5>
+                  <p class="text-muted mb-4"> {{ user.email }} </p>
+                  <h6>Referal Code : {{ user.referral_code }}</h6>
+                </div>
+              </div>
+
+              <div class="card mb-4 mb-lg-0 p-4">
+                <div class="card-body p-0">
+                  <ul class="list-group list-group-flush rounded-3 p-2">
+                    <h5 class="list-group-item d-flex">
+                      Profile
+                    </h5>
+                    <div class="col-md-4 col-lg-4"></div>
+                    <div class="col-md-8 text-left col-lg-8 p-2">
+                      <a class="mb-0 text-right" href="" style="text-decoration: none">Profile Information</a><br>
+                      <a class="mb-0 text-right " href="" style="text-decoration: none">Address Book</a>
+                      <a class="mb-0 text-right " href="" style="text-decoration: none">Change Password</a>
+                    </div>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <h5>Orders & credit</h5>
+                    </li>
+                    <div class="col-md-4 col-lg-4"></div>
+                    <div class="col-md-8 text-left col-lg-8 pt-3">
+                      <a class="mb-2 text-right" href="">Your Orders</a><br>
+                      <a class="mb-2 text-right" href="">Your Wallet</a><br>
+                      <a class="mb-2 text-right" href="">Your Reward</a><br>
+                      <a class="mb-2 text-right" href="https://api.whatsapp.com/send?phone=7559808173&text=Test%20Link%20WhatsApp" target="_blank">Customer Care &nbsp; <i class="bi bi-whatsapp text-success"></i></a><br>
+                    </div>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <form action="" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <!-- Form Inputs -->
+                  </div>
+                </div>
+              </form>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <!-- Orders Status -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <!-- Wallet Status -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

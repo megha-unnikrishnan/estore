@@ -1,0 +1,60 @@
+{% extends 'userview/userprofile.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Update Address</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_name">Name</label>
+                                <input type="text" class="form-control" id="id_name" name="name" required value="{{address.name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_mobile">Mobile</label>
+                                <input type="number" class="form-control" id="id_mobile" name="mobile" pattern="[7-9]{1}[0-9]{9}|6[0-9]{9}" value="{{address.alt_mobile}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_address">Address</label>
+                                <input type="text" class="form-control" id="id_address" name="address" value="{{address.address}}"required>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_town">Town</label>
+                                <input type="text" class="form-control" id="id_town" name="town" value="{{address.town}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_zipcode">Zipcode</label>
+                                <input type="text" class="form-control" id="id_zipcode" pattern="^\d{6}$" value="{{address.zipcode}}" name="zipcode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_nearby_location">Nearby Location</label>
+                                <input type="text" class="form-control" id="id_nearby_location" value="{{address.nearby_location}}" name="location" required>
+                            </div>
+                           <div class="form-group">
+                            <label for="id_district">District</label>
+                            <select class="form-control" id="id_district" name="district" required>
+                                <option value="" disabled>Select District</option>
+                                {% for option in districts %}
+                                    <option value="{{ option }}" {% if option == address.district %} selected {% endif %}>{{ option }}</option>
+                                {% endfor %}
+                            </select>
+</div>
+
+                            <div class="form-group">
+                                <label for="id_state">State</label>
+                                 <input type="text" class="form-control" id="id_state" name="state" required value="{{address.state}}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

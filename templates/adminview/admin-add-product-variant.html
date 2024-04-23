@@ -1,0 +1,88 @@
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5" style="width:50%">
+    <h2>Add Book Variant</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="categoryName" class="form-label">Select Category</label>
+            <select class="form-select select2" id="categoryName" name="category" required>
+                <option value="">Select Category</option>
+                {% for i in category %}
+                <option value="{{i.id}}">{{i.category_name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+      <div class="mb-3">
+            <label for="productName" class="form-label">Select Product</label>
+            <select class="form-select select2" id="productName" name="product" required>
+                <option value="">Select Product</option>
+                {% for i in product %}
+                <option value="{{i.id}}">{{i.product_name}}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <div class="mb-3">
+            <label for="offerName" class="form-label">Select Offer</label>
+            <select class="form-select select2" id="offerName" name="offer" required>
+                <option value="">Select Offer</option>
+                {% for i in offer %}
+                <option value="{{i.id}}">{{i.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+           <div class="mb-3">
+            <label for="offerName" class="form-label">Select Edition</label>
+            <select class="form-select select2" id="editionName" name="edition" required>
+                <option value="">Select Edition</option>
+                {% for i in edition %}
+                <option value="{{i.id}}">{{i.edition_name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+         <div class="mb-3">
+            <label for="productName" class="form-label">Select Author</label>
+            <select class="form-select select2" id="authorName" name="author" required>
+                <option value="">Select Author</option>
+                {% for i in author %}
+                <option value="{{i.id}}">{{i.author_name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" class="form-control" id="price" name="price" required>
+        </div>
+        <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+             <input type="number" class="form-control" id="stock" name="stock" required>
+        </div>
+        <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="number" class="form-control" id="rating" name="rating" required>
+        </div>
+        <div class="mb-3">
+            <label class="text-danger">*Select three images for products*</label>
+            <div class="mb-3">
+                <input class="form-control" type="file" id="formFile" multiple id="formFile" name="multipleImage">
+                <label for="formFile" class="form-label">Choose your image</label>
+            </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="row d-flex justify-content-center" style="align-items: center"> <span class="text-danger fw-5">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </span></div>
+    </form>
+</div>
+
+
+{% endblock %}
+

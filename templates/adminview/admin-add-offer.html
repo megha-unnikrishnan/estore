@@ -1,0 +1,30 @@
+{% extends 'adminview/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Add New Offer</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="offerName">Offer Name</label>
+      <input type="text" class="form-control" id="offerName" placeholder="Enter offer name" name="name">
+    </div>
+    <div class="form-group">
+      <label for="percentage">Percentage Discount (%)</label>
+      <input type="number" class="form-control" id="percentage" placeholder="Enter percentage discount" name="percentage">
+    </div>
+    <div class="form-group">
+      <label for="startDate">Start Date</label>
+      <input type="date" class="form-control" id="startDate" name="startdate">
+    </div>
+    <div class="form-group">
+      <label for="endDate">End Date</label>
+      <input type="date" class="form-control" id="endDate" name="enddate">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+
+{% endblock %}
