@@ -39,7 +39,6 @@ def index(request):
         request.session['cart']=cart_item_count
         user_wishlist_items = Wishlist.objects.filter(user_id=user_id)
         wishlist_item_count = user_wishlist_items.count()
-        print('countindex', cart_item_count)
         request.session['wishlist'] = wishlist_item_count
         # request.session.save()
         # print(request.session.save())
@@ -309,18 +308,15 @@ def search_view(request):
         return JsonResponse({'suggestions': suggestions})
     elif request.method == "POST":
         query = request.POST.get('searchquery', '')
-        print(query)
-        category = Category.objects.all().order_by('id')
         search_result = Bookvariant.objects.filter(
             Q(product__product_name__icontains=query) |
-            Q(author__author_name__icontains=query) |
-            Q(edition__edition_name__icontains=query),
+            Q(author__author_name__icontains=query)| Q(category__category_name__icontains=query) ,
             product__is_active=True,
             is_active=True
         )
         context = {
             'listproducts': search_result,
-            'category': category,
+
             'query':query
         }
         return render(request, 'userview/search.html',context)

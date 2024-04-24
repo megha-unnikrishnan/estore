@@ -32,6 +32,7 @@
                     <p class="card-text">Location: {{ address.nearby_location }}</p>
                     <p class="card-text">District: {{ address.district }}</p>
                     <p class="card-text">State: {{ address.state }}</p>
+
                     {% endif %}
                     <!-- Add other fields as needed -->
                 </div>
@@ -230,8 +231,13 @@
                                     </div>
                                     <div class="payment-method">
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-4" name="payment">
-                                            <label class="custom-control-label" for="payment-4">Direct Bank Transfer</label>
+<!--                                            <input type="radio" class="custom-control-input" id="rzp-button1" name="payment">-->
+<!--                                            <label class="custom-control-label" for="rzp-button1">Pay with razorpay</label>-->
+<!--                                            <form method="post" action="">-->
+<!--                                                 <input type="text" class="custom-control-input" id="" name="payment" value="razorpay">-->
+                                                <button id="rzp-button1" value="razorpay" name="payment">Pay with Razorpay</button>
+<!--                                            </form>-->
+
                                         </div>
                                         <div class="payment-content" id="payment-4-show">
                                             <p>
@@ -270,4 +276,59 @@
         }
     }
 </script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_3DaVx3D81cl8r1", // Enter the Key ID generated from the Dashboard
+    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Ecommerce",
+    "description": "Purchase",
+    "image": "https://example.com/your_logo",
+    "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+
+<script>
+
+
+document.getElementById("rzp-button1").addEventListener("click", function(event) {
+    // Your event handling code here
+    console.log("Button clicked"); // Example: Log a message to the console
+    // You can add more code to handle the click event
+});
+</script>
+
+
 {% endblock %}

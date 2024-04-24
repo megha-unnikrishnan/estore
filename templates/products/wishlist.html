@@ -39,14 +39,14 @@
 
                                             <td>
                                                 <div class="img">
-                                                    <a href="#"><img src="{{i.product.product.product_image.url}}" alt="Image"></a>
+                                                    <a href="#"><img src="{{i.product.product.product_image.url}}" alt="Image" width="50" height="50"></a>
 
                                                 </div>
                                             </td>
                                             <td> <p>{{i.product.variant_name}}</p></td>
                                             <td> <p>{{i.product.product_price}}</p></td>
 
-                                            <td><a href="{% url 'add_to_cart' i.product.id %}" class="btn btn-secondary" value="{{i.id}}">Add to cart</a></td>
+                                            <td><a href="{% url 'add_to_cart' i.product.id %}" class="btn btn-secondary" value="{{i.id}}">View Detail</a></td>
                                               <td><a class="btn btn-danger" href="{% url 'remove_wishlist' i.product.id %}" ><i class="fa fa-trash"></i></a></td>
 
 

@@ -112,14 +112,16 @@
                                     </div>
                                 </div><br><br>
                                 <div class="col-md-12">
-                                    <div class="coupon">
-                                        <input  id="coupon-code-input"  type="text" placeholder="Coupon Code">
-                                        <button id="coupon-button">Apply Code</button><br><br>
-                                        <h5 id="coupon-applied-msg" style="color:green">{{message}}</h5>
+<div class="coupon">
+    <input id="coupon-code-input" type="text" placeholder="Coupon Code">
+    <button id="coupon-button">Apply Coupon</button><br><br>
+    <h5 id="coupon-applied-msg" style="color:green">{{ message }}</h5>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-                                    </div>
-                                </div>
 
+         <button id="coupon-remove" style="display: none;"  data-remove-coupon-url="{% url 'remove_coupon' %}">Remove Coupon</button>
+
+</div>
 <!--                          <div class="container mt-5">-->
 <!--                        <h2>Available Coupons</h2>-->
 <!--                        <div class="card" style="max-height: 300px;">-->
@@ -160,6 +162,9 @@
         </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <div id="update-cart-url" data-url="{% url 'update_cart_quantity' %}"></div>
+
+
+<!--            <div id="remove-coupon-url" data-url="{% url 'remove_coupon' %}"></div>-->
 <script src="{% static 'js/cart.js' %}">
 
 
@@ -167,6 +172,7 @@
 <script>
 
 </script>
+
 
         <!-- Cart End -->
 {% endblock %}

@@ -22,7 +22,9 @@ urlpatterns=[
     path('add-address/<int:id>/',views.addaddress,name='addaddress'),
     path('address-book/',views.address_book,name='addressbook'),
     path('delete-book/<int:id>/',views.deleteaddress,name='deleteaddress'),
+
     path('update-book/<int:id>/<int:o_id>/',views.updateaddress,name='updateaddress'),
+
     path('change-password',views.changeuserpassword,name='changeuserpassword'),
     path('profiledetails/',views.profiledetails,name='profiledetails'),
     path('updateprofile/',views.updateprofile,name='updateprofile'),

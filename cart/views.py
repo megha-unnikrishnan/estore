@@ -1,8 +1,11 @@
 import datetime
 
+import requests
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.urls import reverse
+
 from cart.models import CartItem, Cart,Coupons
 from shop.models import Bookvariant
 from django.shortcuts import redirect
@@ -13,6 +16,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from order.models import Order, Payments, OrderProduct
 import pdb
+import razorpay
+from django.conf import settings
 
 
 
@@ -98,13 +103,17 @@ def cart_items(request, id):
         else:
             userid = CustomUser.objects.get(id=id)
             cartitem = CartItem.objects.filter(user=userid)
+
+
             if cartitem:
                 coupon=Coupons.objects.all()
-                print(coupon)
+
+
             else:
                 messages.error(request,'You have not added any items to cart!')
                 user_id = CustomUser.objects.get(id=request.user.id)
                 cartitem = CartItem.objects.filter(user=user_id).count()
+
                 print('count',cartitem)
                 request.session['cart'] = cartitem
                 return redirect('userindex')
@@ -119,7 +128,8 @@ def cart_items(request, id):
 
             context = {
                 'items': cartitem,
-                'coupon':coupon
+                'coupon':coupon,
+
                 # 'total':withoutoffertotal,
                 # 'offer':offer,
                 # 'grand_total':grand_total
@@ -254,14 +264,20 @@ def update_cart_quantity(request):
         user_id = CustomUser.objects.get(id=request.user.id)
         cart_item = CartItem.objects.filter(user=user_id).first()
         cart_obj = Cart.objects.get(id=cart_item.cart.id)
+        coupon_applied = False
         if cart_obj.coupon:
+            coupon_applied = True
             message=f'Applied coupon code{cart_obj.coupon.coupon_code} successfully'
+
 
             discount_amount = total * int(cart_obj.coupon.off_percent) / 100
             print('discount', discount_amount)
 
             if discount_amount > cart_obj.coupon.max_discount:
                 discount_amount = cart_obj.coupon.max_discount
+
+
+
 
         if get_coupon:
 
@@ -287,6 +303,8 @@ def update_cart_quantity(request):
                 discount_amount = get_coupon.max_discount
             # message = get_coupon.coupon_code
             message=f'Applied coupon code{get_coupon.coupon_code} successfully'
+            coupon_applied = True
+
             cart_obj.save()
 
         user_id = CustomUser.objects.get(id=request.user.id)
@@ -305,7 +323,7 @@ def update_cart_quantity(request):
 
         return JsonResponse(
             {'subtotal': sub_total, 'total': withoutoffertotal, 'offer': offer, 'shipping': shipping_cost,
-             'grand_total': grand_total,'coupon_offer':discount_amount,'tax':tax,'message':message})
+             'grand_total': grand_total,'coupon_offer':discount_amount,'tax':tax,'message':message,'coupon_applied': coupon_applied})
 
 
 def checkout(request):
@@ -387,6 +405,7 @@ def checkout_view(request, id):
 
         if request.method == 'POST':
 
+
             order = Order()
             order.user = user
             order.address = address
@@ -450,6 +469,18 @@ def checkout_view(request, id):
                 request.session['cart'] = cartitem
                 messages.success(request,"ordered successfully")
                 return render(request, 'products/confirm-order.html')
+            if paymentmethod == "razorpay":
+                grand_total = request.POST.get('grand_total')
+                client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
+                print(client)
+                paymentrazor=client.order.create({'amount':int(float((grand_total))),'currency':'INR','payment_capture':1})
+                print(paymentrazor)
+                print('Razorpay payment processing')
+                # return HttpResponse(f'Razorpay payment processed for grand total: {grand_total}')
+                return render(request, 'products/confirm-order.html')
+
+
+
 
 
         context = {
@@ -460,7 +491,9 @@ def checkout_view(request, id):
             'tax':tax,
             'shipping':shipping_cost,
             'coupon':discount_amount,
-            'grand_total':grand_total
+            'grand_total':grand_total,
+
+
 
         }
         return render(request, 'userview/placeorder.html', context)
@@ -473,7 +506,7 @@ def checkout_view(request, id):
         print(e)  # Log the error for debugging
         messages.error(request, 'An error occurred during checkout. Please try again later.')
 
-    return render(request, 'userview/placeorder.html')
+    return render(request, 'userview/placeorder.html',context)
 
 
 def suggest_page_view(request):
@@ -485,3 +518,109 @@ def suggest_page_view(request):
         suggestions = list(suggestions_queryset)
 
     return render(request, 'userview/search.html', {'suggestions': suggestions, 'query': query})
+
+
+
+
+
+def remove_coupon(request):
+    if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        try:
+            user_id = request.user.id
+            cart_item = CartItem.objects.filter(user=user_id).first()
+            if cart_item:
+                cart_obj = Cart.objects.get(id=cart_item.cart.id)
+                cart_obj.coupon = None
+                cart_obj.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'error': 'Cart item not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method or not AJAX'}, status=400)
+
+
+# def razorpay_gateway(request):
+#     # Retrieve the grand_total from the query parameters
+#     grand_total = request.GET.get('grand_total')
+#     address= request.GET.get('address')
+#     print(address)
+#     print("Grand Total:", grand_total)  # Debugging statement
+#     place_order =reverse('checkoutview', kwargs={'id': address})
+#     response = requests.post(place_order, data={'paymentmethod': 'razorpay'})
+#
+#
+#     # Check if the request was successful and return the response content
+#     if response.status_code == 200:
+#         return HttpResponse(response.content)
+#     else:
+#         return HttpResponse('Error: Failed to process payment')
+
+    # # client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
+    # # print(client)
+    # # paymentrazor=client.order.create({'amount':int(float((grand_total))),'currency':'INR','payment_capture':1})
+    # # print(paymentrazor)
+    #
+    # # Check if grand_total is provided
+    # if grand_total:
+    #     # Process the payment using the grand_total
+    #     return HttpResponse(f'Payment processed for grand total: {grand_total}')
+    # else:
+    #     return HttpResponse('Error: Grand total not provided')
+
+# def razorpay_gateway(request):
+#     # Retrieve the grand_total and address from the query parameters
+#
+#
+#     # Check if the grand_total and address_id are provided
+#     # if not grand_total or not address_id:
+#     #     return JsonResponse({'error': 'Grand total or address ID not provided'}, status=400)
+#
+#     try:
+#         grand_total = request.GET.get('grand_total')
+#         address_id = request.GET.get('address_id')
+#         print(address_id)
+#         # Get the checkoutview URL
+#         print("Grand Total:", grand_total)
+#         checkout_url = reverse('checkoutview', kwargs={'id': address_id})
+#
+#         # Make a POST request to the checkoutview URL with the payment method
+#         response = requests.post(checkout_url, data={'paymentmethod': 'razorpay'})
+#
+#         # Check if the request was successful and return the response content
+#         if response.status_code == 200:
+#             return JsonResponse({'message': 'Razorpay Payment initiated'}, status=200)
+#         else:
+#             return JsonResponse({'error': 'Failed to process payment'}, status=500)
+#     except Exception as e:
+#         return JsonResponse({'error': str(e)}, status=500)
+
+
+
+def razorpaygateway(request):
+    try:
+        # Retrieve the grand_total and address_id from the query parameters
+        grand_total = request.GET.get('grand_total')
+        address_id = request.GET.get('address_id')
+
+        # Check if grand_total and address_id are provided
+        if not grand_total or not address_id:
+            return JsonResponse({'error': 'Grand total or address ID not provided'}, status=400)
+
+        # Get the checkoutview URL
+        checkout_url = reverse('checkoutview', kwargs={'id': address_id})
+
+        # Construct the full URL with the correct scheme (e.g., HTTPS)
+        full_checkout_url = request.build_absolute_uri(checkout_url)
+
+        # Make a POST request to the checkoutview URL with the payment method
+        response = requests.post(full_checkout_url, data={'paymentmethod': 'razorpay'})
+
+        # Check if the request was successful and return the response content
+        if response.status_code == 200:
+            return JsonResponse({'message': 'Razorpay Payment initiated'}, status=200)
+        else:
+            return JsonResponse({'error': 'Failed to process payment'}, status=500)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

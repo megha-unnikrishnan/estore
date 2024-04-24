@@ -1,6 +1,7 @@
    $(document).ready(function() {
                 // Function to update cart item quantity and recalculate totals
                 var updateCartUrl = $('#update-cart-url').data('url');
+
                 var couponCode = $('#coupon-code-input').val();
 
                 function updateCartItemQuantity(itemId=null, newQuantity=null,couponCode=null) {
@@ -40,7 +41,13 @@
                             $('#coupon').text(response.coupon_offer);
                             $('#tax').text(response.tax);
                             $('#error-message').text('');
-                            $('#coupon-applied-msg').text(response.message);
+
+                            if (response.coupon_applied) {
+                                      $('#coupon-applied-msg').text(response.message);
+                                    $('#coupon-remove').show(); // Show the button
+                                } else {
+                                    $('#coupon-remove').hide(); // Hide the button
+                                }
 
                             $('#quantity-'+itemId).closest('.cart-item').find('.quantity-input, .quantity-plus').prop('disabled', false);
                         }
@@ -123,11 +130,41 @@
 
 
 
-    function updateQuantity(itemId) {
-        var newQuantity = $('#quantity-' + itemId).val();
-        // Call your JavaScript function to update the quantity via AJAX
-        updateCartItemQuantity(itemId, newQuantity);
-    }
+//    function updateQuantity(itemId) {
+//        var newQuantity = $('#quantity-' + itemId).val();
+//        // Call your JavaScript function to update the quantity via AJAX
+//        updateCartItemQuantity(itemId, newQuantity);
+//    }
 
 
 
+
+$(document).ready(function() {
+    // Function to remove coupon from the cart
+    $('#coupon-remove').click(function() {
+        var removeCouponUrl = $(this).data('remove-coupon-url');
+        console.log("Remove Coupon URL:", removeCouponUrl); // Check URL in console
+
+        // Obtain CSRF token from a hidden input field
+        var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+        // Perform AJAX request to remove coupon from the cart
+        $.ajax({
+            type: "POST",
+            url: removeCouponUrl,
+            data: {
+                csrfmiddlewaretoken: csrfToken
+            },
+            success: function(response) {
+                // Handle success response, such as updating the UI
+                // For example, you can reload the page or update specific elements
+                location.reload(); // Reload the page to reflect the changes
+            },
+           error: function(xhr, status, error) {
+    // Handle error, if any
+    console.error("AJAX Error:", error); // Log the error to the console
+    console.log("Response from server:", xhr.responseText); // Log the full response from the server
+}
+        });
+    });
+});
