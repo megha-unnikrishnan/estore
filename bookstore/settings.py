@@ -163,5 +163,9 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID=1
 
 
-KEY='rzp_test_3DaVx3D81cl8r1'
-SECRET='DzeTtZEX31jjSqO5a2c2iu53'
+KEY='rzp_test_RaBoXTuzoN2GJs'
+SECRET='OAdTbtcZTAYPSIkT4vK5pcGZ'
+
+
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"

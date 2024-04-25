@@ -553,6 +553,7 @@ def updateaddress(request,id,o_id):
                     messages.success(request, "Succesfully saved")
                     return redirect('addressbook')
                 else:
+                    address = UserAddress.objects.get(id=id)
                     messages.success(request, "Succesfully saved")
                     return redirect('checkoutview',id=address.id)
 
