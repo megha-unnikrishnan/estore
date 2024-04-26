@@ -69,4 +69,20 @@ def order_summary(request,id):
     except Exception as e:
         print(e)
     return render(request,'userview/ordersummary.html',context)
+
+
+def order_return_item(request, id):
+    order_item = OrderProduct.objects.get(id=id)
+    try:
+        if request.method == 'POST':
+            return_reason = request.POST.get('returnReason', None)
+            if return_reason:
+                order_item.return_reason = return_reason
+            order_item.return_request = True
+        order_item.save()
+        return redirect('ordersummary',id=order_item.order_id.id)
+    except Exception as e:
+        print(e)
+
+    return redirect('order_view')
 # Create your views here.

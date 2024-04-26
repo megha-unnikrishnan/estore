@@ -40,6 +40,9 @@ class CustomUser(AbstractUser):
     wallet = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     otp_expiry_time = models.DateTimeField(null=True, blank=True)
     last_otp_regeneration = models.DateTimeField(null=True, blank=True)
+    referral_code = models.CharField(default="ESTORE", null=True, blank=True, max_length=12)
+    refered_by = models.CharField(max_length=250, null=True, blank=True)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['phone']
@@ -73,6 +76,14 @@ class UserAddress(models.Model):
     state = models.CharField(max_length=150)
     created = models.DateField(auto_now_add=True)
 
+
     def __str__(self):
         return f"{self.name}"
 # Create your models here.
+
+class WalletBook(models.Model):
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.CharField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    increment = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)

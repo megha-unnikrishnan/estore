@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from order.models import Order, OrderProduct
 from cart.models import CartItem
-from .models import CustomUser, Forgotpassword
+from .models import CustomUser, Forgotpassword, WalletBook
 from django.contrib import messages, auth
 from django.contrib.auth import authenticate, login, logout
 import random
@@ -22,7 +22,8 @@ from userapp.models import UserAddress
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from shop.models import Book
-
+import razorpay
+from decimal import Decimal
 @cache_control(no_cache=True, no_store=True)
 def index(request):
     context={}
@@ -76,6 +77,9 @@ def user_login(request):
         print(e)
 
     return render(request, 'userview/login.html')
+def generate_referral_code():
+    code = str(uuid.uuid4()).replace('-', '')[:12]
+    return code
 
 
 def user_signup(request):
@@ -102,7 +106,24 @@ def user_signup(request):
                     print(register)
                     # generate otp
                     otp = get_random_string(length=6, allowed_chars='1234567890')
+                    code = generate_referral_code()
                     register.otp = otp
+                    register.referral_code = code
+                    try:
+                        if register['referral_code']:
+                            ref_user = CustomUser.objects.filter(referral_code=register['referral_code']).first()
+                            if ref_user:
+                                referred_user = CustomUser.objects.get(id=ref_user.id)
+                                referred_user.wallet = 200
+                                register.wallet = 50
+                                register.referred_by = referred_user.email
+                                referred_user.save()
+                                messages.success(request, "Referral code verified")
+                            else:
+                                messages.error(request, "Invalid Referral code.")
+                    except Exception as e:
+                        print(e)
+                    register.save()
                     otp_expiry_time = timezone.now() + timedelta(minutes=1)
                     register.otp_expiry_time = otp_expiry_time
                     send_otp_email(email, otp)
@@ -660,5 +681,32 @@ def updateprofile(request):
         return redirect('profile_details')  # Redirect to the user profile page
 
     return render(request, 'userview/update_user_details.html')
+
+
+def add_wallet(request):
+    user = request.user
+    amount_paise = Decimal('0')
+
+    # Check if the amount is passed as a query parameter
+    if 'amount' in request.GET:
+        amount=request.GET.get('amount')
+        user.wallet += Decimal(amount)
+        user.save()
+        wallet_acc = WalletBook()
+        wallet_acc.customer = user
+        wallet_acc.amount = amount
+        wallet_acc.description = "Added Money to wallet"
+        wallet_acc.increment = True
+        wallet_acc.save()
+        messages.success(request, f"Amound Rs.{amount} added to the wallet!!")
+        return redirect('add_wallet')
+
+
+
+    context = {
+        'user': user,
+        'amount_paise': amount_paise,  # Pass the amount in paise to the template
+    }
+    return render(request, 'userview/wallet.html', context)
 
 

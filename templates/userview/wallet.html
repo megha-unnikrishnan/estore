@@ -1,0 +1,84 @@
+
+{% extends 'userview/userprofile.html' %}
+{% load static %}
+
+{% block inner_content %}
+{% if user %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-4">Your Wallet</h5>
+                    <div class="h3 mb-4">Wallet Balance</div>
+                    <div class="display-4 mb-4 text-success">₹{{ user.wallet }}</div>
+
+                        <div class="form-group">
+                            <label for="amount">Enter amount to add:</label>
+                            <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" required>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block" id="money">Add Money</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+// Get the amount in paise from the Django template context
+ // Parse the amount as integer
+
+var options = {
+    "key": "rzp_test_RaBoXTuzoN2GJs", // Enter the Key ID generated from the Dashboard
+    "amount": {% widthratio amount_paise 1 100%}, // Use the amount in paise
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{ razorpay_order_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        alert("Payment successful!");
+        window.location.href = "{% url 'add_wallet' %}?amount=" + options.amount / 100; // Use the amount directly
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+
+document.getElementById('money').onclick = function(e){
+    // Get the amount input value
+    var inputAmount = document.getElementById('amount').value;
+    if (inputAmount) {
+        // Update the amount option
+        options.amount = parseInt(inputAmount) * 100; // Convert amount to paise
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+        e.preventDefault();
+    }
+}
+
+</script>
+
+
+{% endif %}
+
+{% endblock %}

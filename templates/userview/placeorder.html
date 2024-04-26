@@ -253,6 +253,7 @@
                                     </div>
                                 </div>
                                 <div class="checkout-btn">
+                                    <input type="hidden" id="order_id" value="{{ razorpay_order_id }}">
                                     <button type="submit" id="place-order">Place order</a></button>
 <!--                                    <div id="razorpay-prefill-details"-->
 <!--     data-razorpay-name="{{ user.first_name }} {{ user.last_name }}"-->
@@ -281,99 +282,114 @@
 <script>
 
 
+
+
+
+
 <!--function handleRazorpayPayment() {-->
-<!--    // Retrieve prefill details from data attributes-->
-<!--    var prefillDetails = document.getElementById('razorpay-prefill-details');-->
-<!--    var name = prefillDetails.dataset.razorpayName;-->
-<!--    var email = prefillDetails.dataset.razorpayEmail;-->
+<!--    console.log('handleRazorpayPayment called');-->
+
+<!--    var name = document.getElementById('razorpay-name').value;-->
+<!--    var email = document.getElementById('razorpay-email').value;-->
+
+<!--    var order_id = "{{ razorpay_order_id }}";-->
+
+<!--    console.log('Order ID:', order_id);-->
 
 <!--    var options = {-->
-<!--        "key": "rzp_test_EqhmmWLkUbpmWf", // Replace with your actual Razorpay API key-->
-<!--        "amount": "{{razorpay_order.amount}}", // Amount is in currency subunits. Replace with actual offerprice-->
+<!--        "key": "rzp_test_RaBoXTuzoN2GJs",-->
+<!--        "amount": {% widthratio grand_total 1 100%},-->
 <!--        "currency": "INR",-->
 <!--        "name": "EbookStore",-->
 <!--        "description": "Test Transaction",-->
 <!--        "image": "https://example.com/your_logo",-->
-<!--        "order_id": "{{ order_id }}", // Replace with actual order ID-->
+<!--        "order_id": order_id,-->
 <!--        "prefill": {-->
 <!--            "name": name,-->
 <!--            "email": email-->
 <!--        },-->
-<!--        "handler": function (response){-->
-<!--            alert(response.razorpay_payment_id);-->
-<!--            alert(response.razorpay_order_id);-->
-<!--            alert(response.razorpay_signature);-->
+<!--        "handler": function (response) {-->
+<!--            var callbackURL = '{{ callback }}';-->
+<!--                var razor_id=response.razorpay_payment_id-->
+<!--                // Append Razorpay payment method value to the URL query string-->
+<!--                callbackURL += '?payment_method=razorpay&razor_id=' + razor_id;-->
+<!--                window.location.href = callbackURL;-->
 <!--        },-->
 <!--        "theme": {-->
 <!--            "color": "#3399cc"-->
 <!--        }-->
 <!--    };-->
+
+<!--    console.log('Razorpay options:', options);-->
+
 <!--    var rzp1 = new Razorpay(options);-->
 <!--    rzp1.open();-->
 <!--}-->
 
 <!--document.getElementById('place-order').addEventListener('click', function() {-->
-<!--    // Check if Razorpay radio button is selected-->
+
+
+
+
 <!--    var razorpayRadio = document.getElementById('payment-razorpay');-->
 <!--    if (razorpayRadio.checked) {-->
+<!--        event.preventDefault()-->
 <!--        handleRazorpayPayment();-->
+
 <!--    } else {-->
-<!--        // Proceed with other payment methods-->
+<!--        console.log('Other payment method selected');-->
 <!--    }-->
 <!--});-->
 
 
 
 
-function handleRazorpayPayment() {
-    console.log('handleRazorpayPayment called');
 
-    var name = document.getElementById('razorpay-name').value;
-    var email = document.getElementById('razorpay-email').value;
 
-    var order_id = "{{ razorpay_order_id }}";
 
-    console.log('Order ID:', order_id);
+  function handleRazorpayPayment() {
+        var options = {
+            "key": "rzp_test_RaBoXTuzoN2GJs", // Enter the Key ID generated from the Dashboard
+            "amount": "{% widthratio grand_total 1 100 %}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "EStore",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": "{{razorpay_order_id}}",
+            "handler": function (response){
+                 var callbackURL = '{{ callback }}';
+            var razor_id = response.razorpay_payment_id;
+            // Append Razorpay payment method value and payment ID to the URL query string
+            callbackURL += '?payment_method=razorpay&razor_id=' + razor_id;
+            // Redirect to the callback URL
+            window.location.href = callbackURL;
+            },
 
-    var options = {
-        "key": "rzp_test_RaBoXTuzoN2GJs",
-        "amount": {% widthratio grand_total 1 100%},
-        "currency": "INR",
-        "name": "EbookStore",
-        "description": "Test Transaction",
-        "image": "https://example.com/your_logo",
-        "order_id": order_id,
-        "prefill": {
-            "name": name,
-            "email": email
-        },
-        "handler": function (response) {
-            console.log(response);
-        },
-        "theme": {
-            "color": "#3399cc"
-        }
-    };
+  "theme": {
+                "color": "#3399cc"
+            }
+        };
+        console.log(options)
+        var rzp1 = new Razorpay(options);
 
-    console.log('Razorpay options:', options);
-
-    var rzp1 = new Razorpay(options);
-    rzp1.open();
-}
-
-document.getElementById('place-order').addEventListener('click', function() {
-    console.log('Place order button clicked');
-<!--    event.preventDefault();-->
-
-    var razorpayRadio = document.getElementById('payment-razorpay');
-    if (razorpayRadio.checked) {
-        event.preventDefault()
-        handleRazorpayPayment();
-
-    } else {
-        console.log('Other payment method selected');
+        rzp1.open();
     }
-});
+    // Event listener for radio button change
+    document.getElementById('place-order').addEventListener('click', function() {
+         // Check if Razorpay radio button is selected
+                var razorpayRadio = document.getElementById('payment-razorpay');
+         if (razorpayRadio.checked) {
+             handleRazorpayPayment();
+             event.preventDefault();
+        } else {
+             // Proceed with other payment methods
+        }
+    });
+
+
+
+
+
 
 
 </script>

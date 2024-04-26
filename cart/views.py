@@ -527,7 +527,11 @@ def checkout_view(request, id):
             messages.error(request, 'You need to log in to add items to the cart.')
 
         address = UserAddress.objects.get(id=id)
+        add_id=id
         order_id=''
+        callback= "http://" + "127.0.0.1:8000" + "/cart/checkout-view/{}".format(add_id)
+        payment_method = request.GET.get('payment_method')
+        razorpay_id = request.GET.get('razor_id')
         print(address)
         user = CustomUser.objects.get(id=request.user.id)
         print(user)
@@ -578,6 +582,66 @@ def checkout_view(request, id):
 
 
         grand_total = mrp-discount-discount_amount+tax+shipping_cost
+        if payment_method=='razorpay':
+            order = Order()
+            order.user = user
+            order.address = address
+            order.subtotal = mrp
+            order.order_total = grand_total  # total amount including tax
+            order.discount_amount = discount
+            order.tax = tax
+            order.is_ordered = True
+            order.coupon = coupon_obj
+            order.coupon_mount = discount_amount
+            order.shipping = shipping_cost
+
+            order.save()
+
+            yr = int(datetime.date.today().strftime('%Y'))
+            dt = int(datetime.date.today().strftime('%d'))
+            mt = int(datetime.date.today().strftime('%m'))
+            d = datetime.date(yr, mt, dt)
+            current_date = d.strftime("%Y%m%d")
+            order_id = current_date + str(order.id)  # creating order id
+            order.order_id = order_id
+
+            order.save()
+
+            payment = Payments.objects.create(
+                user=user,
+                total_amount=offerprice,
+                is_paid=False,
+            )
+
+            for item in cart_items:
+                prod_obj = Bookvariant.objects.get(id=item.product.id)
+                order_item = OrderProduct.objects.create(
+                    user=user,
+                    order_id=order,
+                    payment_id=payment.id,
+                    product=prod_obj,
+                    quantity=item.quantity,
+                    product_price=item.product.product_price,
+                    ordered=True,
+                )
+                prod_obj.stock = prod_obj.stock - item.quantity
+                prod_obj.save()
+                item.delete()
+            try:
+                cart_items.delete()
+            except:
+                pass
+            if razorpay_id:
+                payment.payment_method = 'razorpay'  # set current payment method
+                payment.payment_id = razorpay_id  # check this payment_id
+                payment.is_paid = True
+                payment.save()
+                order.payment = payment
+                order.save()
+                user_id = CustomUser.objects.get(id=request.user.id)
+                cartitem = CartItem.objects.filter(user=user_id).count()
+                request.session['cart'] = cartitem
+                return redirect('confirm_order')
 
         if request.method == 'POST':
 
@@ -640,30 +704,11 @@ def checkout_view(request, id):
                 user_id = CustomUser.objects.get(id=request.user.id)
                 cartitem = CartItem.objects.filter(user=user_id).count()
                 request.session['cart'] = cartitem
-                messages.success(request,"ordered successfully")
+                messages.success(request, "ordered successfully")
                 return render(request, 'products/confirm-order.html')
-
-            if paymentmethod == 'razorpay':
-                client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
-
-                razorpay_order = client.order.create({
-                    'amount': int(grand_total * 100),  # Amount in paisa
-                    'currency': 'INR',
-                    'payment_capture': 1  # Auto-capture payment
-                })
-
-                order_id = razorpay_order['id']
-                razorpay_order.payment_method = 'Razor Pay'  # set current payment method
-                payment.payment_id =order_id # check this payment_id
-                payment.is_paid = True
-                payment.save()
-                order.payment = payment
-                order.save()
-                user_id = CustomUser.objects.get(id=request.user.id)
-                cartitem = CartItem.objects.filter(user=user_id).count()
-                request.session['cart'] = cartitem
-                return HttpResponseRedirect(reverse('confirm_order'))
-
+            else:
+                messages.error(request, 'You to select a payment!!')
+                return redirect('checkoutview', id=id)
 
 
 
@@ -682,7 +727,8 @@ def checkout_view(request, id):
             'shipping':shipping_cost,
             'coupon':discount_amount,
             'grand_total':grand_total,
-            'razorpay_order_id':order_id
+            'razorpay_order_id':order_id,
+            'callback':callback
 
         }
         return render(request, 'userview/placeorder.html', context)

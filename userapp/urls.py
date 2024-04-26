@@ -29,6 +29,7 @@ urlpatterns=[
     path('profiledetails/',views.profiledetails,name='profiledetails'),
     path('updateprofile/',views.updateprofile,name='updateprofile'),
     path('sort/', views.sort_products, name='sort_products'),
+    path('add_wallet',views.add_wallet,name='add_wallet')
 
 
 
