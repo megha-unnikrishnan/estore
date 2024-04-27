@@ -106,4 +106,58 @@ def order_return_item(request, id):
         print(e)
 
     return redirect('order_view')
+
+
+def return_request(request, id):
+    try:
+
+        order_item = OrderProduct.objects.get(id=id)
+        variant = order_item.product
+        order = order_item.order_id
+        order_id = order.id
+
+        user = order.user
+        shipping = 0
+        deduct_discount = 0
+        tax = 0
+        coupon = 0
+        count = OrderProduct.objects.filter(order_id=order).count()
+
+        if order.shipping > 0:
+            if count < order.shipping:
+                shipping = order.shipping / count
+
+        if order.coupon_mount:
+            if count < order.coupon_mount:
+                coupon = order.coupon_mount / count
+
+        if order.tax:
+            if count < order.tax:
+                tax = order.tax / count
+        if request.method == 'POST':
+            order_item.is_returned = True
+            variant.stock += order_item.quantity
+            amount = int(variant.discounted_price()) * order_item.quantity
+            if coupon > 0:
+                amount = amount - coupon
+            if tax > 0:
+                amount = amount + tax
+
+            refund_amount = (float(amount) + float(shipping))  # calculating refund amount.
+
+            user.wallet = float(user.wallet) + float(refund_amount)
+            wallet_acc = WalletBook()
+            wallet_acc.customer = user
+            wallet_acc.amount = refund_amount
+            wallet_acc.description = "Refund Credited for Product Return"
+            wallet_acc.increment = True
+            wallet_acc.save()
+            order_item.save()
+            variant.save()
+            user.save()
+            order.save()
+            return redirect('adminorderupdate', order_id)
+    except Exception as e:
+        print(e)
+        return redirect('adminorder')
 # Create your views here.
