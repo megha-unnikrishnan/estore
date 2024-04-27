@@ -325,6 +325,9 @@ def search_view(request):
             author = Author.objects.filter(author_name__icontains=query)[:5]
             if author:
                 suggestions = [author.author_name for author in author]
+            category = Category.objects.filter(category_name__icontains=query)[:5]
+            if category:
+                suggestions = [category.category_name for category in category]
 
         return JsonResponse({'suggestions': suggestions})
     elif request.method == "POST":
@@ -684,29 +687,40 @@ def updateprofile(request):
 
 
 def add_wallet(request):
-    user = request.user
-    amount_paise = Decimal('0')
+    if 'email' in request.session:
+        try:
+            user = request.user
+            data = WalletBook.objects.filter(customer=user)
+            amount_paise = Decimal('0')
+            if 'amount' in request.GET:
+                amount = request.GET.get('amount')
+                user.wallet += Decimal(amount)
+                user.save()
+                wallet_account = WalletBook()
+                wallet_account.customer = user
+                wallet_account.amount = amount
+                wallet_account.description = "Added Money to wallet"
+                wallet_account.increment = True
+                wallet_account.save()
+                messages.success(request, f"Amound Rs.{amount} added to the wallet!!")
+                return redirect('add_wallet')
 
-    # Check if the amount is passed as a query parameter
-    if 'amount' in request.GET:
-        amount=request.GET.get('amount')
-        user.wallet += Decimal(amount)
-        user.save()
-        wallet_acc = WalletBook()
-        wallet_acc.customer = user
-        wallet_acc.amount = amount
-        wallet_acc.description = "Added Money to wallet"
-        wallet_acc.increment = True
-        wallet_acc.save()
-        messages.success(request, f"Amound Rs.{amount} added to the wallet!!")
-        return redirect('add_wallet')
+            context = {
+                'user': user,
+                'amount_paise': amount_paise,
+                'data':data
+            }
+            return render(request, 'userview/wallet.html', context)
+        except Exception as e:
+            print(e)
+    return redirect('userindex')
 
 
 
-    context = {
-        'user': user,
-        'amount_paise': amount_paise,  # Pass the amount in paise to the template
+def wallet_book(request):
+    user=request.user
+    data=WalletBook.objects.filter(customer=user.id)
+    context={
+        'data':data
     }
-    return render(request, 'userview/wallet.html', context)
-
-
+    return render(request,'userview/walletbook.html',context)

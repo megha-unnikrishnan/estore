@@ -1,0 +1,48 @@
+
+{% extends 'userview/userprofile.html' %}
+{% load static %}
+
+{% block inner_content %}l>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Statement Details</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+
+                                     <th scope="col">Created</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Description</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                      <td>{{i.created}}</td>
+
+                                    <td>{{i.amount}}</td>
+                                    <td>{{i.description}}</td>
+
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

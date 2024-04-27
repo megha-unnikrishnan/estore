@@ -6,16 +6,16 @@ from django.http import HttpResponse
 
 from order.models import Order, OrderProduct
 from shop.models import Bookvariant
-
-
+from userapp.models import WalletBook
 
 
 @login_required(login_url='login')
 def cancel_order(request, id):
     order_product = OrderProduct.objects.get(id=id)
-    variant = Bookvariant.objects.get(id=order_product.product.id)
+    # variant = Bookvariant.objects.get(id=order_product.product.id)
     order_obj = Order.objects.get(id=order_product.order_id.id)
     order = order_product.order_id
+    user=request.user
     print(order)
     try:
         payment = order.payment
@@ -27,14 +27,35 @@ def cancel_order(request, id):
             order.status = "Cancelled"
 
             payment.status = 'Order cancelled'
-            order_product.item_cancel = True
-            variant.stock += order_product.quantity
+
+            order_prod_obj=OrderProduct.objects.filter(order_id=order_obj)
+            for i in order_prod_obj:
+                book_variant = Bookvariant.objects.get(id=i.product.id)
+                print("Before stock update:", book_variant.stock)
+                i.item_cancel = True
+                i.return_reason = reason
+                book_variant.stock += i.quantity
+                print("After stock update:", book_variant.stock)
+                i.save()
+                book_variant.save()
+
+
+            if payment.payment_method!='Cash on delivery':
+                amount=order.order_total
+                refund_amount=float(amount)
+                user.wallet=float(user.wallet)+float(refund_amount)
+                user.save()
+
+                wallet = WalletBook()
+                wallet.customer = request.user
+                wallet.description = "Cashback received due to the cancel of item"
+                wallet.increment = True
+                wallet.amount = f'{refund_amount}'
+                wallet.save()
 
 
 
             order.save()
-            order_product.save()
-            variant.save()
             payment.save()
         return redirect('ordersummary', id=order_obj.id)
     except Exception as e:

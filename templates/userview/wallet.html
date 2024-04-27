@@ -6,10 +6,16 @@
 {% if user %}
 
 <div class="container mt-5">
+
     <div class="row justify-content-center">
         <div class="col-md-6">
+
+
             <div class="card ">
+
                 <div class="card-body text-center">
+
+
                     <h5 class="card-title mb-4">Your Wallet</h5>
                     <div class="h3 mb-4">Wallet Balance</div>
                     <div class="display-4 mb-4 text-success">₹{{ user.wallet }}</div>
@@ -19,16 +25,21 @@
                             <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" required>
                         </div>
                         <button type="submit" class="btn btn-lg btn-primary btn-block" id="money">Add Money</button>
+                     <a href="{% url 'wallet_book' %}" class="btn btn-link mt-3" id="show-details" >Statement</a>
+
 
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-// Get the amount in paise from the Django template context
- // Parse the amount as integer
+
 
 var options = {
     "key": "rzp_test_RaBoXTuzoN2GJs", // Enter the Key ID generated from the Dashboard
@@ -37,18 +48,18 @@ var options = {
     "name": "Acme Corp",
     "description": "Test Transaction",
     "image": "https://example.com/your_logo",
-    "order_id": "{{ razorpay_order_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "order_id": "{{ razorpay_order_id }}",
     "handler": function (response){
         alert("Payment successful!");
         window.location.href = "{% url 'add_wallet' %}?amount=" + options.amount / 100; // Use the amount directly
     },
     "prefill": {
-        "name": "Gaurav Kumar",
+        "name": "Megha M",
         "email": "gaurav.kumar@example.com",
         "contact": "9000090000"
     },
     "notes": {
-        "address": "Razorpay Corporate Office"
+        "address": "ESTORE"
     },
     "theme": {
         "color": "#3399cc"
