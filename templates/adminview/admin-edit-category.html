@@ -59,6 +59,36 @@
                         <textarea class="form-control bg-grey text-black" id="productDesc" rows="4" name="description"> {{ category.category_desc }} </textarea>
 
                     </div>
+                    <div>
+                          <select class="form-select select2" id="offertName" name="offer_cat" required>
+<!--                        <option value="{{ category.offer_cat.id }}">{{ category.offer_cat }}</option>-->
+                        {% for offer in offer %}
+                        <option value="{{offer.id}}">{{offer.name}}</option>
+                         <option value="{{ o.id }}" {% if category.offer_cat == o.id %} selected {% endif %}>{{ o.offer_cat }}</option>-->
+                        {% endfor %}
+                   </select>
+                    </div>
+
+
+
+<!--                    <div class="mb-3">-->
+<!--            <label for="offerName" class="form-label">Select Offer</label>-->
+<!--            <select class="form-select select2" id="offerName" name="offer_cat" required>-->
+<!--    <option value="">Select offer</option>-->
+<!--    {% for o in offer %}-->
+<!--        <option value="{{ o.id }}" {% if category.offer_cat == o.id %} selected {% endif %}>{{ o.offer_cat }}</option>-->
+<!--    {% endfor %}-->
+<!--</select>-->
+<!--        </div>-->
+                    <div class="row mb-4">
+                        <div class="col">
+                          <div class="form-outline">
+                                  <label class="form-label" for="form6Example1">Maximum AMount</label>
+                              <input type="text" id="form6Example2" value="{{ category.max_discount }}" class="form-control bg-grey text-black" name="maxdiscount" required/>
+
+                          </div>
+                        </div>
+      </div>
 
                     <!-- Submit button -->
                     <div class="text-end">

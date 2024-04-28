@@ -185,6 +185,7 @@
             {% endfor %}
             <p class="sub-total resize-text">Sub Total<span><i class="fas fa-rupee-sign"></i>{{mrp}}</span></p>
             <p class="discount resize-text">Discount<span><i class="fas fa-rupee-sign"></i>{{discount}}</span></p>
+             <p class="discount resize-text">Category Discount<span><i class="fas fa-rupee-sign"></i>{{category_offer_amount}}</span></p>
             <p class="coupon resize-text">Coupon<span><i class="fas fa-rupee-sign"></i>{{coupon}}</span></p>
             <p class="tax resize-text">Tax<span><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
             <p class="shipping resize-text">Shipping Cost<span><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
@@ -196,39 +197,9 @@
                             <div class="checkout-payment">
                                 <div class="payment-methods">
                                     <h1>Payment Methods</h1>
-                                    <div class="payment-method">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-1" name="payment">
-                                            <label class="custom-control-label" for="payment-1">Paypal</label>
-                                        </div>
-                                        <div class="payment-content" id="payment-1-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="payment-method">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-2" name="payment">
-                                            <label class="custom-control-label" for="payment-2">Payoneer</label>
-                                        </div>
-                                        <div class="payment-content" id="payment-2-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="payment-method">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="payment-3" name="payment">
-                                            <label class="custom-control-label" for="payment-3">Check Payment</label>
-                                        </div>
-                                        <div class="payment-content" id="payment-3-show">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
-                                            </p>
-                                        </div>
-                                    </div>
+
+
+
                                    <div class="payment-method">
                                         <div class="custom-control custom-radio">
                                             <input type="radio" class="custom-control-input" id="payment-razorpay" name="payment" value="razorpay">
@@ -246,6 +217,17 @@
                                             <label class="custom-control-label" for="payment-5">Cash on Delivery</label>
                                         </div>
                                         <div class="payment-content" id="payment-5-show">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="payment-6" name="payment" value="wallet">
+                                            <label class="custom-control-label" for="payment-6">Wallet</label>
+                                        </div>
+                                        <div class="payment-content" id="payment-6-show">
                                             <p>
                                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt orci ac eros volutpat maximus lacinia quis diam.
                                             </p>

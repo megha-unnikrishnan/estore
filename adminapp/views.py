@@ -1,10 +1,12 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
+from django.db.models import Q, Sum
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.utils.datetime_safe import date
 from django.views.decorators.cache import cache_control
 
 from order.models import Order, OrderProduct
@@ -13,7 +15,8 @@ from shop.models import Category,Author,Book,Offer,Bookvariant,MultipleImages,Ed
 import os
 from cart.models import Coupons
 from adminapp.forms import CategoryUpdateform
-from datetime import datetime
+from datetime import datetime, timedelta
+
 
 def admin_login(request):
     try:
@@ -44,8 +47,44 @@ def admin_login(request):
 
 def admin_dashboard(request):
     if 'email' in request.session:
+        context={}
+        try:
+            orders = Order.objects.all().order_by('-id')
+            order_count = orders.count()
+            order_total = Order.objects.aggregate(total=Sum('order_total'))['total']
+            today = date.today()
+            today_count = Order.objects.filter(created__date=today).count()
+            today_revenue = Order.objects.filter(created__date=today).aggregate(total=Sum('order_total'))['total']
+            if request.method == 'POST':
+                date_from = request.POST.get('startDate')
+                date_to = request.POST.get('endDate')
 
-        return render(request, 'adminview/admindashboard.html')
+                date_format = '%Y-%m-%d'
+                try:
+                    date_from = datetime.strptime(date_from, date_format)
+                    date_to = datetime.strptime(date_to, date_format)
+
+                    # Adjust end date to end of the day (23:59:59)
+                    date_to += timedelta(days=1)  # Move to the next day
+                    date_to -= timedelta(seconds=1)  # Go back one second to reach the end of the selected day
+
+                except ValueError:
+                    return HttpResponseBadRequest('Invalid date format')
+
+                # Filter orders based on the selected date range
+                orders = Order.objects.filter(created__range=(date_from, date_to))
+
+            context={
+                'order_count':order_count,
+                'order_total':order_total,
+                'today_count':today_count,
+                'today_revenue':today_revenue,
+                'orders':orders
+
+            }
+        except Exception as e:
+            print(e)
+        return render(request, 'adminview/admindashboard.html',context)
     return redirect('adminlogin')
 
 
@@ -240,11 +279,22 @@ def admin_author(request):
 def admin_add_category(request):
     if 'email' in request.session:
         try:
+            offer = Offer.objects.all()
             if request.method=='POST':
                 name=request.POST['name']
                 image = request.FILES.get('image')
                 description = request.POST['description']
-                category=Category(category_name=name,category_image=image,category_desc=description)
+                offer=request.POST['offer']
+                offer_obj=Offer.objects.get(id=offer)
+                maxamount=request.POST['maxdiscount']
+                try:
+                    if offer_obj.is_expired():
+                        messages.error(request, 'Offer is expired. Please select a valid offer.')
+                        return redirect("admincategory")
+                except Exception as e:
+                    print(e)
+
+                category=Category(category_name=name,category_image=image,category_desc=description,offer_cat=offer_obj,max_discount=maxamount)
                 category.save()
                 messages.error(request, 'Saved Successfully')
                 return redirect("admincategory")
@@ -252,20 +302,26 @@ def admin_add_category(request):
         except Exception as e:
             messages.error(request,'Saved failed')
             return redirect("admincategory")
-        return render(request, 'adminview/admin-add-category.html')
+        context={
+            'offer':offer
+        }
+        return render(request, 'adminview/admin-add-category.html',context)
     return redirect('adminlogin')
 
 
 
 @cache_control(no_cache=True, no_store=True)
 def admin_category(request):
-    if 'email' in request.session:
-        category=Category.objects.all()
-        context={
-            'category':category
-        }
-        return render(request,'adminview/admincategory.html',context)
-    return redirect('adminlogin')
+    try:
+        if 'email' in request.session:
+            category = Category.objects.all()
+            context = {
+                'category': category
+            }
+            return render(request, 'adminview/admincategory.html', context)
+        return redirect('adminlogin')
+    except Exception as e:
+        print(e)
 
 
 @cache_control(no_cache=True, no_store=True)
@@ -276,23 +332,34 @@ def admin_edit_category(request, id):
         print("call fucntion")
         try:
             category = Category.objects.get(id=id)
-            print(category)
-            print(category.category_name)
-            context = {'category': category}
+            offer=Offer.objects.all()
+
+            context = {'category': category,
+                       'offer':offer}
             if request.method == "POST":
                 print(request.POST)
                 if request.FILES:
                     os.remove(category.category_image.path)
                     category.category_image = request.FILES['catimage']
                 category.category_name = request.POST['catname']
-                print(category.category_name)
                 category.category_desc = request.POST['description']
+                category_offer=request.POST['offer_cat']
+                offer_obj = Offer.objects.get(id=category_offer)
+                category.max_discount=request.POST['maxdiscount']
+                try:
+                    if offer_obj.is_expired():
+                        messages.error(request, 'Offer is expired. Please select a valid offer.')
+                        return redirect("admincategory")
+                except Exception as e:
+                    print(e)
+                category.offer_cat=offer_obj
                 category.offer = 12
 
                 category.save()
                 print('after save')
                 messages.success(request, "Succesfully updated all details")
                 return redirect('admincategory')
+
             return render(request, 'adminview/admin-edit-category.html', context)
 
 

@@ -99,6 +99,7 @@
                                             <h1>Cart Summary</h1>
                                             <p>MRP<span id="total"><i class="fas fa-rupee-sign"></i>{{ total| floatformat:0 }}</span></p>
                                             <p>Discount<span id="offer"><i class="fas fa-rupee-sign"></i>{{ offer| floatformat:0 }}</span></p>
+                                             <p>Category Discount<span id="catoffer"><i class="fas fa-rupee-sign"></i>{{ category_offer_amount| floatformat:0 }}</span></p>
                                             <p>Coupon<span id="coupon"><i class="fas fa-rupee-sign"></i>{{coupon_offer}}</span></p>
                                             <p>Tax<span id="tax"><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
                                             <p>Shipping Cost<span id="shipping-cost"><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
@@ -119,7 +120,7 @@
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 
-         <button id="coupon-remove" style="display: none;"  data-remove-coupon-url="{% url 'remove_coupon' %}">Remove Coupon</button>
+         <button id="coupon-remove" style="display: none;width: 34%;"  data-remove-coupon-url="{% url 'remove_coupon' %}">Remove Coupon</button>
 
 </div>
 <!--                          <div class="container mt-5">-->

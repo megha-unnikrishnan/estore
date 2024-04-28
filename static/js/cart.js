@@ -36,6 +36,7 @@
 //                            $('#coupon-applied-msg').text("Coupon applied successfully!");
                             $('#total').text(response.total);
                             $('#offer').text(response.offer);
+                            $('#catoffer').text(response.category_offer_amount);
                             $('#shipping-cost').text(response.shipping);
                             $('#grand_total').text(response.grand_total);
                             $('#coupon').text(response.coupon_offer);

@@ -42,6 +42,7 @@ class Order(models.Model):
     coupon = models.ForeignKey(Coupons, on_delete=models.SET_NULL, null=True, blank=True)
     coupon_mount=models.FloatField(null=True)
     shipping=models.FloatField(default=0)
+    category_amount=models.FloatField(null=True)
 
     def _str_(self):
         return self.order_id
