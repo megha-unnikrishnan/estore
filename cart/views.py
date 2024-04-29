@@ -244,6 +244,8 @@ def update_cart_quantity(request):
         for items in cat_ofr_obj:
             if not items.product.category.offer_cat.is_expired():
                 category_offer_amount += items.sub_total_with_category_offer()
+            else:
+                category_offer_amount=0
 
         shipping_cost = 0
         if total < 3000:

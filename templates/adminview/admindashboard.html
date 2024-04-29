@@ -1,6 +1,11 @@
 {% extends 'adminview/base.html' %}
 {% load static %}
+{% block js %}
 
+<script src="{% static 'js/pdffile.js' %}"></script>
+
+
+{% endblock js %}
 {% block content %}
             <!-- Sales Chart Start -->
 <!--            <div class="container-fluid pt-4 px-4">-->
@@ -221,66 +226,317 @@
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
-            <!-- Widgets End -->
+<!-- Widgets End -->
+         <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-line fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Order count</p>
+                                <h6 class="mb-0">{{order_count}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Order Total</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i><i class="fa-solid fa-indian-rupee-sign"></i>{{order_total}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-area fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Today Total Revenue</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i>₹ {% if today_revenue %} {{ today_revenue }} {% else %} 0 {% endif %}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Today Sales Count</p>
+                                <h6 class="mb-0">{{today_count}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-line fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Weekly Sales count</p>
+                                <h6 class="mb-0">{{weekly_count}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-area fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Weekly Sales Revenue</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i>₹ {% if weekly_revenue %} {{ weekly_revenue }} {% else %} 0 {% endif %}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Monthly Sales Count</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i><i class="fa-solid fa-indian-rupee-sign"></i>{{monthly_count}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                 <p class="mb-2">Monthly Sales Revenue</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i> {% if monthly_revenue %} {{ monthly_revenue }} {% else %} 0 {% endif %}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                 <p class="mb-2">Annual sales count</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i>{{current_yearly_count}}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                 <p class="mb-2">Annual sales revenue</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i>{{current_yearly_revenue}}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                 <p class="mb-2">Total Discount sales</p>
+                                <h6 class="mb-0"><i class="fa-solid fa-indian-rupee-sign"></i>{{common_discount}}</h6>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card bg-light">
+        <div class="card-body">
+          <h2 class="card-title">Yearly Sales</h2>
+          <ul class="list-group">
+            {% for sale in yearly_sales %}
+              <li class="list-group-item">{{ sale.year }}: {{ sale.year_total }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bg-light">
+        <div class="card-body">
+          <h2 class="card-title">Yearly Orders</h2>
+          <ul class="list-group">
+            {% for order in yearly_orders %}
+              <li class="list-group-item">{{ order.year }}: {{ order.total_orders }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Monthly Sales</h2>
+          <ul class="list-group">
+            {% for sale in monthly_sales %}
+              <li class="list-group-item">{{ sale.month_name }}: {{ sale.monthly_total }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Monthly Orders</h2>
+          <ul class="list-group">
+            {% for order in monthly_orders %}
+              <li class="list-group-item">{{ order.month_name }}  : {{ order.total_orders }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-light rounded h-100 p-4" style="width:100%">
+                <h6 class="mb-4">Most Selling Books</h6>
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-light rounded h-100 p-4" style="width:100%">
+                <h6 class="mb-4">Yearly Sales</h6>
+                <canvas id="yearlySalesChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ book_names|safe }},
+                datasets: [{
+                    label: 'Total Quantity',
+                    data: {{ quantities|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+
+<script>
+    var ctx = document.getElementById('yearlySalesChart').getContext('2d');
+    var yearlySalesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ all_years|safe }},
+            datasets: [{
+                label: 'Yearly Sales',
+                data: {{ chart_data|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+  </div>
+</div>
 <div class="container-fluid pt-4 px-4" style="background-color: white;" xmlns="http://www.w3.org/1999/html">
   <div class="bg-light rounded p-4">
     <div class="d-flex align-items-center justify-content-between mb-4">
       <h2 class="mb-0">Sales Reports</h2>
-      <div class="d-flex flex-column gap-3">
-        <button class="btn btn-sm btn-warning" onclick="printOrderTable()">Download PDF <i class="bi bi-file-earmark-pdf"></i>
-        </button>
-        <button class="btn btn-sm btn-warning" onclick="exportOrderTable()">Download Excel <i class="bi bi-file-earmark-excel"></i></button>
-      </div>
+    <div class="d-flex flex-column gap-3">
+    <button class="btn btn-sm btn-success" onclick="printTable()">Download PDF </button>
+    <button class="btn btn-sm btn-success" onclick="exportReportToExcel()">Download Excel </button>
+</div>
+
     </div>
     <div class="table-responsive">
-      <table class="table text-start align-middle table-bordered table-hover mb-2" id="orderTable">
-           <form action="" class="" method="POST">
+      <div >
+
+          <form action="" class="" method="POST">
             {% csrf_token %}
-        <div class="row mb-3">
+            <div class="row mb-3">
+              <div class="col-sm-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control form-control-sm" id="startDate" name="startDate">
+              </div>
+              <div class="col-sm-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" class="form-control form-control-sm" id="endDate" name="endDate">
+              </div>
+              <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary" style="margin-top: 9%;">Filter</button>
+              </div>
+            </div>
+              <!-- Yearly Sales Count Start -->
 
-          <div class="col-sm-3">
+<!-- Yearly Sales Count End -->
 
-            <label for="startDate" class="form-label">Start Date</label>
-            <input type="date" class="form-control form-control-sm" id="startDate" name="startDate">
-          </div>
-          <div class="col-sm-3">
-            <label for="endDate" class="form-label">End Date</label>
-            <input type="date" class="form-control form-control-sm" id="endDate" name="endDate">
-          </div>
-          <div class="col-sm-3">
-            <button type="submit" class="btn btn-primary" style="margin-top: 9%;">Filter</button>
-          </div>
-        </div>
           </form>
-
+        <div style="max-height: 400px; overflow-y: auto;">
+    <table class="table text-start align-middle table-bordered table-hover mb-2" id="orderTable">
         <thead class="mt-2">
-          <tr class="text-dark">
-<!--            <th scope="col"><input class="form-check-input" type="checkbox"></th>-->
-            <th scope="col">Date</th>
-            <th scope="col">Order ID</th>
-            <th scope="col">Customer</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
-          </tr>
+            <tr class="text-dark">
+                <th scope="col">Date</th>
+                <th scope="col">Order ID</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
         </thead>
         <tbody>
-          {% for order in orders %}
-          <tr>
-<!--            <td><input class="form-check-input" type="checkbox"></td>-->
-            <td>{{ order.created }}</td>
-            <td>{{ order.order_id }}</td>
-            <td>{{ order.user.email }}</td>
-            <td>₹ {{ order.order_total }}</td>
-            <td>{{ order.status }}</td>
-            <td><a class="btn btn-sm btn-primary" href="#">Detail</a></td>
-          </tr>
-          {% endfor %}
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.created }}</td>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.user.email }}</td>
+                <td>₹ {{ order.order_total }}</td>
+                <td>{{ order.status }}</td>
+                <td><a class="btn btn-sm btn-success" href="{% url 'adminorderupdate' order.id %}">Detail</a></td>
+            </tr>
+            {% endfor %}
         </tbody>
-      </table>
+    </table>
+</div>
+
+      </div>
     </div>
   </div>
 </div>
+
 
 
             <!-- Footer Start -->
@@ -297,5 +553,10 @@
                     </div>
                 </div>
             </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+
+
+
 {% endblock %}
             <!-- Footer End -->

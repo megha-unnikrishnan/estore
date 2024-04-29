@@ -45,5 +45,7 @@ urlpatterns=[
     path('admin-edit-coupon/<int:id>/', views.admin_edit_coupon, name='couponedit'),
 
     path('admin-orders/' ,views.admin_orders,name='adminorder'),
-    path('admin-update-orders/<int:id>/',views.admin_order_update,name='adminorderupdate')
+    path('admin-update-orders/<int:id>/',views.admin_order_update,name='adminorderupdate'),
+
+    path('admin-sales-reports/',views.admin_sales_reports,name='adminreports')
 ]

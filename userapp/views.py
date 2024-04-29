@@ -724,3 +724,6 @@ def wallet_book(request):
         'data':data
     }
     return render(request,'userview/walletbook.html',context)
+
+
+

@@ -1,5 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count, When, Case, Value, CharField
+from django.db.models.functions import ExtractYear, ExtractMonth, Coalesce
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -8,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.utils.datetime_safe import date
 from django.views.decorators.cache import cache_control
-
+import io
+import base64
 from order.models import Order, OrderProduct
 from userapp.models import CustomUser
 from shop.models import Category,Author,Book,Offer,Bookvariant,MultipleImages,Editions
@@ -16,7 +18,15 @@ import os
 from cart.models import Coupons
 from adminapp.forms import CategoryUpdateform
 from datetime import datetime, timedelta
+from django import template
+import calendar
+import matplotlib.pyplot as plt
+register = template.Library()
 
+@register.filter
+def month_name(month_number):
+    month_number = int(month_number)
+    return calendar.month_name[month_number]
 
 def admin_login(request):
     try:
@@ -74,12 +84,174 @@ def admin_dashboard(request):
                 # Filter orders based on the selected date range
                 orders = Order.objects.filter(created__range=(date_from, date_to))
 
+            # Calculate yearly sales
+            yearly_sales = (
+                Order.objects
+                .annotate(year=ExtractYear('created'))
+                .values('year')
+                .annotate(year_total=Sum('order_total'))
+                .order_by('year')
+            )
+
+
+            # Calculate yearly orders
+            yearly_orders = (
+                Order.objects
+                .annotate(year=ExtractYear('created'))
+                .values('year')
+                .annotate(total_orders=Count('id'))
+                .order_by('year')
+            )
+
+            # Calculate monthly sales
+            monthly_sales = (
+                Order.objects
+                .annotate(year=ExtractYear('created'), month=ExtractMonth('created'))
+                .annotate(
+                    month_name=Case(
+                        When(month=1, then=Value('January')),
+                        When(month=2, then=Value('February')),
+                        When(month=3, then=Value('March')),
+                        When(month=4, then=Value('April')),
+                        When(month=5, then=Value('May')),
+                        When(month=6, then=Value('June')),
+                        When(month=7, then=Value('July')),
+                        When(month=8, then=Value('August')),
+                        When(month=9, then=Value('September')),
+                        When(month=10, then=Value('October')),
+                        When(month=11, then=Value('November')),
+                        When(month=12, then=Value('December')),
+                        output_field=CharField(),
+                    )
+                )
+                .values('year', 'month_name')
+                .annotate(monthly_total=Sum('order_total'))
+                .order_by('year', 'month')
+            )
+
+            # Calculate monthly orders
+            monthly_orders = (
+                Order.objects
+                .annotate(year=ExtractYear('created'), month=ExtractMonth('created'))
+                .annotate(
+                    month_name=Case(
+                        When(month=1, then=Value('January')),
+                        When(month=2, then=Value('February')),
+                        When(month=3, then=Value('March')),
+                        When(month=4, then=Value('April')),
+                        When(month=5, then=Value('May')),
+                        When(month=6, then=Value('June')),
+                        When(month=7, then=Value('July')),
+                        When(month=8, then=Value('August')),
+                        When(month=9, then=Value('September')),
+                        When(month=10, then=Value('October')),
+                        When(month=11, then=Value('November')),
+                        When(month=12, then=Value('December')),
+                        output_field=CharField(),
+                    )
+                )
+                .values('year', 'month_name')
+                .annotate(total_orders=Count('id'))
+                .order_by('year', 'month')
+            )
+            #current weekly sales data
+            week_start = today - timedelta(days=today.weekday())
+            week_end = week_start + timedelta(days=6)
+            weekly_count = Order.objects.filter(created__date__range=[week_start, week_end]).count()
+            weekly_revenue = Order.objects.filter(created__date__range=[week_start, week_end]).aggregate(total=Sum('order_total'))[
+                'total']
+
+            # current Monthly sales data
+            month_start = today.replace(day=1)
+            month_end = month_start.replace(month=month_start.month % 12 + 1) - timedelta(days=1)
+            monthly_count = Order.objects.filter(created__date__range=[month_start, month_end]).count()
+            monthly_revenue =Order.objects.filter(created__date__range=[month_start, month_end]).aggregate(total=Sum('order_total'))[
+                'total']
+
+            #current year sales
+
+
+
+            # Get the start date of the current year
+            year_start = datetime(datetime.now().year, 1, 1)
+
+            # Get the end date of the current year
+            year_end = datetime(datetime.now().year, 12, 31)
+
+            # Filter orders for the current year
+            current_yearly_count = Order.objects.filter(created__date__range=[year_start, year_end]).count()
+
+            # Calculate the total revenue for the current year
+            current_yearly_revenue = Order.objects.filter(created__date__range=[year_start, year_end]).aggregate(total=Sum('order_total'))[
+                'total']
+
+            # Calculate the total sum of discount_amount, coupon_amount, and category_amount
+            total_discount = Order.objects.aggregate(
+                total_discount=Sum('discount_amount') + Sum('coupon_mount') + Sum('category_amount')
+            )['total_discount']
+
+            # Now you have the total sum, you can assign it to a common variable
+            common_discount = total_discount if total_discount else 0
+
+            most_ordered_books = OrderProduct.objects.values('product__product__product_name').annotate(
+                total_quantity=Coalesce(Sum('quantity'), 0)).order_by('-total_quantity')
+            # Extract data for plotting
+            book_names = [item['product__product__product_name'] for item in most_ordered_books]
+            quantities = [item['total_quantity'] for item in most_ordered_books]
+            # Print or use the most ordered books
+            # for book in most_ordered_books:
+            #     print(f"Book: {book['product__variant_name']} - Total Quantity: {book['total_quantity']}")
+            # Get the start date of the current year
+            current_year_start = datetime(datetime.now().year, 1, 1)
+
+            # Calculate year-wise order total
+            yearly_order_totals = (
+                Order.objects
+                .filter(created__gte=current_year_start)
+                .annotate(year=ExtractYear('created'))
+                .values('year')
+                .annotate(year_total=Sum('order_total'))
+                .order_by('year')
+            )
+            start_year = 2020  # Change this to your start year
+            current_year = datetime.now().year
+            all_years = list(range(start_year, current_year + 1))
+
+            # Retrieve the actual yearly sales data
+            yearly_sales_data = {sale['year']: sale['year_total'] for sale in yearly_order_totals}
+
+            # Populate the chart data
+            chart_data = []
+            for year in all_years:
+                year_total = yearly_sales_data.get(year,
+                                                   0)  # Get the total sales for the year, or set it to 0 if no data available
+                chart_data.append(year_total)
             context={
                 'order_count':order_count,
                 'order_total':order_total,
                 'today_count':today_count,
                 'today_revenue':today_revenue,
-                'orders':orders
+                'orders':orders,
+                'yearly_sales':yearly_sales,
+                'yearly_orders':yearly_orders,
+                'weekly_count': weekly_count,
+                'weekly_revenue': weekly_revenue,
+                'monthly_count': monthly_count,
+                'monthly_revenue': monthly_revenue,
+                'current_yearly_count':current_yearly_count,
+                'current_yearly_revenue':current_yearly_revenue,
+                'common_discount':common_discount,
+                'monthly_sales':monthly_sales,
+                'monthly_orders':monthly_orders,
+                'most_ordered_books ':most_ordered_books,
+                'book_names': book_names,
+                'quantities': quantities,
+                'yearly_order_totals':yearly_order_totals,
+                'chart_data':chart_data,
+                'all_years':all_years
+
+
+
 
             }
         except Exception as e:
@@ -418,16 +590,18 @@ def admin_edit_offer(request,id):
             offer = Offer.objects.get(id=id)
             context = {'offer': offer}
             if request.method == "POST":
-                offer.name = request.POST['name']
-                offer.off_percent = request.POST['percentage']
-                offer.start_date = request.POST['startdate']
-                offer.end_date = request.POST['enddate']
+                offer.name = request.POST['offer_name']
+                offer.off_percent = request.POST['off_percent']
+                offer.start_date = request.POST['start_date']
+                offer.end_date = request.POST['end_date']
                 offer.save()
                 messages.info(request, "Succesfully updated all details")
                 return redirect('adminoffer')
         except Exception as e:
             print(e)
-            messages.info(request, "Succesfully updated all details")
+            messages.info(request, "Updated failed")
+            return redirect('admineditoffer')
+
         return render(request, 'adminview/admin-edit-offer.html', context)
     return redirect('adminlogin')
 
@@ -916,3 +1090,18 @@ def admin_order_update(request, id):
             print(e)
             return redirect('adminorder')
     return redirect('adminlogin')
+
+def admin_sales_reports(request):
+    context = {}
+    try:
+        book = Bookvariant.objects.all()
+        cancel_orders = OrderProduct.objects.filter(item_cancel=True)
+
+        context = {
+            'book': book,
+            'cancel_orders': cancel_orders,
+        }
+    except Exception as e:
+        print(e)
+
+    return render(request, 'adminview/admin_sales_report.html', context)
