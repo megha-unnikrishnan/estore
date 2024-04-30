@@ -345,11 +345,14 @@ def checkout_view(request, id):
 
         address = UserAddress.objects.get(id=id)
         add_id = id
+        print(add_id)
         order_id = ''
         callback = "http://" + "127.0.0.1:8000" + "/cart/checkout-view/{}".format(add_id)
         payment_method = request.GET.get('payment_method')
+        print(payment_method)
         razorpay_id = request.GET.get('razor_id')
         print(address)
+        print(razorpay_id)
         user = CustomUser.objects.get(id=request.user.id)
         print(user)
         cart_items = CartItem.objects.filter(user=user)
@@ -589,15 +592,12 @@ def checkout_view(request, id):
         }
         return render(request, 'userview/placeorder.html', context)
 
-    except UserAddress.DoesNotExist:
-        messages.error(request, 'Address does not exist.')
-    except CustomUser.DoesNotExist:
-        messages.error(request, 'User does not exist.')
+
     except Exception as e:
         print(e)  # Log the error for debugging
         messages.error(request, 'An error occurred during checkout. Please try again later.')
 
-    return render(request, 'userview/placeorder.html')
+    return render(request, 'userview/placeorder.html',context)
 
 
 def confirm_order(request):

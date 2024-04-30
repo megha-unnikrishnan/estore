@@ -37,11 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'adminapp',
     'userapp',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
     'shop',
     'cart',
     'order'
@@ -56,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
+
 ]
 
 ROOT_URLCONF = 'bookstore.urls'
@@ -143,24 +138,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Your SMTP server address
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'demodjango96@gmail.com'  # Your email address or username
-EMAIL_HOST_PASSWORD = 'hufj uapl gbqw rlbz'  # Your email password or app-specific password
+EMAIL_HOST_USER = 'meghaunnikrishnan96@gmail.com'  # Your email address or username
+EMAIL_HOST_PASSWORD = 'ycyt sdhz ycqk hckm'  # Your email password or app-specific password
 
 
 
 AUTH_USER_MODEL = 'userapp.CustomUser'
 
 
-AUTHENTICATION_BACKENDS = [
-
-    'django.contrib.auth.backends.ModelBackend',
-
-    'allauth.account.auth_backends.AuthenticationBackend',
-
-]
 
 
-SITE_ID=1
+
+
 
 
 KEY='rzp_test_RaBoXTuzoN2GJs'
@@ -169,3 +158,10 @@ SECRET='OAdTbtcZTAYPSIkT4vK5pcGZ'
 
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+
+
+
+SITE_ID = 1
+
+# LOGIN_REDIRECT_URL='login'

@@ -268,11 +268,14 @@ def admin_logout(request):
 
 
 def admin_users(request):
-    if 'email' in request.session:
-        user = CustomUser.objects.all()
-        context = {'user': user}
-        return render(request, 'adminview/admin-users.html', context)
-    return redirect('adminlogin')
+    try:
+        if 'email' in request.session:
+            user = CustomUser.objects.all()
+            context = {'user': user}
+            return render(request, 'adminview/admin-users.html', context)
+        return redirect('adminlogin')
+    except Exception as e:
+        print(e)
 
 
 
@@ -436,15 +439,19 @@ def admin_edit_author(request, id):
     return redirect('adminlogin')
 
 
+
 @cache_control(no_cache=True, no_store=True)
 def admin_author(request):
-    if 'email' in request.session:
-        author=Author.objects.all()
-        context={
-            'author':author
-        }
-        return render(request,'adminview/adminauthor.html',context)
-    return redirect('adminlogin')
+    try:
+        if 'email' in request.session:
+            author = Author.objects.all()
+            context = {
+                'author': author
+            }
+            return render(request, 'adminview/adminauthor.html', context)
+        return redirect('adminlogin')
+    except Exception as e:
+        print(e)
 
 
 @cache_control(no_cache=True, no_store=True)

@@ -28,7 +28,7 @@ from decimal import Decimal
 def index(request):
     context={}
     try:
-        image = Bookvariant.objects.filter(Q(product__is_active=True))
+        image = Bookvariant.objects.filter(is_active=True)
 
         variant = Bookvariant.objects.all()
         product = Book.objects.all()
@@ -277,41 +277,6 @@ def product_detail(request, id):
 
 
 
-# @cache_control(no_cache=True, no_store=True)
-# def search_view(request):
-#     context = {
-#
-#     }
-#     try:
-#         query = request.GET.get('q')
-#         results = Bookvariant.objects.filter(
-#             Q(product__product_name__icontains=query) | Q(category__category_name__icontains=query))
-#         context = {
-#             'query': query, 'results': results
-#         }
-#
-#     except Exception as e:
-#         print(e)
-#     return render(request, 'userview/search.html', context)
-
-
-
-# def search_view(request):
-#     query = request.GET.get('q', '')
-#     results = []
-#
-#     try:
-#         if query:
-#             results = Bookvariant.objects.filter(
-#                 Q(product__product_name__icontains=query) | Q(category__category_name__icontains=query)
-#             ).values('product__product_name', 'category__category_name')[:5]  # Limiting to 10 results
-#     except Exception as e:
-#         print(e)
-#
-#     return JsonResponse({'results': list(results)})
-
-
-
 
 def search_view(request):
     if request.method == "GET":
@@ -344,21 +309,6 @@ def search_view(request):
             'query':query
         }
         return render(request, 'userview/search.html',context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def sort_products(request):
@@ -399,17 +349,11 @@ def product_list(request):
     low = Bookvariant.objects.filter(is_active=True).order_by('product__product_price')
     high = Bookvariant.objects.filter(is_active=True).order_by('-product__product_price')
 
-
-
-
-    print(category)
     context = {
         'image': image,
         'category': category,
         'low':low,
         'high':high
-
-
     }
     return render(request, 'userview/product-list.html', context)
 
@@ -482,9 +426,6 @@ def userprofile(request):
 
 @login_required
 def addaddress(request, id):
-
-
-
 
         try:
 

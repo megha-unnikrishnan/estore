@@ -2,58 +2,6 @@
 {% extends 'userview/index.html' %}
 {% load static %}
 {% block content %}
-<!--<div class="">-->
-<!--    <div class="container-fluid">-->
-<!--        <div class="section-header">-->
-<!--            <h1>Featured Product</h1>-->
-<!--        </div><br><br>-->
-
-<!--        <div class="row" style="margin: -3%;">-->
-<!--            {% if query %}-->
-<!--                <h2>Search results for "{{ query }}"</h2>-->
-<!--                <ul>-->
-<!--                    {% for i in results %}-->
-<!--                        <div class="col-md-6">-->
-<!--                            <div style="width: 100%;">-->
-<!--                                <div class="product-title">-->
-<!--                                    <p><a href="#"><b>{{i.product.product_name|upper}}</b></a></p>-->
-<!--                                    <span title="{{ i.rating }}/5">-->
-<!--                                        &lt;!&ndash; By default the star is full else it is empty otherwise it is half &ndash;&gt;-->
-<!--                                        <i style="color:yellow" class="fa fa-star{% if i.rating < 0.5%}-o{% elif i.rating >= 0.5 and i.rating < 1 %}-half-o{% endif %}" aria-hidden="true"></i>-->
-<!--                                        <i  style="color:yellow" class="fa fa-star{% if i.rating < 1.5%}-o{% elif i.rating >= 1.5 and i.rating < 2 %}-half-o{% endif %}" aria-hidden="true"></i>-->
-<!--                                        <i  style="color:yellow" class="fa fa-star{% if i.rating < 2.5%}-o{% elif i.rating >= 2.5 and i.rating < 3 %}-half-o{% endif %}" aria-hidden="true"></i>-->
-<!--                                        <i style="color:yellow" class="fa fa-star{% if i.rating < 3.5%}-o{% elif i.rating >= 3.5 and i.rating < 4 %}-half-o{% endif %}" aria-hidden="true"></i>-->
-<!--                                        <i style="color:yellow" class="fa fa-star{% if i.rating < 4.5%}-o{% elif i.rating >= 4.5 and i.rating < 5 %}-half-o{% endif %}" aria-hidden="true"></i>-->
-<!--                                    </span>-->
-<!--                                </div>-->
-
-<!--                                <div class="row">-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <a href="">-->
-<!--                                            <img src="{{i.product.product_image.url}}" width="300" height="350" alt="Product Image">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-
-<!--                                </div>-->
-
-<!--                                <div>-->
-<!--                                    <h2><i class="fas fa-rupee-sign"></i>{{i.discounted_price|floatformat:"0"}} <small><del>{{i.product_price|floatformat:"0"}}</del></small></h2>-->
-<!--                                    <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a><br>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    {% empty %}-->
-<!--                        <li>No results found.</li>-->
-<!--                    {% endfor %}-->
-<!--            {% endif %}-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-
-
-
 
 
 <div class="container">

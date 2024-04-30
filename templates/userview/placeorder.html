@@ -18,10 +18,12 @@
                         <!-- Three-dot icon -->
                         ⋮
                       </button>
+                         {% if address%}
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                        <a class="dropdown-item" href="{% url 'updateaddress' id=address.id o_id=1 %}">Update</a>
 <!--                      -->
                       </div>
+                         {% endif %}
                     </div>
                     {% if address%}
                     <h5 class="card-title">{{ address.name }}</h5>

@@ -151,6 +151,8 @@ class Bookvariant(models.Model):
     rating = models.IntegerField()
     max_quantity_per_person = models.PositiveIntegerField(default=4)
 
+    class Meta:
+        ordering=['id']
 
     def save(self, *args, **kwargs):
         value = self.variant_name
