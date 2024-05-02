@@ -2,34 +2,40 @@
 {% load static %}
 
 {% block content %}
-    <div class="container">
-        <h2 class="text-center mt-4 mb-4">Add Edition</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="productName">Edition Name:</label>
-                        <input type="text" class="form-control" id="productName" name="name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Description:</label>
-                        <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="productName">Publisher Name:</label>
-                        <input type="text" class="form-control" id="publish" name="publisher" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productName">Year:</label>
-                        <input type="number" class="form-control" id="year" name="year" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+    <div class="container mt-5">
+    <h2 class="text-center mt-4 mb-4">Add Edition</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Edition Name:</label>
+                            <input type="text" class="form-control" id="productName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="publish" class="form-label">Publisher Name:</label>
+                            <input type="text" class="form-control" id="publish" name="publisher" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Year:</label>
+                            <input type="number" class="form-control" id="year" name="year" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

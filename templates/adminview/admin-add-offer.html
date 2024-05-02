@@ -2,29 +2,68 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4">Add New Offer</h2>
-  <form method="POST">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="offerName">Offer Name</label>
-      <input type="text" class="form-control" id="offerName" placeholder="Enter offer name" name="name">
-    </div>
-    <div class="form-group">
-      <label for="percentage">Percentage Discount (%)</label>
-      <input type="number" class="form-control" id="percentage" placeholder="Enter percentage discount" name="percentage">
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date</label>
-      <input type="date" class="form-control" id="startDate" name="startdate">
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date</label>
-      <input type="date" class="form-control" id="endDate" name="enddate">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-</div>
-
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4">Add New Offer</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="offerName">Offer Name</label>
+            <input type="text" class="form-control" id="offerName" placeholder="Enter offer name" name="name">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="percentage">Percentage Discount (%)</label>
+            <input type="number" class="form-control" id="percentage" placeholder="Enter percentage discount" name="percentage">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" class="form-control" id="startDate" name="startdate">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" class="form-control" id="endDate" name="enddate">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
 {% endblock %}

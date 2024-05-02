@@ -1,84 +1,45 @@
 {% extends 'adminview/base.html' %}
 {% load static %}
 
+
 {% block content %}
-
-
-<div class="container-fluid">
-    <div class="table-wrapper bg-light border">
-        <div class="table-title bg-light">
-            <div class="row">
-                <div class="col-md-3 mt-5"></div>
-                <div class="col-md-6 text-center mt-5">
-                    <h2>EDIT YOUR PRODUCT </h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h2 class="card-title text-center">EDIT YOUR PRODUCT</h2>
                 </div>
-            </div>
-        </div>
-
-        <div class="card bg-grey p-5">
-            <div class="card-body" style="font-size: 1rem">
-                <h5 class="card-title text-white mb-5">PRODUCT</h5>
-
-                <!-- Edit category form  -->
-
-                <form enctype="multipart/form-data" method="post" >
-                    {% csrf_token %}
-                    <div class="row mb-4">
-                        <div class="col">
-                          <div class="form-outline">
-                                  <label class="form-label" for="form6Example1">PRODUCT Name</label>
-                              <input type="text" id="form6Example1" value="{{ book.product_name }}" class="form-control bg-grey text-black" name="name" required/>
-
-                          </div>
+                <div class="card-body bg-grey">
+                    <form enctype="multipart/form-data" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName" name="name" value="{{ book.product_name }}" required>
                         </div>
-                    </div>
-
-
-
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="mb-4 d-flex justify-content-center align-items-center gap-3">
-                                <label for="currentFile" class="form-label">Image</label>
-                                {% if book.product_image %}
-                                    <img src="{{ book.product_image.url }}"
-                                    alt="product image" style="width: 10vw;" id="currentFile" />
-                                {% endif %}
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <div class="mb-3">
-                                    <input class="form-control bg-grey text-black" type="file" id="formFile" name="image">
-                                    <label for="formFile" class="form-label">Choose your image</label>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="productImage" class="form-label">Product Image</label>
+                            <input type="file" class="form-control" id="productImage" name="image">
                         </div>
-                    </div>
-
-                    <!-- Description input -->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="productDesc"> Description</label>
-                        <textarea class="form-control bg-grey text-black" id="productDesc" rows="4" name="description"> {{ book.product_desc }} </textarea>
-
-                    </div>
-                      <div class="form-outline mb-4">
-                        <label class="form-label" for="productDesc"> Description</label>
-                        <textarea class="form-control bg-grey text-black" id="productreview" rows="4" name="review"> {{ book.review }} </textarea>
-
-                    </div>
-
-                    <!-- Submit button -->
-                    <div class="text-end">
-                        <button type="submit" class="btn-lg border-0 btn-success btn-block mb-4">Update</button>
-                    </div>
-                </form>
-                {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li class="{{ message.tags }}" style="color:green">{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-              <!-- Edit product form end -->
-                <hr />
+                        {% if book.product_image %}
+                        <div class="mb-3">
+                            <label>Current Image</label><br>
+                            <img src="{{ book.product_image.url }}" alt="Current Image" style="max-width: 200px;">
+                        </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label for="productDesc" class="form-label">Description</label>
+                            <textarea class="form-control" id="productDesc" rows="4" name="description" required>{{ book.product_desc }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productReview" class="form-label">Review</label>
+                            <textarea class="form-control" id="productReview" rows="4" name="review" required>{{ book.review }}</textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

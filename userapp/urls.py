@@ -30,7 +30,13 @@ urlpatterns=[
     path('updateprofile/',views.updateprofile,name='updateprofile'),
     path('sort/', views.sort_products, name='sort_products'),
     path('add-wallet',views.add_wallet,name='add_wallet'),
-    path('wallet-book/',views.wallet_book,name='wallet_book')
+    path('wallet-book/',views.wallet_book,name='wallet_book'),
+
+    path('user-review/',views.write_review,name='write_review'),
+
+    path('invoice-pdf-view/<int:order_id>/', views.viewinvoice.as_view(), name="invoice_pdf_view"),
+    path('download-invoice-pdf-view/<int:order_id>/', views.downloadinvoice.as_view(), name="download_invoice_pdf_view"),
+
 
 
 

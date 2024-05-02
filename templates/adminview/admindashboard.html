@@ -512,7 +512,9 @@
                 <th scope="col">Date</th>
                 <th scope="col">Order ID</th>
                 <th scope="col">Customer</th>
-                <th scope="col">Amount</th>
+                <th scope="col">Product Name</th>
+                 <th scope="col">Quantity</th>
+                <th scope="col">Paid Amount</th>
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
             </tr>
@@ -520,11 +522,13 @@
         <tbody>
             {% for order in orders %}
             <tr>
-                <td>{{ order.created }}</td>
-                <td>{{ order.order_id }}</td>
+                <td>{{ order.order_id.created }}</td>
+                <td>{{ order.order_id.order_id }}</td>
                 <td>{{ order.user.email }}</td>
-                <td>₹ {{ order.order_total }}</td>
-                <td>{{ order.status }}</td>
+                <td>{{ order.product.variant_name|truncatechars:22 }}</td>
+                 <td> {{ order.quantity }}</td>
+                <td>₹ {{ order.order_id.order_total }}</td>
+                <td>{{ order.order_id.status }}</td>
                 <td><a class="btn btn-sm btn-success" href="{% url 'adminorderupdate' order.id %}">Detail</a></td>
             </tr>
             {% endfor %}

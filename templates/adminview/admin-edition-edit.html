@@ -4,71 +4,60 @@
 {% block content %}
 
 
-<div class="container-fluid">
-    <div class="table-wrapper bg-light border">
-        <div class="table-title bg-light">
+<div class="container-fluid mt-5">
+    <div class="card border">
+        <div class="card-header bg-light">
             <div class="row">
-                <div class="col-md-3 mt-5"></div>
-                <div class="col-md-6 text-center mt-5">
-                    <h2>EDIT AUTHOR </h2>
+                <div class="col-md-3"></div>
+                <div class="col-md-6 text-center">
+                    <h2 class="text-uppercase">Edit Edition</h2>
                 </div>
             </div>
         </div>
 
-        <div class="card bg-grey p-5">
-            <div class="card-body" style="font-size: 1rem">
-                <h5 class="card-title text-white mb-5">EDITION  TABLE</h5>
+        <div class="card-body">
+            <h5 class="card-title text-dark mb-4">Edition Details</h5>
 
-                <!-- Edit category form  -->
-
-                <form enctype="multipart/form-data" method="post" style="border:1px solid black">
-                    {% csrf_token %}
-                    <div class="row mb-4">
-                        <div class="col">
-                          <div class="form-outline">
-                                  <label class="form-label" for="form6Example1">Edition Name</label>
-                              <input type="text" id="form6Example1" value="{{ edition.edition_name }}" class="form-control bg-grey text-black" name="name" required/>
-
-                          </div>
-                        </div>
-                           <div class="form-outline mb-4">
-                        <label class="form-label" for="productDesc"> Description</label>
-                        <textarea class="form-control bg-grey text-black" id="productDesc" rows="4" name="description"> {{  edition.edition_desc }} </textarea>
-
-                    </div>
-                        <div class="col">
-                          <div class="form-outline">
-                                  <label class="form-label" for="form6Example1">Edition Publisher</label>
-                              <input type="text" id="form6Example2" value="{{ edition.publisher }}" class="form-control bg-grey text-black" name="publisher" required/>
-
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="form-outline">
-                                  <label class="form-label" for="form6Example1">Edition year</label>
-                              <input type="text" id="form6Example3" value="{{ edition.year }}" class="form-control bg-grey text-black" name="year" required/>
-
-                          </div>
+            <!-- Edit edition form -->
+            <form enctype="multipart/form-data" method="post" class="border p-4 rounded">
+                {% csrf_token %}
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editionName" class="form-label">Edition Name</label>
+                            <input type="text" id="editionName" value="{{ edition.edition_name }}" class="form-control" name="name" required/>
                         </div>
                     </div>
-
-
-
-
-                    <!-- Description input -->
-
-
-                    <!-- Submit button -->
-                    <div class="text-end">
-                        <button type="submit" class="btn-lg border-0 btn-success btn-block mb-4">Update</button>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editionDesc" class="form-label">Description</label>
+                            <textarea class="form-control" id="editionDesc" rows="4" name="description">{{ edition.edition_desc }}</textarea>
+                        </div>
                     </div>
-                </form>
-              <!-- Edit product form end -->
-                <hr />
-            </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editionPublisher" class="form-label">Edition Publisher</label>
+                            <input type="text" id="editionPublisher" value="{{ edition.publisher }}" class="form-control" name="publisher" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="editionYear" class="form-label">Edition Year</label>
+                            <input type="text" id="editionYear" value="{{ edition.year }}" class="form-control" name="year" required/>
+                        </div>
+                    </div>
+                </div>
+                <!-- Submit button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Update</button>
+                </div>
+            </form>
+            <!-- Edit edition form end -->
+            <hr />
         </div>
     </div>
 </div>
+
     <!-- Bootstrap JS -->
 
 {% endblock %}

@@ -12,7 +12,6 @@ from userapp.models import WalletBook
 @login_required(login_url='login')
 def cancel_order(request, id):
     order_product = OrderProduct.objects.get(id=id)
-    # variant = Bookvariant.objects.get(id=order_product.product.id)
     order_obj = Order.objects.get(id=order_product.order_id.id)
     order = order_product.order_id
     user=request.user

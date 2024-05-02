@@ -1,5 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
+from django.views import View
+
 from order.models import Order, OrderProduct
 from cart.models import CartItem
 from .models import CustomUser, Forgotpassword, WalletBook
@@ -12,7 +14,7 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 import uuid
 from userapp.helper import send_forget_password_mail
-from shop.models import Category, Book, Bookvariant, MultipleImages, Author, Wishlist
+from shop.models import Category, Book, Bookvariant, MultipleImages, Author, Wishlist, ProductReview
 from django import template
 from django.views.decorators.cache import cache_control
 from django.db.models import Q, Count, Max, Avg, Sum
@@ -24,6 +26,10 @@ from django.contrib.auth.decorators import login_required
 from shop.models import Book
 import razorpay
 from decimal import Decimal
+# module for print pdf
+from io import BytesIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 @cache_control(no_cache=True, no_store=True)
 def index(request):
     context={}
@@ -93,6 +99,8 @@ def user_signup(request):
             phone = request.POST['mobile']
             password = request.POST['password']
             cpassword = request.POST['cpassword']
+            referal=request.POST['referal']
+            print(referal)
             if password == cpassword:
                 if CustomUser.objects.filter(email=email).exists():
                     messages.info(request, 'Email already exists')
@@ -109,21 +117,40 @@ def user_signup(request):
                     code = generate_referral_code()
                     register.otp = otp
                     register.referral_code = code
+
                     try:
-                        if register['referral_code']:
-                            ref_user = CustomUser.objects.filter(referral_code=register['referral_code']).first()
+                        if referal is not None:
+                            ref_user = CustomUser.objects.filter(referral_code=referal).first()
+                            print("refered user")
+                            print(ref_user)
+
+
                             if ref_user:
                                 referred_user = CustomUser.objects.get(id=ref_user.id)
-                                referred_user.wallet = 200
+                                referred_user.wallet += 200
                                 register.wallet = 50
                                 register.referred_by = referred_user.email
                                 referred_user.save()
+                                wallet_acc = WalletBook()
+                                wallet_acc.customer = referred_user
+                                wallet_acc.amount = referred_user.wallet
+                                wallet_acc.description = "Referal  Amount Credited"
+                                wallet_acc.increment = True
+                                wallet_acc.save()
                                 messages.success(request, "Referral code verified")
                             else:
                                 messages.error(request, "Invalid Referral code.")
                     except Exception as e:
                         print(e)
                     register.save()
+                    if register.wallet > 0:
+                        wallet_acc = WalletBook()
+                        wallet_acc.customer = register
+                        wallet_acc.amount = register.wallet
+                        wallet_acc.description = "Sign up bonus credited"
+                        wallet_acc.increment = True
+                        wallet_acc.save()
+                        print(f"Sign up bonus of {register.wallet} credited to {register.email}")
                     otp_expiry_time = timezone.now() + timedelta(minutes=1)
                     register.otp_expiry_time = otp_expiry_time
                     send_otp_email(email, otp)
@@ -152,8 +179,14 @@ def otp_verification(request, id):
                 user.is_active = True
                 user.otp = ''
                 user.save()
-                messages.success(request, "Account verified successfully. You can now log in.")
-                return redirect('login')
+                if user.wallet > 0:
+                    messages.success(request,
+                                     f"Account verified.You got a referal amount of Rs.{user.wallet} in your wallet.")
+                    return redirect('login')
+                else:
+                    messages.success(request, "Account verified.")
+                    return redirect('login')
+
             else:
                 messages.error(request, "Invalid OTP or OTP expired. Please try again.")
                 return redirect('otp-verification', id=user.id)
@@ -261,14 +294,16 @@ def product_detail(request, id):
     context = {}
     try:
         product = Bookvariant.objects.get(id=id)
+        reviews = ProductReview.objects.filter(product=product)
         image = MultipleImages.objects.filter(product=product)
         related_products = Bookvariant.objects.filter(
             Q(author=product.author) | Q(edition=product.edition) | Q(category=product.category)
-        )
+        )[:4]
         context = {
             'product': product,
             'image': image,
-            'related_products': related_products
+            'related_products': related_products,
+            'reviews':reviews
         }
 
     except Exception as e:
@@ -660,11 +695,142 @@ def add_wallet(request):
 
 def wallet_book(request):
     user=request.user
-    data=WalletBook.objects.filter(customer=user.id)
+    data=WalletBook.objects.filter(customer=user.id).order_by('-id')
     context={
         'data':data
     }
     return render(request,'userview/walletbook.html',context)
 
 
+def write_review(request):
+    if request.user.is_authenticated and not request.user.is_superuser:
+        try:
+            if request.method == "POST":
+                rating = request.POST.get('rating')
+                review_desc = request.POST.get('review_desc')
+                product_id = request.POST.get('id')
+                title=request.POST.get('title')
+                if product_id is None:
+                    return HttpResponse("Product ID is missing in the form data.")
+
+                try:
+                    product = Bookvariant.objects.get(id=product_id)
+                except Bookvariant.DoesNotExist:
+                    messages.error(request, 'Product does not exist.')
+                    return redirect('productdetail', id=product_id)
+
+                user_id = CustomUser.objects.get(id=request.user.id)
+
+                # Use filter() instead of get() to handle multiple OrderProduct objects
+                order_products = OrderProduct.objects.filter(user=user_id, product=product, item_cancel=False,
+                                                             return_request=False)
+
+                if not order_products.exists():
+                    messages.error(request, 'You cannot review the product. You have to buy the product to review it.')
+                    return redirect('productdetail', id=product_id)
+
+                try:
+                    reviewcheck = ProductReview.objects.get(user=user_id, product=product)
+                    messages.error(request, 'Review already exists!')
+                    return redirect('productdetail', id=product_id)
+                except ProductReview.DoesNotExist:
+                    pass
+
+                review = ProductReview(product=product, rating=rating, text=review_desc, user=user_id,title=title)
+                review.save()
+                messages.success(request, 'Review saved successfully!')
+                return redirect('productdetail', id=product_id)
+        except Exception as e:
+            print(e)
+            messages.error(request, 'An error occurred while processing your request.')
+        return redirect('productdetail', id=product_id)
+    else:
+        return redirect('login')
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
+class viewinvoice(View):
+    def get(self, request, order_id, *args, **kwargs):
+        user = request.user
+        try:
+            id = OrderProduct.objects.get(id=order_id).order_id.id
+            order = Order.objects.get(id=id)
+            order_products = OrderProduct.objects.filter(order_id=order)
+            data = {
+                "company": "ESTORE",
+                "address": "ERNAKULAM STREET",
+                "city": "Ernakulam",
+                "state": "Kerala",
+                "zipcode": "678654",
+
+                "phone": "+91 9008761234",
+                "email": "estore@gmail.com",
+                "website": "estore.com",
+                "user": order.address.name,
+                "customer_address": order.address.address,
+                "town": order.address.town,
+                "customer_email": user.email,
+                "nearby_location": order.address.nearby_location,
+                "district": order.address.district,
+                "zip_code": order.address.zipcode,
+                "customer_phone": user.phone,
+                "order_products": order_products,
+                "order": order,
+
+            }
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(False)
+        pdf = render_to_pdf('userview/order_invoice.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
+
+class downloadinvoice(View):
+    def get(self, request, order_id, *args, **kwargs):
+        user = request.user
+        try:
+            id = OrderProduct.objects.get(id=order_id).order_id.id
+            order = Order.objects.get(id=id)
+            order_products = OrderProduct.objects.filter(order_id=order)
+            data = {
+                "company": "ESTORE",
+                "address": "ERNAKULAM STREET",
+                "city": "Ernakulam",
+                "state": "Kerala",
+                "zipcode": "678654",
+
+                "phone": "+91 9008761234",
+                "email": "estore@gmail.com",
+                "website": "estore.com",
+                "user": order.address.name,
+                "customer_address": order.address.address,
+                "town": order.address.town,
+                "customer_email": user.email,
+                "nearby_location": order.address.nearby_location,
+                "district": order.address.district,
+                "zip_code": order.address.zipcode,
+                "customer_phone": user.phone,
+                "order_products": order_products,
+                "order": order,
+
+            }
+
+
+        except Exception as e:
+            print(e)
+
+        pdf = render_to_pdf('userview/order_invoice.html', data)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "orderinvoice_%s.pdf" % ("345678")
+        content = "attachment; filename=%s" % (filename)  # Remove the quotes around filename
+        response['Content-Disposition'] = content
+        return response
 

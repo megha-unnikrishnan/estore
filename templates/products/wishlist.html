@@ -7,8 +7,8 @@
         <div class="breadcrumb-wrap">
             <div class="container-fluid">
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Products</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'userindex' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'productlist' %}">Products</a></li>
                     <li class="breadcrumb-item active">Wishlist</li>
                 </ul>
             </div>
@@ -46,7 +46,7 @@
                                             <td> <p>{{i.product.variant_name}}</p></td>
                                             <td> <p>{{i.product.product_price}}</p></td>
 
-                                            <td><a href="{% url 'add_to_cart' i.product.id %}" class="btn btn-secondary" value="{{i.id}}">View Detail</a></td>
+                                            <td><a href="{% url 'productdetail' i.product.id %}" class="btn btn-secondary">View Detail</a></td>
                                               <td><a class="btn btn-danger" href="{% url 'remove_wishlist' i.product.id %}" ><i class="fa fa-trash"></i></a></td>
 
 

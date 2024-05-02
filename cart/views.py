@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
 from cart.models import CartItem, Cart, Coupons
-from shop.models import Bookvariant
+from shop.models import Bookvariant, Wishlist
 from django.shortcuts import redirect
 from django.contrib import messages
 from userapp.models import CustomUser, UserAddress, WalletBook
@@ -20,12 +20,6 @@ import pdb
 import razorpay
 from django.conf import settings
 
-
-# def show_cart(request):
-#     user = request.user
-#     cart_items = CartItem.objects.filter(user=user, cart__isnull=False)
-#     context = {'cart_items': cart_items}
-#     return render(request, 'userview/cart.html', context)
 
 
 def add_to_cart(request, id):
@@ -103,6 +97,7 @@ def cart_items(request, id):
         else:
             userid = CustomUser.objects.get(id=id)
             cartitem = CartItem.objects.filter(user=userid)
+
 
             if cartitem:
                 coupon = Coupons.objects.all()
@@ -405,12 +400,6 @@ def checkout_view(request, id):
             offerprice = offerprice + tax
 
         shipping_cost = 0
-        # if total < 7000:
-        #     shipping_cost = 90
-        # else:
-        #     shipping_cost = 0
-
-
         if offerprice < 3000:
             shipping_cost = 150
             offerprice = offerprice + shipping_cost
@@ -481,7 +470,11 @@ def checkout_view(request, id):
                 return redirect('confirm_order')
 
         if request.method == 'POST':
-
+            paymentmethod = request.POST['payment']
+            if paymentmethod == 'cod':
+                if grand_total > 1000:
+                    messages.error(request, "Cash on Delivery is not available for orders above Rs 1000.")
+                    return redirect('checkoutview', id=id)
             order = Order()
             order.user = user
             order.address = address

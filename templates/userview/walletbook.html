@@ -16,8 +16,9 @@
                                 <tr>
 
                                      <th scope="col">Created</th>
+                                     <th scope="col">Description</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Description</th>
+
 
 
                                 </tr>
@@ -26,9 +27,9 @@
                                 {% for i in data %}
                                 <tr>
                                       <td>{{i.created}}</td>
-
+                                     <td>{{i.description}}</td>
                                     <td>{{i.amount}}</td>
-                                    <td>{{i.description}}</td>
+
 
 
                                 </tr>

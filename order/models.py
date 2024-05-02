@@ -47,6 +47,9 @@ class Order(models.Model):
     def _str_(self):
         return self.order_id
 
+    class Meta:
+        ordering=['id']
+
 
 class OrderProduct(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)

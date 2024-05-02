@@ -3,70 +3,53 @@
 
 {% block content %}
 
-
-<div class="container-fluid">
-    <div class="table-wrapper bg-light border">
-        <div class="table-title bg-light">
-            <div class="row">
-                <div class="col-md-3 mt-5"></div>
-                <div class="col-md-6 text-center mt-5">
-                    <h2>EDIT AUTHOR </h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h2 class="card-title text-center">EDIT AUTHOR</h2>
                 </div>
-            </div>
-        </div>
-
-        <div class="card bg-grey p-5">
-            <div class="card-body" style="font-size: 1rem">
-                <h5 class="card-title text-white mb-5">AUTHOR  TABLE</h5>
-
-                <!-- Edit category form  -->
-
-                <form enctype="multipart/form-data" method="post" style="border:1px solid black">
-                    {% csrf_token %}
-                    <div class="row mb-4">
-                        <div class="col">
-                          <div class="form-outline">
-                                  <label class="form-label" for="form6Example1">Author Name</label>
-                              <input type="text" id="form6Example1" value="{{ author.author_name }}" class="form-control bg-grey text-black" name="name" required/>
-
-                          </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="mb-4 d-flex justify-content-center align-items-center gap-3">
-                                <label for="currentFile" class="form-label">Image</label>
-                                {% if author.author_image %}
-                                    <img src="{{ author.author_image.url }}"
-                                    alt="author image" style="width: 10vw;" id="currentFile" />
-                                {% endif %}
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <div class="mb-3">
-                                    <input class="form-control bg-grey text-black" type="file" id="formFile" name="image">
-                                    <label for="formFile" class="form-label">Choose your image</label>
+                <div class="card-body bg-grey">
+                    <form enctype="multipart/form-data" method="post" style="border:1px solid black">
+                        {% csrf_token %}
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <label class="form-label" for="authorName">Author Name</label>
+                                    <input type="text" id="authorName" value="{{ author.author_name }}" class="form-control bg-grey text-black" name="name" required/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Description input -->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="productDesc"> Description</label>
-                        <textarea class="form-control bg-grey text-black" id="productDesc" rows="4" name="description"> {{ author.author_desc }} </textarea>
-
-                    </div>
-
-                    <!-- Submit button -->
-                    <div class="text-end">
-                        <button type="submit" class="btn-lg border-0 btn-success btn-block mb-4">Update</button>
-                    </div>
-                </form>
-              <!-- Edit product form end -->
-                <hr />
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="mb-4 d-flex justify-content-center align-items-center gap-3">
+                                    <label for="currentFile" class="form-label">Image</label>
+                                    {% if author.author_image %}
+                                    <img src="{{ author.author_image.url }}" alt="author image" style="width: 10vw;" id="currentFile" />
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <div class="mb-3">
+                                        <input class="form-control bg-grey text-black" type="file" id="formFile" name="image">
+                                        <label for="formFile" class="form-label">Choose your image</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Description input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="authorDesc">Description</label>
+                            <textarea class="form-control bg-grey text-black" id="authorDesc" rows="4" name="description">{{ author.author_desc }}</textarea>
+                        </div>
+                        <!-- Submit button -->
+                        <div class="text-end">
+                            <button type="submit" class="btn-lg border-0 btn-success btn-block mb-4">Update</button>
+                        </div>
+                    </form>
+                    <!-- Edit product form end -->
+                    <hr />
+                </div>
             </div>
         </div>
     </div>

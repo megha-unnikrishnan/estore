@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<style>
+
+    .invoice-item {
+    margin-bottom: 10px;
+}
+
+.invoice-item .item-label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.invoice-item .item-value {
+    font-size: 13px;
+}
+
+.small-item {
+    font-size: 12px;
+}
+
+
+
+</style>
+</head>
+
+<body>
+    <!-- Content for Static Frame 'header_frame' -->
+   <div id="header_content">
+    <h1 style="font-size: 30px; color: #333; text-align: left;">
+        <span class="text-primary font-weight-bold mr-1" style="font-size: 35px; color: #FF6F61;">E</span>STORE
+    </h1>
+       <h2 style="float:right">Order Id: #{{ order.order_id }}</h2>
+</div>
+<br><br>
+
+
+    <!-- HTML Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+			Billed To:
+		</h1>
+            <table class="table table-bordered">
+
+                <tr>
+                    <td><strong>Company:</strong></td>
+                    <td>{{ company }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Phone:</strong></td>
+                    <td>{{ phone }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Address:</strong></td>
+                    <td>{{ city }}, {{ state }}, {{ zipcode }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td>{{ email }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Website:</strong></td>
+                    <td>{{ website }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+    <hr>
+
+	<div id="delivery_address">
+    	<h1>
+			Shipped To:
+		</h1>
+    </div>
+	<table>
+    		<tr>
+    			<td>{{ user }}</td>
+
+    		</tr>
+        <tr>
+            	<td>{{ customer_phone }}</td>
+        </tr>
+    		<tr>
+    			<td>{{ customer_address }} {{town}},{{ nearby_location }}, {{ district }}</td>
+
+    		</tr>
+        <tr><td>{{ customer_email }}</td></tr>
+
+    		<tr>
+    			<td>{{ zip_code }}</td>
+
+    		</tr>
+    </table>
+	<hr>
+	<div class="text-center bg-secondary" style="background-color: #FF6F61; text-align: left; padding: 10px">
+		<h1>ORDERS </h1>
+	</div>
+
+    <table style="text-align: center">
+    	<tr>
+    		<th>Product</th>
+    		<th>Price</th>
+    		<th>Quantity</th>
+    		<th>Status</th>
+    		<th>Total</th>
+    	</tr>
+
+		{% for product in order_products %}
+    	<tr>
+    		<td> {{ product.product.variant_name }} </td>
+    		<td> {{ product.product_price }} </td>
+    		<td> {{ product.quantity }} </td>
+			{% if product.is_returned %}
+    		<td> Returned </td>
+			{% elif product.item_cancel %}
+    		<td> Cancelled </td>
+			{% else %}
+    		<td> Delivered </td>
+			{% endif %}
+			<td>Rs. {{ product.product_price }} * {{ product.quantity }}</td>
+
+    	</tr>
+		{% endfor %}
+
+    </table>
+
+    <hr>
+   <div class="row justify-content-end mt-4" style="text-align: right">
+    <div class="col-md-4">
+        <div class="border p-3 ">
+            <p>Total: <strong>Rs.</i>{{ order.subtotal }}</strong></p>
+            <p>Product Discount: <strong>Rs.{{ order.discount_amount }}</strong></p>
+            <p>Category Discount: <strong>Rs.{{ order.category_amount|floatformat:2 }}</strong></p>
+            <p>Coupon Discount: <strong>Rs.{{ order.coupon_mount|floatformat:2 }}</strong></p>
+            <p>Tax: <strong>Rs.{{ order.tax }}</strong></p>
+            <p>Shipping: <strong>Rs.{{ order.shipping }}</strong></p>
+            <hr>
+            <p>Total Amount: <strong>Rs.{{ order.order_total }}</strong><strong></strong></p>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

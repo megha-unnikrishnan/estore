@@ -40,8 +40,16 @@ def wishlistview(request):
             messages.error(request, 'You need to login for add to wishlist!')
             return redirect('login')
         else:
-            user=request.user
-            wishlist = Wishlist.objects.filter(user=user)
+            user_id=request.user
+            wishlist = Wishlist.objects.filter(user=user_id)
+            if not wishlist:
+                messages.error(request, 'You have not added any items to wishlist!')
+                user_id = CustomUser.objects.get(id=request.user.id)
+                wishlist = Wishlist.objects.filter(user=user_id).count()
+
+                print('wishlist count', wishlist)
+                request.session['wishlist'] = wishlist
+                return redirect('userindex')
             print(wishlist)
 
             context = {

@@ -79,11 +79,15 @@
 
                     {% if order.order_id.status == 'Delivered' %}
 
-<!--                    <div class="col-md-4">-->
-<!--                        <a class="btn btn-sm btn-warning mb-2" href="" target="_blank">View Invoice<i class="bi bi-file-earmark-excel"></i></a>-->
-<!--					<a class="btn btn-sm btn-info"  href="{}">Download Invoice <i class="bi bi-download"></i></a>-->
+                   <div class="col-md-4">
+                  <a href="{% url 'invoice_pdf_view' order.id %}" class="btn btn-sm btn-warning mb-2" target="_blank">
+                      <i class="bi bi-file-earmark-excel"></i> View Invoice
+                  </a>
+                  <a href="{% url 'download_invoice_pdf_view' order.id %}" class="btn btn-sm btn-info">
+                      <i class="bi bi-download"></i> Download Invoice
+                  </a>
+              </div>
 
-<!--                    </div>-->
                     {% endif %}
                   </div>
                 </div>
@@ -193,9 +197,6 @@
                         Item Returned
                       </p>
                     {% else %}
-<!--                    <p class="text-danger text-left m-3" data-bs-target="modalName" type="button" data-bs-toggle=" " class="text-left btn btn-danger">-->
-<!--                      Cancel Return-->
-<!--                    </p>-->
                     {% endif %}
                 {% else %}
                 <p class="text-danger text-left m-3" data-bs-target="#returnModal-{{ order.id }}" type="button" data-bs-toggle="modal" class="text-left btn btn-danger">
@@ -335,12 +336,6 @@
             });
         });
 });
-
-
-
-
-
-
 </script>
     {% endfor %}
     {% endif %}

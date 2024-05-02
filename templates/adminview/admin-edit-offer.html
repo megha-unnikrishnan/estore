@@ -4,70 +4,43 @@
 {% block content %}
 
 
-<div class="col-12 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body col-12">
-            <h4 class="card-title">Edit offer</h4>
-            <p class="card-description">UPDATE OFFER</p>
-            <form class="forms-sample" method="POST" action="" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="col-12">
-
-                        <div class="d-flex">
-                            <div class="form-group col-6">
-                                <label for="">Offer Name</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="offer_name"
-                                    name ="offer_name"
-                                    placeholder="{{ offer.name }}"
-                                    value="{{ offer.name }}"
-                                required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">Edit Offer</h4>
+                    <form class="forms-sample" method="POST" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="offer_name" class="form-label">Offer Name</label>
+                            <input type="text" class="form-control" id="offer_name" name="offer_name" placeholder="Enter offer name" value="{{ offer.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="off_percent" class="form-label">Offer Percentage</label>
+                            <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter offer percentage" value="{{ offer.off_percent }}" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ offer.start_date|date:'Y-m-d' }}" required>
                             </div>
-                            <div class="form-group col-6">
-                                <label for="">Offer percentage</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id ="off_percent"
-                                    name ="off_percent"
-                                    placeholder="{{ offer.off_percent }}"
-                                    value="{{ offer.off_percent }}"
-                                required>
+                            <div class="col-md-6 mb-3">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ offer.end_date|date:'Y-m-d' }}" required>
                             </div>
                         </div>
-
-                        <div class="d-flex">
-                            <div class="form-group col-6">
-                                <label >Start Date</label>
-                                <input
-                                    type="date"
-                                    class="form-control"
-                                    id="start_date"
-                                    name ="start_date"
-                                    value="{{ offer.start_date| date:'Y-m-d' }}"
-                                required>
-                            </div>
-                            <div class="form-group col-6">
-                                <label >End date</label>
-                                <input
-                                    type="date"
-                                    class="form-control"
-                                    id ="end_date"
-                                    name ="end_date"
-                                    value="{{ offer.end_date | date:'Y-m-d' }}"
-                                required>
-                            </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
                         </div>
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    </form>
                 </div>
-            </form>
-
-
+            </div>
         </div>
     </div>
 </div>
+
+
     <!-- Bootstrap JS -->
 
 {% endblock %}

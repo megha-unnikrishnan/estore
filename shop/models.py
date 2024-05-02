@@ -198,7 +198,13 @@ class Wishlist(models.Model):
     def __str__(self) -> str:
         return self.product.variant_name
 
-
+class ProductReview(models.Model):
+    product = models.ForeignKey(Bookvariant, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    title=models.CharField(max_length=150,null=True)
+    rating = models.IntegerField(default=0)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 

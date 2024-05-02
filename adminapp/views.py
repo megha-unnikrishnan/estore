@@ -59,7 +59,7 @@ def admin_dashboard(request):
     if 'email' in request.session:
         context={}
         try:
-            orders = Order.objects.all().order_by('-id')
+            orders = OrderProduct.objects.all().order_by('-id')
             order_count = orders.count()
             order_total = Order.objects.aggregate(total=Sum('order_total'))['total']
             today = date.today()
@@ -570,7 +570,7 @@ def admin_offer_add(request):
                 offer=Offer(name=name,off_percent=percentage,start_date=startdate,end_date=enddate)
                 offer.save()
                 messages.success(request, 'Saved successfully')
-                return redirect("admincategory")
+                return redirect("adminoffer")
 
         except Exception as e:
             print(e)

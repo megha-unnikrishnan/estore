@@ -9,6 +9,11 @@
                         <div class="checkout-inner">
                             <div class="billing-address">
                                 <h2>Deliver to this Address</h2>
+                                <div class="messages" style="color:red;text-align:center">
+         {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+     </div>
 
         <div class="col-md-12">
             <div class="card mb-12">
@@ -49,67 +54,7 @@
             </div>
         </div>
 
-<!--                                <div class="row">-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>First Name</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="First Name">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>Last Name"</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="Last Name">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>E-mail</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="E-mail">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>Mobile No</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="Mobile No">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-12">-->
-<!--                                        <label>Address</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="Address">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>Country</label>-->
-<!--                                        <select class="custom-select">-->
-<!--                                            <option selected>United States</option>-->
-<!--                                            <option>Afghanistan</option>-->
-<!--                                            <option>Albania</option>-->
-<!--                                            <option>Algeria</option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>City</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="City">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>State</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="State">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <label>ZIP Code</label>-->
-<!--                                        <input class="form-control" type="text" placeholder="ZIP Code">-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-12">-->
-<!--                                        <div class="custom-control custom-checkbox">-->
-<!--                                            <input type="checkbox" class="custom-control-input" id="newaccount">-->
-<!--                                            <label class="custom-control-label" for="newaccount">Create an account</label>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-12">-->
-<!--                                        <div class="custom-control custom-checkbox">-->
-<!--                                            <input type="checkbox" class="custom-control-input" id="shipto">-->
-<!--                                            <label class="custom-control-label" for="shipto">Ship to different address</label>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col-md-12">&ndash;&gt;-->
-<!--                                        <div class="custom-control custom-checkbox">-->
-<!--                                            <input type="checkbox" class="custom-control-input" id="shipto" onchange="redirectToAddressPage(this)">-->
-<!--                                            <label class="custom-control-label" for="shipto">Ship to different address</label>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+
 
 
 <div class="col-md-12">
@@ -199,9 +144,6 @@
                             <div class="checkout-payment">
                                 <div class="payment-methods">
                                     <h1>Payment Methods</h1>
-
-
-
                                    <div class="payment-method">
                                         <div class="custom-control custom-radio">
                                             <input type="radio" class="custom-control-input" id="payment-razorpay" name="payment" value="razorpay">
@@ -239,10 +181,7 @@
                                 <div class="checkout-btn">
                                     <input type="hidden" id="order_id" value="{{ razorpay_order_id }}">
                                     <button type="submit" id="place-order">Place order</a></button>
-<!--                                    <div id="razorpay-prefill-details"-->
-<!--     data-razorpay-name="{{ user.first_name }} {{ user.last_name }}"-->
-<!--     data-razorpay-email="{{ user.email }}">-->
-<!--</div>-->
+
                                     <input type="hidden" id="razorpay-name" value="{{ user.first_name }} {{ user.last_name }}">
 <input type="hidden" id="razorpay-email" value="{{ user.email }}">
                                 </div>
@@ -264,74 +203,7 @@
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-
-
-
-
-
-
-<!--function handleRazorpayPayment() {-->
-<!--    console.log('handleRazorpayPayment called');-->
-
-<!--    var name = document.getElementById('razorpay-name').value;-->
-<!--    var email = document.getElementById('razorpay-email').value;-->
-
-<!--    var order_id = "{{ razorpay_order_id }}";-->
-
-<!--    console.log('Order ID:', order_id);-->
-
-<!--    var options = {-->
-<!--        "key": "rzp_test_RaBoXTuzoN2GJs",-->
-<!--        "amount": {% widthratio grand_total 1 100%},-->
-<!--        "currency": "INR",-->
-<!--        "name": "EbookStore",-->
-<!--        "description": "Test Transaction",-->
-<!--        "image": "https://example.com/your_logo",-->
-<!--        "order_id": order_id,-->
-<!--        "prefill": {-->
-<!--            "name": name,-->
-<!--            "email": email-->
-<!--        },-->
-<!--        "handler": function (response) {-->
-<!--            var callbackURL = '{{ callback }}';-->
-<!--                var razor_id=response.razorpay_payment_id-->
-<!--                // Append Razorpay payment method value to the URL query string-->
-<!--                callbackURL += '?payment_method=razorpay&razor_id=' + razor_id;-->
-<!--                window.location.href = callbackURL;-->
-<!--        },-->
-<!--        "theme": {-->
-<!--            "color": "#3399cc"-->
-<!--        }-->
-<!--    };-->
-
-<!--    console.log('Razorpay options:', options);-->
-
-<!--    var rzp1 = new Razorpay(options);-->
-<!--    rzp1.open();-->
-<!--}-->
-
-<!--document.getElementById('place-order').addEventListener('click', function() {-->
-
-
-
-
-<!--    var razorpayRadio = document.getElementById('payment-razorpay');-->
-<!--    if (razorpayRadio.checked) {-->
-<!--        event.preventDefault()-->
-<!--        handleRazorpayPayment();-->
-
-<!--    } else {-->
-<!--        console.log('Other payment method selected');-->
-<!--    }-->
-<!--});-->
-
-
-
-
-
-
-
-  function handleRazorpayPayment() {
+function handleRazorpayPayment() {
         var options = {
             "key": "rzp_test_RaBoXTuzoN2GJs", // Enter the Key ID generated from the Dashboard
             "amount": "{% widthratio grand_total 1 100 %}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -369,16 +241,7 @@
              // Proceed with other payment methods
         }
     });
-
-
-
-
-
-
-
 </script>
-
-
 {% endblock %}
 
 

@@ -2,56 +2,53 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5" style="width: 50%;">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+                  <div class="messages" style="color:red;">
+         {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+     </div>
 
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-         <div class="mb-3">
-                    <label for="coupon_code">Coupon Code</label>
-                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" required>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center">Add Coupon</h5>
                 </div>
-
-
-           <div class="mb-3">
-                    <label for="min_amount">Min Amount</label>
-                    <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount" required>
+                <div class="card-body">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="coupon_code" class="form-label">Coupon Code</label>
+                            <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="min_amount" class="form-label">Min Amount</label>
+                            <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="off_percent" class="form-label">Off Percentage</label>
+                            <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="max_discount" class="form-label">Max Discount</label>
+                            <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="expiry_date" class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control" id="expiry_date" name="expiry_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="coupon_stock" class="form-label">Coupon Stock</label>
+                            <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">ADD</button>
+                        </div>
+                    </form>
                 </div>
-
-
-                    <div class="mb-3">
-                    <label for="off_percent">Off Percentage</label>
-                    <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage" required>
-                </div>
-
-
-
-            <div class="mb-3">
-             <label for="max_discount">Max Discount</label>
-                <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount" required>
-        </div>
-
-
-
-
-        <div class="mb-3">
-            <label for="expiry_date">Expiry Date</label>
-                    <input type="date" class="form-control" id="expiry_date" name="expiry_date" placeholder="Enter expiry date of the coupon" required>
-        </div>
-
-          <div class="mb-3">
-            <label for="expiry_date">Coupon stock</label>
-                    <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock" required>
-        </div>
-
-
-
-       <div class="mb-3">
-                <button type="submit" class="btn btn-primary mr-2">ADD</button>
-<!--              -->
             </div>
-
-    </form>
+        </div>
+    </div>
 </div>
-
 {% endblock %}

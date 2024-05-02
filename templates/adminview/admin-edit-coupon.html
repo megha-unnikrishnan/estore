@@ -3,59 +3,50 @@
 
 {% block content %}
 <div class="container mt-5" style="width: 50%;">
-         <div class="messages" style="color:red;">
-         {% for message in messages %}
-                                {{ message }}
-                            {% endfor %}
-     </div>
+    <h2 class="mb-4">Edit Coupon</h2> <!-- Title added here -->
+
+    <div class="messages" style="color:red;">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
 
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-         <div class="mb-3">
-                    <label for="coupon_code">Coupon Code</label>
-                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" value="{{coupon.coupon_code}}" required>
-                </div>
-
-
-           <div class="mb-3">
-                    <label for="min_amount">Min Amount</label>
-                    <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount" value="{{coupon.min_amount}}" required>
-                </div>
-
-
-                    <div class="mb-3">
-                    <label for="off_percent">Off Percentage</label>
-                    <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage"  value="{{coupon.off_percent}}" required>
-                </div>
-
-
-
-            <div class="mb-3">
-             <label for="max_discount">Max Discount</label>
-                <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount" value="{{coupon.max_discount}}" required>
+        <div class="mb-3">
+            <label for="coupon_code">Coupon Code</label>
+            <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" value="{{coupon.coupon_code}}" required>
         </div>
 
+        <div class="mb-3">
+            <label for="min_amount">Min Amount</label>
+            <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount" value="{{coupon.min_amount}}" required>
+        </div>
 
+        <div class="mb-3">
+            <label for="off_percent">Off Percentage</label>
+            <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage"  value="{{coupon.off_percent}}" required>
+        </div>
 
+        <div class="mb-3">
+            <label for="max_discount">Max Discount</label>
+            <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount" value="{{coupon.max_discount}}" required>
+        </div>
 
         <div class="mb-3">
             <label for="expiry_date">Expiry Date</label>
-                    <input type="date" class="form-control" id="expiry_date" name="expiry_date" placeholder="Enter expiry date of the coupon" value="{{coupon.expiry_date| date:'Y-m-d'}}" required>
+            <input type="date" class="form-control" id="expiry_date" name="expiry_date" placeholder="Enter expiry date of the coupon" value="{{coupon.expiry_date| date:'Y-m-d'}}" required>
         </div>
 
-          <div class="mb-3">
-            <label for="expiry_date">Coupon stock</label>
-                    <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock" value="{{coupon.coupon_stock}}" required>
+        <div class="mb-3">
+            <label for="coupon_stock">Coupon Stock</label>
+            <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock" value="{{coupon.coupon_stock}}" required>
         </div>
 
-
-
-       <div class="mb-3">
-                <button type="submit" class="btn btn-primary mr-2">ADD</button>
-<!--              -->
-            </div>
-
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary mr-2">Update</button>
+        </div>
     </form>
 </div>
 
