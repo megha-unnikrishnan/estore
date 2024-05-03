@@ -10,6 +10,7 @@ urlpatterns=[
     path('suggest_page_view/',views.suggest_page_view,name='suggest_page_view'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
     path('confirm_order/', views.confirm_order, name='confirm_order'),
+    path('payment_failure/',views.payment_failure,name='paymentfailure')
 
 
 ]

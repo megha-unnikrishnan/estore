@@ -344,6 +344,7 @@ def checkout_view(request, id):
         order_id = ''
         callback = "http://" + "127.0.0.1:8000" + "/cart/checkout-view/{}".format(add_id)
         payment_method = request.GET.get('payment_method')
+
         print(payment_method)
         razorpay_id = request.GET.get('razor_id')
         print(address)
@@ -407,6 +408,14 @@ def checkout_view(request, id):
 
 
         grand_total = mrp - discount - discount_amount-category_offer_amount + tax + shipping_cost
+        if request.method == "GET":
+            # Check if payment failed
+            payment_failed = request.GET.get('payment_failed', False)
+            if payment_failed:
+                error_code = request.GET.get('error_code')
+                error_description = request.GET.get('error_description')
+                # Handle the error message accordingly
+                messages.error(request, f"Payment failed. Error code: {error_code}. Description: {error_description}")
         if payment_method == 'razorpay':
             order = Order()
             order.user = user
@@ -468,6 +477,7 @@ def checkout_view(request, id):
                 cartitem = CartItem.objects.filter(user=user_id).count()
                 request.session['cart'] = cartitem
                 return redirect('confirm_order')
+
 
         if request.method == 'POST':
             paymentmethod = request.POST['payment']
@@ -595,7 +605,8 @@ def checkout_view(request, id):
 
 def confirm_order(request):
     return render(request, 'products/confirm-order.html')
-
+def payment_failure(request):
+    return render(request, 'userview/payment_failure.html')
 
 def suggest_page_view(request):
     query = request.GET.get('q')

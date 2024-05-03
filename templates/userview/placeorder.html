@@ -226,7 +226,24 @@ function handleRazorpayPayment() {
             }
         };
         console.log(options)
-        var rzp1 = new Razorpay(options);
+         var rzp1 = new Razorpay(options);
+         var rzp1 = new Razorpay(options);
+
+            rzp1.on('payment.failed', function (response){
+            var errorInfo = {
+                code: response.error.code,
+                description: response.error.description,
+                reason: response.error.reason,
+                order_id: response.error.metadata.order_id,
+                payment_id: response.error.metadata.payment_id
+            };
+            var errorURL = '{{ callback }}';
+            errorURL += '?payment_failed=true';
+            errorURL += '&error_code=' + errorInfo.code;
+            errorURL += '&error_description=' + errorInfo.description;
+            // Redirect the user to the error view
+            window.location.href = errorURL;
+         });
 
         rzp1.open();
     }

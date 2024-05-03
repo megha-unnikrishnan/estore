@@ -1,0 +1,43 @@
+{% extends 'userview/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+  <style>
+    /* Custom CSS */
+    .my-prod-row-class {
+      background-color: #f8f9fa; /* Light grey background */
+      padding: 20px 0;
+    }
+    .anchor {
+      color: #007bff; /* Blue color for links */
+      text-decoration: none;
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <!-- Navigation Links -->
+      <div class="my-prod-row-class text-center">
+        <p style="font-size: 24px; padding-top: 11px;">
+          <a class="anchor" href="{% url 'userindex' %}">Home</a> |
+          <a class="anchor" href="{% url 'orderslist' %}">Order Summary</a>
+        </p>
+      </div>
+
+      <!-- Success Alert -->
+      <div class="alert alert-success mt-3" role="alert">
+        <h4 class="alert-heading">Payment failed!</h4>
+        <p>Your order has been successfully placed. Thank you for your purchase!</p>
+        <hr>
+        <p class="mb-0">View <a href="{% url 'orderslist' %}">order summary</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
