@@ -190,7 +190,7 @@
          <h1>{{ product.product_name }}</h1>
     <!-- Display product details -->
 <div class="container">
-  <h2 class="my-4">Customer Reviews</h2>
+  <h2 class="my-4">Customer Reviews({{ reviews|length }})</h2>
   {% if reviews %}
   <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for review in reviews %}

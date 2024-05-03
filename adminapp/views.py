@@ -82,7 +82,7 @@ def admin_dashboard(request):
                     return HttpResponseBadRequest('Invalid date format')
 
                 # Filter orders based on the selected date range
-                orders = Order.objects.filter(created__range=(date_from, date_to))
+                orders = OrderProduct.objects.filter(order_id__created__range=(date_from, date_to))
 
             # Calculate yearly sales
             yearly_sales = (
@@ -128,6 +128,15 @@ def admin_dashboard(request):
                 .annotate(monthly_total=Sum('order_total'))
                 .order_by('year', 'month')
             )
+
+            chart_labels = []
+            chart_datas = []
+            for sale in monthly_sales:
+                chart_labels.append(sale['month_name'])
+                chart_datas.append(sale['monthly_total'])
+
+
+
 
             # Calculate monthly orders
             monthly_orders = (
@@ -193,15 +202,22 @@ def admin_dashboard(request):
             # Now you have the total sum, you can assign it to a common variable
             common_discount = total_discount if total_discount else 0
 
+            # product
             most_ordered_books = OrderProduct.objects.values('product__product__product_name').annotate(
                 total_quantity=Coalesce(Sum('quantity'), 0)).order_by('-total_quantity')
             # Extract data for plotting
             book_names = [item['product__product__product_name'] for item in most_ordered_books]
             quantities = [item['total_quantity'] for item in most_ordered_books]
-            # Print or use the most ordered books
-            # for book in most_ordered_books:
-            #     print(f"Book: {book['product__variant_name']} - Total Quantity: {book['total_quantity']}")
-            # Get the start date of the current year
+
+
+            # catgeory
+            most_ordered_category_books = OrderProduct.objects.values('product__category__category_name').annotate(
+                total_quantity=Coalesce(Sum('quantity'), 0)).order_by('-total_quantity')
+            # Extract data for plotting
+            category_book_names = [item['product__category__category_name'] for item in most_ordered_category_books]
+            cat_quantities = [item['total_quantity'] for item in most_ordered_category_books]
+
+
             current_year_start = datetime(datetime.now().year, 1, 1)
 
             # Calculate year-wise order total
@@ -248,7 +264,12 @@ def admin_dashboard(request):
                 'quantities': quantities,
                 'yearly_order_totals':yearly_order_totals,
                 'chart_data':chart_data,
-                'all_years':all_years
+                'all_years':all_years,
+                'chart_labels':chart_labels,
+                'chart_datas':chart_datas,
+                'category_book_names':category_book_names,
+                'cat_quantities':cat_quantities
+
 
 
 

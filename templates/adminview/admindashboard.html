@@ -405,10 +405,22 @@
                 <canvas id="myChart"></canvas>
             </div>
         </div>
+         <div class="col-sm-6 col-xl-6">
+            <div class="bg-light rounded h-100 p-4" style="width:100%">
+                <h6 class="mb-4">Most Selling Category</h6>
+                <canvas id="category"></canvas>
+            </div>
+        </div>
         <div class="col-sm-6 col-xl-6">
             <div class="bg-light rounded h-100 p-4" style="width:100%">
                 <h6 class="mb-4">Yearly Sales</h6>
                 <canvas id="yearlySalesChart"></canvas>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-light rounded h-100 p-4" style="width:100%">
+                <h6 class="mb-4">Monthly Sales</h6>
+                <canvas id="monthlySalesChart" width="400" height="200"></canvas>
             </div>
         </div>
     </div>
@@ -428,6 +440,30 @@
                 datasets: [{
                     label: 'Total Quantity',
                     data: {{ quantities|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+ <script>
+        var ctx = document.getElementById('category').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ category_book_names|safe }},
+                datasets: [{
+                    label: 'Total Quantity',
+                    data: {{ cat_quantities|safe }},
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderWidth: 0
                 }]
@@ -470,6 +506,43 @@
         }
     });
 </script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('monthlySalesChart').getContext('2d');
+    var chartData = {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Monthly Sales',
+            data: {{ chart_datas|safe }},
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+    var monthlySalesChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: function(value, context) {
+                        return '$' + value;  // Customize the format of the data label as needed
+                    }
+                }
+            }
+        }
+    });
+</script>
+
   </div>
 </div>
 <div class="container-fluid pt-4 px-4" style="background-color: white;" xmlns="http://www.w3.org/1999/html">
