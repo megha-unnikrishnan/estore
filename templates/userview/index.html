@@ -1,6 +1,18 @@
 {% extends 'userview/base.html' %}
 {% load static %}
 {% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="messages" style="color: red;">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
         <div class="header">
             <div class="container-fluid">
                 <div class="row">
@@ -10,6 +22,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'userindex' %}"><i class="fa fa-home"></i>HOME</a>
                                 </li>
+
                                   {% for i in category %}
 
                                 <li class="nav-item">

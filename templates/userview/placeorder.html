@@ -4,16 +4,22 @@
 {% block content %}
         <div class="checkout">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="checkout-inner">
-                            <div class="billing-address">
-                                <h2>Deliver to this Address</h2>
-                                <div class="messages" style="color:red;text-align:center">
+                <div class="messages" style="    color: red;
+    text-align: left;
+    margin-left: 17%;
+    margin-bottom: 3%;
+}">
          {% for message in messages %}
                                 {{ message }}
                             {% endfor %}
      </div>
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="checkout-inner">
+
+                            <div class="billing-address">
+                                <h2>Deliver to this Address</h2>
+
 
         <div class="col-md-12">
             <div class="card mb-12">

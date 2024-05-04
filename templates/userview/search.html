@@ -45,11 +45,17 @@
                             </div>
                         </div>
                     {% empty %}
-                        <div class="col-md-12">
-                            <h4>No results found.</h4>
-                        </div>
-                    {% endfor %}
+                       <div class="col-md-12 text-center">
+<div class="col-md-12">
+            <div class="card mb-4 shadow-sm text-center">
+                <div class="card-body">
+                    <h2 class="mt-5" style="color:#FF6F61">No results found </h2><p class="lead">Check back later for updates or explore other categories.</p>
                 </div>
+            </div>
+        </div>
+
+                    {% endfor %}
+                </div></div><br>
             {% endif %}
         </div>
     </div>

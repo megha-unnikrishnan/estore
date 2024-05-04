@@ -602,7 +602,7 @@
                  <td> {{ order.quantity }}</td>
                 <td>₹ {{ order.order_id.order_total }}</td>
                 <td>{{ order.order_id.status }}</td>
-                <td><a class="btn btn-sm btn-success" href="{% url 'adminorderupdate' order.id %}">Detail</a></td>
+                <td><a class="btn btn-sm btn-success" href="{% url 'adminorderupdate' order.order_id.id %}">Detail</a></td>
             </tr>
             {% endfor %}
         </tbody>
