@@ -65,8 +65,12 @@ class OrderProduct(models.Model):
     return_reason = models.TextField(blank=True)
     item_cancel = models.BooleanField(default=False, blank=True, null=True)
 
+    class Meta:
+        ordering=['id']
+
     def _str_(self):
         return f"{self.user.email} - {self.product.variant_name}"
+
 
 
 # Create your models here.

@@ -21,7 +21,10 @@
 .small-item {
     font-size: 12px;
 }
+.user{
+    float:right;
 
+}
 
 
 </style>
@@ -30,6 +33,7 @@
 <body>
     <!-- Content for Static Frame 'header_frame' -->
    <div id="header_content">
+       <p><strong>{{ order.created }}</strong></p>
     <h1 style="font-size: 30px; color: #333; text-align: left;">
         <span class="text-primary font-weight-bold mr-1" style="font-size: 35px; color: #FF6F61;">E</span>STORE
     </h1>
@@ -42,30 +46,34 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <h1>
-			Billed To:
-		</h1>
+<!--            <h1>-->
+<!--			Billed To:-->
+<!--		</h1>-->
             <table class="table table-bordered">
 
                 <tr>
-                    <td><strong>Company:</strong></td>
                     <td>{{ company }}</td>
+                    	<td class="user">{{ user|upper }}</td>
+
                 </tr>
                 <tr>
-                    <td><strong>Phone:</strong></td>
                     <td>{{ phone }}</td>
+                    	<td class="user">+91 {{ customer_phone }}</td>
+
                 </tr>
                 <tr>
-                    <td><strong>Address:</strong></td>
-                    <td>{{ city }}, {{ state }}, {{ zipcode }}</td>
+                     <td>{{ city }}, {{ state }}, {{ zipcode }}</td>
+                 	<td class="user">{{ customer_address }} {{town}},{{ nearby_location }}, {{ district }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Email:</strong></td>
-                    <td>{{ email }}</td>
+                     <td>{{ email }}</td>
+                   <td class="user">{{ customer_email }}</td>
+
                 </tr>
                 <tr>
-                    <td><strong>Website:</strong></td>
                     <td>{{ website }}</td>
+                    	<td class="user">{{ zip_code }}</td>
+
                 </tr>
             </table>
         </div>
@@ -73,32 +81,8 @@
 </div>
 
 
-    <hr>
 
-	<div id="delivery_address">
-    	<h1>
-			Shipped To:
-		</h1>
-    </div>
-	<table>
-    		<tr>
-    			<td>{{ user }}</td>
 
-    		</tr>
-        <tr>
-            	<td>{{ customer_phone }}</td>
-        </tr>
-    		<tr>
-    			<td>{{ customer_address }} {{town}},{{ nearby_location }}, {{ district }}</td>
-
-    		</tr>
-        <tr><td>{{ customer_email }}</td></tr>
-
-    		<tr>
-    			<td>{{ zip_code }}</td>
-
-    		</tr>
-    </table>
 	<hr>
 	<div class="text-center bg-secondary" style="background-color: #FF6F61; text-align: left; padding: 10px">
 		<h1>ORDERS </h1>

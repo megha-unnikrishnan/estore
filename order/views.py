@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -65,6 +67,7 @@ def cancel_order(request, id):
 def orders_page(request):
     user = request.user
     orders = Order.objects.filter(user=user)
+
 
     context = {
         'orders': orders
@@ -155,8 +158,22 @@ def return_request(request, id):
             variant.save()
             user.save()
             order.save()
+            send_refund_email(user.email,refund_amount)
             return redirect('adminorderupdate', order_id)
     except Exception as e:
         print(e)
         return redirect('adminorder')
-# Create your views here.
+
+
+
+def send_refund_email(email, amount):
+    try:
+        subject = 'Return Successful'
+        message = f'Your return request is accepted.Amount Rs.{amount} is credited to your wallet.Please Check your wallet!'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+
+        send_mail(subject, message, from_email, recipient_list)
+    except Exception as e:
+        print(e)
+    # Create your views here.
