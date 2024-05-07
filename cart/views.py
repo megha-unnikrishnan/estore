@@ -407,6 +407,8 @@ def checkout_view(request, id):
 
 
 
+        # grand total
+
         grand_total = mrp - discount - discount_amount-category_offer_amount + tax + shipping_cost
         if request.method == "GET":
             # Check if payment failed

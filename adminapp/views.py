@@ -269,11 +269,6 @@ def admin_dashboard(request):
                 'chart_datas':chart_datas,
                 'category_book_names':category_book_names,
                 'cat_quantities':cat_quantities
-
-
-
-
-
             }
         except Exception as e:
             print(e)
@@ -297,9 +292,6 @@ def admin_users(request):
         return redirect('adminlogin')
     except Exception as e:
         print(e)
-
-
-
 
 def admin_action(request, id):
     user = CustomUser.objects.get(id=id)

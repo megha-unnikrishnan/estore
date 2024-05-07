@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage, InvalidPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -374,8 +375,17 @@ def sort_products(request):
     else:
         # Default sorting or handle invalid sorting parameter
         products = Bookvariant.objects.filter(is_active=True)
-
-    return render(request, 'userview/sortproducts.html', {'products': products})
+    paginator = Paginator(products, 4)  # Show 6 products per page
+    page_number = request.GET.get('page')
+    try:
+        image_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        image_obj = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        image_obj = paginator.page(paginator.num_pages)
+    return render(request, 'userview/sortproducts.html', {'products':image_obj})
 
 @cache_control(no_cache=True, no_store=True)
 def product_list(request):
@@ -383,9 +393,18 @@ def product_list(request):
     category = Category.objects.all
     low = Bookvariant.objects.filter(is_active=True).order_by('product__product_price')
     high = Bookvariant.objects.filter(is_active=True).order_by('-product__product_price')
-
+    paginator = Paginator(image, 4)
+    try:
+        page = int(request.GET.get('page', '1'))
+        print(page)
+    except:
+        page = 1
+    try:
+        image_obj = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        image_obj = paginator.page(paginator.num_pages)
     context = {
-        'image': image,
+        'image': image_obj,
         'category': category,
         'low':low,
         'high':high
@@ -405,11 +424,24 @@ def product_list_detail(request, id):
         related_products = Bookvariant.objects.filter(
             Q(author=product.author) | Q(edition=product.edition) | Q(category=product.category)
         )
+        paginator = Paginator(image, 10)  # Set 10 images per page
+        page = request.GET.get('page')
 
+        try:
+            image_page = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            image_page = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            image_page = paginator.page(paginator.num_pages)
+        print(image_page.number, image_page.paginator.num_pages, image_page.has_previous, image_page.has_next)
         context = {
             'product': product,
             'image': image,
-            'related_products': related_products
+            'related_products': related_products,
+            'image_page':image_page
+
         }
 
     except Exception as e:
@@ -834,3 +866,22 @@ class downloadinvoice(View):
         response['Content-Disposition'] = content
         return response
 
+def contacts(request):
+    try:
+        if request.method == 'GET':
+            name = request.GET['name']
+            email = request.GET['email']
+            message = request.GET['message']
+            head = 'meghamohan2006@gmail.com'
+
+            subject = f"Queries from {name} "
+            message = f'email {email}\n messaage : {message}'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [head, ]
+            send_mail(subject, message, email_from, recipient_list)
+
+            messages.success(request, "Message sent successfully")
+            return redirect('contacts')
+    except Exception as e:
+        print(e)
+    return render(request,'userview/contacts.html')

@@ -66,7 +66,7 @@ def cancel_order(request, id):
 @login_required(login_url='login')
 def orders_page(request):
     user = request.user
-    orders = Order.objects.filter(user=user)
+    orders = Order.objects.filter(user=user).order_by('-id')
 
 
     context = {
@@ -169,7 +169,7 @@ def return_request(request, id):
 def send_refund_email(email, amount):
     try:
         subject = 'Return Successful'
-        message = f'Your return request is accepted.Amount Rs.{amount} is credited to your wallet.Please Check your wallet!'
+        message = f'Your return request of the product is accepted.Amount Rs.{amount} is credited to your wallet.Please Check your wallet!'
         from_email = settings.EMAIL_HOST_USER
         recipient_list = [email]
 

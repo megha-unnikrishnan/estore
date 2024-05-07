@@ -36,6 +36,7 @@ urlpatterns=[
 
     path('invoice-pdf-view/<int:order_id>/', views.viewinvoice.as_view(), name="invoice_pdf_view"),
     path('download-invoice-pdf-view/<int:order_id>/', views.downloadinvoice.as_view(), name="download_invoice_pdf_view"),
+    path('contacts/',views.contacts,name='contacts')
 
 
 

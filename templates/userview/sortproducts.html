@@ -71,18 +71,22 @@
                                 <div class="product-item">
                                     <div class="product-title">
                                       <small style="color:white">{{i.product.product_name}}</small>
-                                        <div class="ratting">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
+                                        <div class="rating-star">
+            <span title="{{ i.rating }}">
+            <!-- By default the star is full else it is empty otherwise it is half -->
+                <i style="color:#FF6F61" class="fa fa-star{% if i.rating < 0.5%}-o{% elif i.rating >= 0.5 and i.rating < 1 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i  style="color:#FF6F61" class="fa fa-star{% if i.rating < 1.5%}-o{% elif i.rating >= 1.5 and i.rating < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i  style="color:#FF6F61" class="fa fa-star{% if i.rating < 2.5%}-o{% elif i.rating >= 2.5 and i.rating < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i style="color:#FF6F61" class="fa fa-star{% if i.rating < 3.5%}-o{% elif i.rating >= 3.5 and i.rating < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
+                <i style="color:#FF6F61" class="fa fa-star{% if i.rating < 4.5%}-o{% elif i.rating >= 4.5 and i.rating < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
+            </span>
+            <span><strong>( {{ review.rating }} )</strong></span>
+        </div>
                                     </div>
                                     <div >
 
                                              <a href="{% url 'productlistdetail' i.id %}">
-                                    <img src="{{i.product.product_image.url}}" width="235" height="200" alt="Product Image">
+                                    <img src="{{i.product.product_image.url}}" width="235" height="205" alt="Product Image">
                                 </a>
 
                                     </div>
@@ -97,21 +101,28 @@
 
 
                         <!-- Pagination Start -->
-                        <div class="col-md-12">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                        <div class="col-lg-12">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+            <li class="page-item {% if num == products.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if image.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
                         <!-- Pagination Start -->
                     </div>
 
