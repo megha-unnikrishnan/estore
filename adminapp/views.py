@@ -202,6 +202,7 @@ def admin_dashboard(request):
             # Now you have the total sum, you can assign it to a common variable
             common_discount = total_discount if total_discount else 0
 
+
             # product
             most_ordered_books = OrderProduct.objects.values('product__product__product_name').annotate(
                 total_quantity=Coalesce(Sum('quantity'), 0)).order_by('-total_quantity')
@@ -229,7 +230,7 @@ def admin_dashboard(request):
                 .annotate(year_total=Sum('order_total'))
                 .order_by('year')
             )
-            start_year = 2020  # Change this to your start year
+            start_year = 2021  # Change this to your start year
             current_year = datetime.now().year
             all_years = list(range(start_year, current_year + 1))
 

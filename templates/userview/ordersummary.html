@@ -4,115 +4,208 @@
 {% load static %}
 
  {% block content %}
-    <section class="h-100 gradient-custom">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-10 col-xl-10">
-            <div class="mx-auto">
-    <p style="font-size:24px;padding-top:11px"><a class="anchor" href="{% url 'orderslist' %}">ORDERLIST</a>|<a class="anchor" href="" >orders</a></p>
-  </div>
-          <div class="card" style="border-radius: 10px;">
-                      <div class="my-prod-row-class">
+<!--    <section class="h-100 gradient-custom">-->
+<!--    <div class="container py-5 h-100">-->
+<!--      <div class="row d-flex justify-content-center align-items-center h-100">-->
+<!--        <div class="col-lg-10 col-xl-10">-->
+<!--            <div class="mx-auto">-->
+<!--    <p style="font-size:24px;padding-top:11px"><a class="anchor" href="{% url 'orderslist' %}">ORDERLIST</a>|<a class="anchor" href="" >orders</a></p>-->
+<!--  </div>-->
+<!--          <div class="card" style="border-radius: 10px;">-->
+<!--                      <div class="my-prod-row-class">-->
 
-</div>
-            <div class="card-header px-5 py-5">
-              <h5 class="text-muted mb-0"><span style="color: #a8729a;">Your Orders</span>!</h5>
-            </div>
+<!--</div>-->
+<!--            <div class="card-header px-5 py-5">-->
+<!--              <h5 class="text-muted mb-0"><span style="color: #a8729a;">Your Orders</span>!</h5>-->
+<!--            </div>-->
 
 
 
-            {% if orders %}
-            {% for order in orders %}
+<!--            {% if orders %}-->
+<!--            {% for order in orders %}-->
 
-            <div class="card-body p-3">
-              <div class="card shadow-0 border mb-4">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-2">
-                      <img src="{{ order.product.product.product_image.url }}"
-                        class="img-fluid" alt="image">
-                    </div>
-                    <div class="col-md-3 text-center d-flex justify-content-center align-items-center">
-                      <p class="text-muted mb-0"> {{ order.product.variant_name }} </p>
-                    </div>
+<!--            <div class="card-body p-3">-->
+<!--              <div class="card shadow-0 border mb-4">-->
+<!--                <div class="card-body">-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-md-2">-->
+<!--                      <img src="{{ order.product.product.product_image.url }}"-->
+<!--                        class="img-fluid" alt="image">-->
+<!--                    </div>-->
+<!--                    <div class="col-md-3 text-center d-flex justify-content-center align-items-center">-->
+<!--                      <p class="text-muted mb-0"> {{ order.product.variant_name }} </p>-->
+<!--                    </div>-->
 
-                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                      <p class="text-muted mb-0 small">Qty: {{ order.quantity }} </p>
-                    </div>
-                    <div class="col-md-3 text-center d-flex justify-content-center align-items-center">
-                      <p class="text-muted mb-0 small">Rs. {{ order.product.product_price }} X {{ order.quantity }} </p>
-                    </div>
+<!--                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">-->
+<!--                      <p class="text-muted mb-0 small">Qty: {{ order.quantity }} </p>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-3 text-center d-flex justify-content-center align-items-center">-->
+<!--                      <p class="text-muted mb-0 small">Rs. {{ order.product.product_price }} X {{ order.quantity }} </p>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">-->
+<!--                  <div class="row d-flex align-items-center">-->
+<!--                    <div class="col-md-4">-->
+<!--                      <button data-bs-target="#myModal-{{ order.id }}" type="button" data-bs-toggle="modal" class="btn btn-sm btn-info">Track Order</button>-->
+<!--                    </div>-->
+
+<!--                    {% if order.order_id.status == 'Cancelled' %}-->
+<!--                    <div class="col-md-4">-->
+<!--                      <p class="text-danger"> Cancelled </p>-->
+<!--                    </div>-->
+<!--                    {% elif order.order_id.status == 'Delivered' %}-->
+<!--                      {% if order.return_request %}-->
+<!--                        {% if order.is_returned %}-->
+<!--                          <div class="col-md-4">-->
+<!--                            <p class="text-danger"> Returned item </p>-->
+<!--                          </div>-->
+<!--                        {% else %}-->
+<!--                          <div class="col-md-4">-->
+<!--                            <p class="text-warning"> Return processing </p>-->
+<!--                          </div>-->
+<!--                        {% endif %}-->
+<!--                      {% else %}-->
+<!--                        <div class="col-md-4">-->
+<!--                          <p class="text-success"> Delivered </p>-->
+<!--                        </div>-->
+<!--                        {% endif %}-->
+<!--                    {% elif order.order_id.status == 'Returned' %}-->
+<!--                    <div class="col-md-4">-->
+<!--                      <p class="text-danger"> Returned </p>-->
+<!--                    </div>-->
+<!--                    {% else %}-->
+<!--                    <div class="col-md-4"></div>-->
+<!--                    {% endif %}-->
+
+<!--                    {% if order.order_id.status == 'Delivered' %}-->
+
+<!--                   <div class="col-md-4">-->
+<!--                  <a href="{% url 'invoice_pdf_view' order.id %}" class="btn btn-sm btn-warning mb-2" target="_blank">-->
+<!--                      <i class="bi bi-file-earmark-excel"></i> View Invoice-->
+<!--                  </a>-->
+<!--                  <a href="{% url 'download_invoice_pdf_view' order.id %}" class="btn btn-sm btn-info">-->
+<!--                      <i class="bi bi-download"></i> Download Invoice-->
+<!--                  </a>-->
+<!--              </div>-->
+
+<!--                    {% endif %}-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            {% endfor %}-->
+<!--            {% else %}-->
+
+<!--            <div class="text-center">-->
+<!--                <h1 class="text-danger m-5"> Order list is empty !</h1>-->
+<!--            </div>-->
+<!--            <div class="text-center">-->
+<!--                <img src="" alt="image" class="w-75">-->
+<!--            </div>-->
+
+<!--            {% endif %}-->
+
+
+
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </section>-->
+<section class="h-100 bg-light">
+  <div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-lg-10 col-xl-10">
+        <div class="mx-auto">
+          <p style="font-size:24px;padding-top:11px">
+            <a style="color:#FF6F61" href="{% url 'orderslist' %}">ORDER LIST</a>
+            <span class="text-muted">|</span>
+            <a style="color:#FF6F61" href="#">Orders</a>
+          </p>
+        </div>
+        <div class="card border-0 rounded shadow">
+          <div class="card-header  text-white px-5 py-3" style="background:#FF6F61">
+            <h5 class="mb-0">Your Orders</h5>
+          </div>
+          {% if orders %}
+          {% for order in orders %}
+          <div class="card-body p-3">
+            <div class="card mb-4 border-0 shadow">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-2">
+                    <img src="{{ order.product.product.product_image.url }}" class="img-fluid" alt="Product Image">
                   </div>
-                  <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
-                  <div class="row d-flex align-items-center">
-                    <div class="col-md-4">
-                      <button data-bs-target="#myModal-{{ order.id }}" type="button" data-bs-toggle="modal" class="btn btn-sm btn-info">Track Order</button>
-                    </div>
-
-                    {% if order.order_id.status == 'Cancelled' %}
-                    <div class="col-md-4">
-                      <p class="text-danger"> Cancelled </p>
-                    </div>
-                    {% elif order.order_id.status == 'Delivered' %}
-                      {% if order.return_request %}
-                        {% if order.is_returned %}
-                          <div class="col-md-4">
-                            <p class="text-danger"> Returned item </p>
-                          </div>
-                        {% else %}
-                          <div class="col-md-4">
-                            <p class="text-warning"> Return processing </p>
-                          </div>
-                        {% endif %}
+                  <div class="col-md-3 text-center">
+                    <p class="text-muted mb-0">{{ order.product.variant_name }}</p>
+                  </div>
+                  <div class="col-md-2 text-center">
+                    <p class="text-muted mb-0 small">Qty: {{ order.quantity }}</p>
+                  </div>
+                  <div class="col-md-3 text-center">
+                    <p class="text-muted mb-0 small">Rs. {{ order.product.product_price }} X {{ order.quantity }}</p>
+                  </div>
+                </div>
+                <hr class="my-4" style="background-color: #e0e0e0; opacity: 1;">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-sm btn-warning" data-bs-target="#myModal-{{ order.id }}" data-bs-toggle="modal">Track Order</button>
+                  </div>
+                  {% if order.order_id.status == 'Cancelled' %}
+                  <div class="col-md-4">
+                    <p class="text-danger">Cancelled</p>
+                  </div>
+                  {% elif order.order_id.status == 'Delivered' %}
+                    {% if order.return_request %}
+                      {% if order.is_returned %}
+                        <div class="col-md-4">
+                          <p class="text-danger">Returned item</p>
+                        </div>
                       {% else %}
                         <div class="col-md-4">
-                          <p class="text-success"> Delivered </p>
+                          <p class="text-warning">Return processing</p>
                         </div>
-                        {% endif %}
-                    {% elif order.order_id.status == 'Returned' %}
-                    <div class="col-md-4">
-                      <p class="text-danger"> Returned </p>
-                    </div>
+                      {% endif %}
                     {% else %}
-                    <div class="col-md-4"></div>
+                      <div class="col-md-4">
+                        <p class="text-success">Delivered</p>
+                      </div>
                     {% endif %}
-
-                    {% if order.order_id.status == 'Delivered' %}
-
-                   <div class="col-md-4">
-                  <a href="{% url 'invoice_pdf_view' order.id %}" class="btn btn-sm btn-warning mb-2" target="_blank">
-                      <i class="bi bi-file-earmark-excel"></i> View Invoice
-                  </a>
-                  <a href="{% url 'download_invoice_pdf_view' order.id %}" class="btn btn-sm btn-info">
-                      <i class="bi bi-download"></i> Download Invoice
-                  </a>
-              </div>
-
-                    {% endif %}
+                  {% elif order.order_id.status == 'Returned' %}
+                  <div class="col-md-4">
+                    <p class="text-danger">Returned</p>
                   </div>
+                  {% endif %}
+                  {% if order.order_id.status == 'Delivered' %}
+                  <div class="col-md-4">
+                    <a href="{% url 'invoice_pdf_view' order.id %}" class="btn btn-sm btn-info mb-2" target="_blank">
+                      <i class="bi bi-file-earmark-excel"></i> View Invoice
+                    </a>
+                    <a href="{% url 'download_invoice_pdf_view' order.id %}" class="btn btn-sm btn-primary">
+                      <i class="bi bi-download"></i> Download Invoice
+                    </a>
+                  </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
-
-            {% endfor %}
-            {% else %}
-
-            <div class="text-center">
-                <h1 class="text-danger m-5"> Order list is empty !</h1>
-            </div>
-            <div class="text-center">
-                <img src="" alt="image" class="w-75">
-            </div>
-
-            {% endif %}
-
-
-
           </div>
+          {% endfor %}
+          {% else %}
+          <div class="text-center">
+            <h1 class="text-danger m-5">Order list is empty!</h1>
+          </div>
+          <div class="text-center">
+            <img src="" alt="image" class="w-75">
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
 
 

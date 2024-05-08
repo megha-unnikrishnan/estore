@@ -758,7 +758,7 @@ def write_review(request):
                                                              return_request=False)
 
                 if not order_products.exists():
-                    messages.error(request, 'You cannot review the product. You have to buy the product to review it.')
+                    messages.error(request, 'To provide a review for the product, you must first make a purchase of the item.')
                     return redirect('productdetail', id=product_id)
 
                 try:
@@ -778,6 +778,7 @@ def write_review(request):
         return redirect('productdetail', id=product_id)
     else:
         return redirect('login')
+
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)
