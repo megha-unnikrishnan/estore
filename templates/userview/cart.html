@@ -74,7 +74,7 @@
                                          <!-- Display price -->
 
 <!--                                            <td><button type="submit"><i class="fa fa-trash"></i></button></td>-->
-                                             <td><a class="btn btn-danger" href="{% url 'deletecart' item.id %}" ><i class="fa fa-trash"></i></a></td>
+                                             <td><a class="btn btn-danger" href="{% url 'deletecart' item.id %}" onclick="return confirm('Do you want to delete the item from your cart?')" ><i class="fa fa-trash"></i></a></td>
 
                                         </tr>
                                          {% endfor %}

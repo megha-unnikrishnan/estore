@@ -3,7 +3,7 @@
 {% load static %}
 {% block content %}
         <!-- Breadcrumb Start -->
-<html>
+
         <div class="breadcrumb-wrap">
             <div class="container-fluid">
                 <ul class="breadcrumb">
@@ -14,93 +14,173 @@
             </div>
         </div>
         <!-- Breadcrumb End -->
-        
-        <!-- Login Start -->
-        <div class="login">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="register-form">
-                              <form action="" method="POST">
-                             {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>First Name</label>
-                                    <input class="form-control" type="text" placeholder="First Name" name="firstname" pattern="[A-Za-z -]+" title="Please enter a valid name" required>
-                                    <span id="firstname" class="text-danger" style="color:red"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Last Name"</label>
-                                    <input class="form-control" type="text" placeholder="Last Name" name="lastname" required pattern="[A-Za-z -]+" title="Please enter a valid name">
-                                     <span id="lastname" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>E-mail</label>
-                                    <input class="form-control" type="email" placeholder="E-mail" name =email  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address" required>
-                                     <span id="email" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Mobile No</label>
-                                    <input class="form-control" type="text" placeholder="Mobile No" name="mobile"  pattern="[7-9]{1}[0-9]{9}|6[0-9]{9}" title="Please enter a valid mobile number starting with 7, 8, 9, or 6"required>
-                                    <span id="mobile" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Password</label>
-                                    <input class="form-control" type="password" placeholder="Password" name="password" required >
-                                       <span id="password" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Confirm Password</label>
-                                    <input class="form-control" type="password" placeholder="Confirm Password" name="cpassword" required>
-                                     <span id="confirmpassword" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label>Referal code</label>
-                                    <input class="form-control" type="text" placeholder="Referal code" name="referal" >
-                                     <span id="referal" class="text-danger"></span>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <button class="btn" type="submit" onclick="return signupform()">Submit</button>
-                                </div>
-                            </div>
-
-                                                           <div class="messages" style="color:red;text-align:center">
+                            <div class="messages" style="color:red;text-align:center">
                                                                  {% for message in messages %}
                                                                                         {{ message }}
                                                                                     {% endfor %}
                                                              </div>
-                        </form>
-                                 <script src="{% static 'js/validation.js' %}"></script>
-                    </div>
-<!--                    <div class="col-lg-6">-->
-<!--                        <div class="login-form">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-md-6">-->
-<!--                                    <label>E-mail / Username</label>-->
-<!--                                    <input class="form-control" type="text" placeholder="E-mail / Username">-->
-<!--                                </div>-->
-<!--                                <div class="col-md-6">-->
-<!--                                    <label>Password</label>-->
-<!--                                    <input class="form-control" type="text" placeholder="Password">-->
-<!--                                </div>-->
-<!--                                <div class="col-md-12">-->
-<!--                                    <div class="custom-control custom-checkbox">-->
-<!--                                        <input type="checkbox" class="custom-control-input" id="newaccount">-->
-<!--                                        <label class="custom-control-label" for="newaccount">Keep me signed in</label>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col-md-12">-->
-<!--                                    <button class="btn">Submit</button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
+        <!-- Login Start -->
+   <div class="login">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="register-form">
+                    <form id="registrationForm" action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>First Name</label>
+                                <input class="form-control" type="text" placeholder="First Name" name="firstname" id="firstname">
+                                <span id="firstnameError" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" placeholder="Last Name" name="lastname" id="lastname">
+                                <span id="lastnameError" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Email</label>
+                                <input class="form-control" type="text" placeholder="Email" name="email" id="email">
+                                <span id="emailError" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Mobile Number</label>
+                                <input class="form-control" type="text" placeholder="Mobile Number" name="mobile" id="mobile">
+                                <span id="mobileError" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Password</label>
+                                <input class="form-control" type="password" placeholder="Password" name="password" id="password">
+                                <span id="passwordError" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Confirm Password</label>
+                                <input class="form-control" type="password" placeholder="Confirm Password" name="cpassword" id="cpassword">
+                                <span id="cpasswordError" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                    <label >Referal code<span style="color:#FF6F61">(optional)</span></label>
+                                    <input class="form-control" type="text" placeholder="Referal code" name="referal" >
+                                     <span id="referal" class="text-danger"></span>
+                                </div>
+                            <div class="col-md-12 mt-3">
+                                <button class="btn" type="submit" id="submitButton">Submit</button>
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Login End -->
-        </div>
-</html>
+    </div>
+</div>
+<!-- Login End -->
+
+<script>
+    // JavaScript validation for form fields
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+        // Prevent the form from submitting
+        event.preventDefault();
+
+        // Validate first name
+        var firstname = document.getElementById("firstname").value;
+        if (firstname.trim() === "") {
+            document.getElementById("firstnameError").textContent = "First name is required";
+            return;
+        } else if (/[\d]/.test(firstname)) {
+            document.getElementById("firstnameError").textContent = "First name should not contain numbers";
+            return;
+        } else {
+            document.getElementById("firstnameError").textContent = "";
+        }
+
+        // Validate last name
+        var lastname = document.getElementById("lastname").value;
+        if (lastname.trim() === "") {
+            document.getElementById("lastnameError").textContent = "Last name is required";
+            return;
+        } else if (/[\d]/.test(lastname)) {
+            document.getElementById("lastnameError").textContent = "Last name should not contain numbers";
+            return;
+        } else {
+            document.getElementById("lastnameError").textContent = "";
+        }
+
+
+        // Validate email
+        var email = document.getElementById("email").value;
+        if (email.trim() === "") {
+            document.getElementById("emailError").textContent = "Email is required";
+            return;
+        } else if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
+            document.getElementById("emailError").textContent = "Invalid email format";
+            return;
+        } else {
+            document.getElementById("emailError").textContent = "";
+        }
+
+
+        // Validate mobile number
+        var mobile = document.getElementById("mobile").value;
+        if (mobile.trim() === "") {
+            document.getElementById("mobileError").textContent = "Mobile number is required";
+            return;
+        } else if (!/^[6-9]\d{9}$/.test(mobile)) {
+            document.getElementById("mobileError").textContent = "Invalid mobile number format";
+            return;
+        } else {
+            document.getElementById("mobileError").textContent = "";
+        }
+
+
+        var password = document.getElementById("password").value;
+
+        // Check if password meets minimum length requirement
+        if (password.trim().length < 8) {
+            document.getElementById("passwordError").textContent = "Password must be at least 8 characters long";
+            return;
+        }
+
+        // Check if password contains at least one lowercase letter
+        if (!/[a-z]/.test(password)) {
+            document.getElementById("passwordError").textContent = "Password must contain at least one lowercase letter";
+            return;
+        }
+
+        // Check if password contains at least one uppercase letter
+        if (!/[A-Z]/.test(password)) {
+            document.getElementById("passwordError").textContent = "Password must contain at least one uppercase letter";
+            return;
+        }
+
+        // Check if password contains at least one special character
+        if (!/[\W_]/.test(password)) {
+            document.getElementById("passwordError").textContent = "Password must contain at least one special character";
+            return;
+        }
+
+        document.getElementById("passwordError").textContent = "";
+
+        // Validate confirm password
+        var cpassword = document.getElementById("cpassword").value;
+        if (cpassword.trim() === "") {
+            document.getElementById("cpasswordError").textContent = "Confirm Password is required";
+            return;
+        } else {
+            document.getElementById("cpasswordError").textContent = "";
+        }
+
+        // Validate if password and confirm password match
+        if (password !== cpassword) {
+            document.getElementById("cpasswordError").textContent = "Passwords do not match";
+            return;
+        } else {
+            document.getElementById("cpasswordError").textContent = "";
+        }
+
+        // If all validations pass, submit the form
+        document.getElementById("registrationForm").submit();
+    });
+</script>
+
         {% endblock %}

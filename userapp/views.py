@@ -230,30 +230,61 @@ def send_otp_email(email, otp):
 
     send_mail(subject, message, from_email, recipient_list)
 
+#
+# def user_forgotpassword(request):
+#     try:
+#         if request.method == 'POST':
+#             email = request.POST.get('email', None)
+#             my_user = CustomUser.objects.get(email=email)
+#             token = str(uuid.uuid4())
+#             try:
+#                 profile_token = Forgotpassword.objects.get(user=my_user.id)
+#             except:
+#                 profile_token = Forgotpassword.objects.create(user=my_user)
+#             profile_token.forgot_password_token = token
+#             profile_token.save()
+#
+#             send_forget_password_mail(email, token)
+#
+#             messages.success(request, "Password reset link sent to the email.")
+#             return redirect('login')
+#
+#     except Exception as e:
+#         messages.error(request, "User not found")
+#         print(e)
+#     return render(request, 'userview/forgotpassword.html')
+
 
 def user_forgotpassword(request):
     try:
         if request.method == 'POST':
             email = request.POST.get('email', None)
             my_user = CustomUser.objects.get(email=email)
-            token = str(uuid.uuid4())
-            try:
-                profile_token = Forgotpassword.objects.get(user=my_user.id)
-            except:
-                profile_token = Forgotpassword.objects.create(user=my_user)
-            profile_token.forgot_password_token = token
-            profile_token.save()
 
-            send_forget_password_mail(email, token)
+            # Check if the user is blocked
+            if my_user.is_active:  # Assuming you have a field named is_active to track user's blocked status
+                token = str(uuid.uuid4())
+                try:
+                    profile_token = Forgotpassword.objects.get(user=my_user.id)
+                except:
+                    profile_token = Forgotpassword.objects.create(user=my_user)
+                profile_token.forgot_password_token = token
+                profile_token.save()
 
-            messages.success(request, "Password reset link sent to the email.")
-            return redirect('login')
+                send_forget_password_mail(email, token)
 
-    except Exception as e:
+                messages.success(request, "Password reset link sent to the email.")
+                return redirect('login')
+            else:
+                messages.error(request, "User is blocked by admin")
+                return redirect('login')  # or any other page you want to redirect to
+
+    except CustomUser.DoesNotExist:
         messages.error(request, "User not found")
+    except Exception as e:
+        messages.error(request, "An error occurred")
         print(e)
     return render(request, 'userview/forgotpassword.html')
-
 
 def change_password(request, token):
     context = {}

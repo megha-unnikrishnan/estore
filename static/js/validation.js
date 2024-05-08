@@ -1,62 +1,68 @@
+
 function signupform() {
-    var firstName = document.getElementById("firstname").value;
-    var lastName = document.getElementById("lastname").value;
-    var email = document.getElementById("email").value;
-    var mobile = document.getElementById("mobile").value;
-    var password = document.getElementById("password").value;
-    var confirmPassword = document.getElementById("cpassword").value;
+    var valid = true;
 
-    var isValid = true;
-
-    // First Name validation
-    if (!firstName.trim()) {
-        document.getElementById("firstname").innerText = "First Name is required";
-        isValid = false;
+    // Validate First Name
+    var firstName = document.forms["myForm"]["firstname"].value.trim();
+    if (firstName === "") {
+        document.getElementById("firstname").innerHTML = "Please enter your first name";
+        valid = false;
     } else {
-        document.getElementById("firstname").innerText = "";
+        document.getElementById("firstname").innerHTML = "";
     }
 
-    // Last Name validation
-    if (!lastName.trim()) {
-        document.getElementById("lastname").innerText = "Last Name is required";
-        isValid = false;
+    // Validate Last Name
+    var lastName = document.forms["myForm"]["lastname"].value.trim();
+    if (lastName === "") {
+        document.getElementById("lastname").innerHTML = "Please enter your last name";
+        valid = false;
     } else {
-        document.getElementById("lastname").innerText = "";
+        document.getElementById("lastname").innerHTML = "";
     }
 
-    // Email validation
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        document.getElementById("email").innerText = "Invalid email format";
-        isValid = false;
+    // Validate Email
+    var email = document.forms["myForm"]["email"].value.trim();
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(email)) {
+        document.getElementById("email").innerHTML = "Please enter a valid email address";
+        valid = false;
     } else {
-        document.getElementById("email").innerText = "";
+        document.getElementById("email").innerHTML = "";
     }
 
-    // Mobile validation
-    var mobileRegex = /^\d{10}$/;
-    if (!mobileRegex.test(mobile)) {
-        document.getElementById("mobile").innerText = "Mobile number must be 10 digits";
-        isValid = false;
+    // Validate Mobile No
+    var mobile = document.forms["myForm"]["mobile"].value.trim();
+    var mobilePattern = /^[6789]\d{9}$/;
+    if (!mobilePattern.test(mobile)) {
+        document.getElementById("mobile").innerHTML = "Please enter a valid mobile number starting with 7, 8, 9, or 6";
+        valid = false;
     } else {
-        document.getElementById("mobile").innerText = "";
+        document.getElementById("mobile").innerHTML = "";
     }
 
-    // Password validation
-    if (password.length < 6) {
-        document.getElementById("password").innerText = "Password must be at least 6 characters";
-        isValid = false;
+    // Validate Password
+    var password = document.forms["myForm"]["password"].value;
+    if (password === "") {
+        document.getElementById("password").innerHTML = "Please enter a password";
+        valid = false;
     } else {
-        document.getElementById("password").innerText = "";
+        document.getElementById("password").innerHTML = "";
     }
 
-    // Confirm Password validation
-    if (password !== confirmPassword) {
-        document.getElementById("confirmpassword").innerText = "Passwords don't match";
-        isValid = false;
+    // Validate Confirm Password
+    var confirmPassword = document.forms["myForm"]["cpassword"].value;
+    if (confirmPassword === "") {
+        document.getElementById("confirmpassword").innerHTML = "Please confirm your password";
+        valid = false;
+    } else if (confirmPassword !== password) {
+        document.getElementById("confirmpassword").innerHTML = "Passwords do not match";
+        valid = false;
     } else {
-        document.getElementById("confirmpassword").innerText = "";
+        document.getElementById("confirmpassword").innerHTML = "";
     }
 
-    return isValid;
+    // You can add more validations for other fields if needed
+
+    return valid;
 }
+

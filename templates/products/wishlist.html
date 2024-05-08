@@ -47,7 +47,7 @@
                                             <td> <p>{{i.product.product_price}}</p></td>
 
                                             <td><a href="{% url 'productdetail' i.product.id %}" class="btn btn-secondary">View Detail</a></td>
-                                              <td><a class="btn btn-danger" href="{% url 'remove_wishlist' i.product.id %}" ><i class="fa fa-trash"></i></a></td>
+                                              <td><a class="btn btn-danger" href="{% url 'remove_wishlist' i.product.id %}" onclick="return confirm('Do you want to delete the item from your wishlist?')"><i class="fa fa-trash"></i></a></td>
 
 
                                         </tr>

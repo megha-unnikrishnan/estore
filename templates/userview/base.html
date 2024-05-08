@@ -68,8 +68,8 @@
     background-color: #f4f4f4; /* Hover background color*/
 }
 
-
         </style>
+
     </head>
 
     <body>
@@ -92,26 +92,25 @@
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+                              <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+<!--                                <div class="navbar-nav mr-auto">-->
+<!--    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/index/' %}active{% endif %}">Home</a>-->
+<!--    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/product-list/' %}active{% endif %}">Products</a>-->
+<!--    &lt;!&ndash; Add more navbar items as needed &ndash;&gt;-->
+<!--</div>-->
+                                  <div class="navbar-nav mr-auto">
+    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/user/index/' %}active{% endif %}">Home</a>
+    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/user/product-list/' %}active{% endif %}">Products</a>
 
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto">
-                            <a href="{% url 'userindex' %}" class="nav-item nav-link active">Home</a>
-                            <a href="{% url 'productlist' %}" class="nav-item nav-link">Products</a>
+    <a href="{% url 'wishlist_view' %}" class="nav-item nav-link {% if request.path == '/shop/wishlist_view/' %}active{% endif %}">Wishlist</a>
+    <a href="{% url 'checkout' %}" class="nav-item nav-link {% if request.path == '/cart/checkout/' %}active{% endif %}">Checkout</a>
+</div>
 
-                            <a href="" class="nav-item nav-link">Cart</a>
-                            {% if request.user.is_authenticated and not request.user.is_superuser %}
-                            <a href="{% url 'checkout' %}" class="nav-item nav-link">Checkout</a>
-                            {% endif %}
 
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">More Pages</a>
-                                <div class="dropdown-menu">
-                                    <a href="{% url 'wishlist_view' %}" class="dropdown-item">Wishlist</a>
-                                    <a href="{% url 'login' %}" class="dropdown-item">Login & Register</a>
-                                    <a href="{% url 'contacts' %}" class="dropdown-item">Contact Us</a>
-                                </div>
-                            </div>
-                        </div>
+
+
+
+
                         <div class="navbar-nav ml-auto">
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User Account</a>
@@ -384,9 +383,12 @@ function triggerSearch() {
 
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+// Prevent default action for anchor links with the class 'nav-link'
 
 
-
+</script>
 
     </body>
 

@@ -339,7 +339,7 @@
     <div class="table-responsive">
       <div >
 
-          <form action="" class="" method="POST">
+          <form action="" class="" method="POST" onsubmit="return validateDates()">
             {% csrf_token %}
             <div class="row mb-3">
               <div class="col-sm-3">
@@ -354,9 +354,6 @@
                 <button type="submit" class="btn btn-primary" style="margin-top: 9%;">Filter</button>
               </div>
             </div>
-              <!-- Yearly Sales Count Start -->
-
-<!-- Yearly Sales Count End -->
 
           </form>
         <div style="max-height: 400px; overflow-y: auto;">
@@ -370,7 +367,7 @@
                  <th scope="col">Quantity</th>
                 <th scope="col">Paid Amount</th>
                 <th scope="col">Status</th>
-                <th scope="col">Action</th>
+
             </tr>
         </thead>
         <tbody>
@@ -383,7 +380,7 @@
                  <td> {{ order.quantity }}</td>
                 <td>₹ {{ order.order_id.order_total }}</td>
                 <td>{{ order.order_id.status }}</td>
-                <td><a class="btn btn-sm btn-success" href="{% url 'adminorderupdate' order.order_id.id %}">Detail</a></td>
+
             </tr>
             {% endfor %}
         </tbody>
@@ -414,6 +411,29 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
 
+<script>
+    function validateDates() {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+
+        // Required fields check
+        if (!startDate || !endDate) {
+            alert("Please fill in both start date and end date.");
+            return false;
+        }
+
+
+
+
+        // End date should not be earlier than start date
+        if (endDate < startDate) {
+            alert("End date cannot be earlier than start date.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 
 {% endblock %}
