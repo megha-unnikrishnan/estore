@@ -184,7 +184,8 @@
                             <div >
 
 
-                                 <h2><i class="fas fa-rupee-sign"></i>{{i.discounted_price|floatformat:"0"}} <small><del>{{i.product_price|floatformat:"0"}}</del></small></h2>
+                                 <h2><i class="fas fa-rupee-sign"></i>{{i.discounted_price|floatformat:"0"}} <small><del>{{i.product_price|floatformat:"0"}}   </del></small><small class=" text-danger">-{{ i.offer.off_percent }}%</small></h2>
+
                                 <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a><br><br>
                             </div>
                         </div>

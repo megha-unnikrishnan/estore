@@ -5,7 +5,7 @@ from django.shortcuts import reverse
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from decimal import Decimal
-
+from django.core.validators import MinValueValidator
 
 
 def validate_expiry_date(value):
@@ -18,7 +18,7 @@ def validate_expiry_date(value):
 
 class Offer(models.Model):
     name = models.CharField(max_length=100)
-    off_percent = models.PositiveBigIntegerField()
+    off_percent = models.PositiveBigIntegerField(validators=[MinValueValidator(70)])
     start_date = models.DateField(validators=[validate_expiry_date])
     end_date = models.DateField()
     is_active = models.BooleanField(default=True, blank=True)

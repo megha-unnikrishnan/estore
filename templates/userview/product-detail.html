@@ -55,7 +55,7 @@
                 <i style="color:yellow" class="fa fa-star{% if product.rating < 3.5%}-o{% elif product.rating >= 3.5 and product.rating < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
                 <i style="color:yellow" class="fa fa-star{% if product.rating < 4.5%}-o{% elif product.rating >= 4.5 and product.rating < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
             </span>
-            <span><strong>( {{ review.rating }}/5 )</strong></span>
+           <span><strong>( {{ product.rating }}/5 )</strong></span>
         </div>
           <small class="prod_title_desc text-justify">{{product.product.product_desc}} </small>
 

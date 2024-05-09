@@ -39,7 +39,11 @@
 
                                 <td>{{ i.category_name }}</td>
                                 <td>{{ i.category_desc }}</td>
-                                <td>  <img src="{{ i.category_image.url }}" alt="category image" width="100" height="100"></td>
+                                  {% if i.category_image %}
+                                <td><img src="{{ i.category_image.url }}" width="100" height="100" alt="product image"></td>
+                            {% else %}
+                                <td>No Image</td>
+                            {% endif %}
                                  <td>{{ i.offer_cat }}</td>
                                 <td>{{i.max_discount}}</td>
                                   <td>{% if i.is_active %}<span class="text-success">ACTIVE</span>{% else %}<span class="text-danger">BLOCK</span>{% endif %}</td>

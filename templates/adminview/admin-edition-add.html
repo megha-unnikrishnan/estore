@@ -2,29 +2,33 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-5">
+   <div class="container mt-5">
     <h2 class="text-center mt-4 mb-4">Add Edition</h2>
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form id="addEditionForm" action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditionForm()">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="productName" class="form-label">Edition Name:</label>
-                            <input type="text" class="form-control" id="productName" name="name" required>
+                            <input type="text" class="form-control" id="productName" name="name" >
+                            <span class="text-danger" id="productNameError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Description:</label>
-                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="4" ></textarea>
+                            <span class="text-danger" id="descriptionError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="publish" class="form-label">Publisher Name:</label>
-                            <input type="text" class="form-control" id="publish" name="publisher" required>
+                            <input type="text" class="form-control" id="publish" name="publisher" >
+                            <span class="text-danger" id="publishError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="year" class="form-label">Year:</label>
-                            <input type="number" class="form-control" id="year" name="year" required>
+                            <input type="number" class="form-control" id="year" name="year" >
+                            <span class="text-danger" id="yearError"></span>
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-block">Submit</button>
@@ -35,6 +39,43 @@
         </div>
     </div>
 </div>
+
+<script>
+    function validateEditionForm() {
+        var productName = document.getElementById("productName").value;
+        var description = document.getElementById("description").value;
+        var publish = document.getElementById("publish").value;
+        var year = document.getElementById("year").value;
+
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("productNameError").innerHTML = "";
+        document.getElementById("descriptionError").innerHTML = "";
+        document.getElementById("publishError").innerHTML = "";
+        document.getElementById("yearError").innerHTML = "";
+
+        // Validate inputs
+        if (productName === "") {
+            document.getElementById("productNameError").innerHTML = "Edition Name is required";
+            error = true;
+        }
+        if (description === "") {
+            document.getElementById("descriptionError").innerHTML = "Description is required";
+            error = true;
+        }
+        if (publish === "") {
+            document.getElementById("publishError").innerHTML = "Publisher Name is required";
+            error = true;
+        }
+        if (year === "") {
+            document.getElementById("yearError").innerHTML = "Year is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
 
 
     <!-- Bootstrap JS -->

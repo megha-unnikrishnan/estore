@@ -22,9 +22,12 @@
         {% for product in products %}
         <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
-                <a href="{% url 'category-detail' product.id%}">
-                    <img src="{{ product.product.product_image.url }}" class="card-img-top" alt="{{ product.product.product_name }}" width="200" height="300">
-                </a>
+                 <div>
+                                <a href="{% url 'productdetail' product.id %}">
+                                    <img src="{{product.product.product_image.url}}" width="346" height="350" alt="Product Image">
+                                </a>
+
+                            </div>
                 <div class="card-body">
                     <h4 class="card-title">{{ product.product.product_name }}</h4>
                     <span title="{{ product.rating }}/5">

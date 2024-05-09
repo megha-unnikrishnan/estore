@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-5">
+<div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -10,30 +10,63 @@
                     <h2 class="card-title text-center">Add Author</h2>
                 </div>
                 <div class="card-body bg-grey">
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="authorName" class="form-label">Author Name:</label>
-                            <input type="text" class="form-control" id="authorName" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="authorImage" class="form-label">Author Image:</label>
-                            <input type="file" class="form-control-file" id="authorImage" name="image" accept="image/*" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="authorDesc" class="form-label">Description:</label>
-                            <textarea class="form-control" id="authorDesc" name="description" rows="4" required></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
+<form id="addAuthorForm" action="" method="POST" enctype="multipart/form-data" onsubmit="return validateAuthorForm()">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="authorName" class="form-label">Author Name:</label>
+        <input type="text" class="form-control" id="authorName" name="name">
+        <span class="text-danger" id="authorNameError"></span>
+    </div>
+    <div class="mb-3">
+        <label for="authorImage" class="form-label">Author Image:</label>
+        <input type="file" class="form-control-file" id="authorImage" name="image" accept="image/*">
+        <span class="text-danger" id="authorImageError"></span>
+    </div>
+    <div class="mb-3">
+        <label for="authorDesc" class="form-label">Description:</label>
+        <textarea class="form-control" id="authorDesc" name="description" rows="4"></textarea>
+        <span class="text-danger" id="authorDescError"></span>
+    </div>
+    <div class="text-center">
+         <input type="submit" id="submitBtn" class="btn btn-primary" value="Submit">
+    </div>
+</form>
+<div id="message" class="mt-3"></div> <!-- Message container -->
+              </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function validateAuthorForm() {
+        var name = document.getElementById("authorName").value;
+        var image = document.getElementById("authorImage").value;
+        var description = document.getElementById("authorDesc").value;
 
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("authorNameError").innerHTML = "";
+        document.getElementById("authorImageError").innerHTML = "";
+        document.getElementById("authorDescError").innerHTML = "";
+
+        // Validate inputs
+        if (name === "") {
+            document.getElementById("authorNameError").innerHTML = "Author Name is required";
+            error = true;
+        }
+        if (image === "") {
+            document.getElementById("authorImageError").innerHTML = "Author Image is required";
+            error = true;
+        }
+        if (description === "") {
+            document.getElementById("authorDescError").innerHTML = "Description is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

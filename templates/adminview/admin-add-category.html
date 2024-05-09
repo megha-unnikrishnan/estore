@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -10,47 +12,88 @@
                     <h2 class="card-title text-center">Add Category</h2>
                 </div>
                 <div class="card-body bg-grey">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form id="addCategoryForm" action="" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="categoryName" class="form-label">Category Name:</label>
-                            <input type="text" class="form-control" id="categoryName" name="name" required>
-                            <span class="text-danger" id="product"></span>
+                            <input type="text" class="form-control" id="categoryName" name="name" >
+                            <span class="text-danger" id="categoryNameError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="categoryImage" class="form-label">Category Image:</label>
-                            <input type="file" class="form-control-file" id="categoryImage" name="image" accept="image/*" required>
+                            <input type="file" class="form-control-file" id="categoryImage" name="image" accept="image/*" >
+                            <span class="text-danger" id="categoryImageError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="categoryDescription" class="form-label">Description:</label>
-                            <textarea class="form-control" id="categoryDescription" name="description" rows="4" required></textarea>
+                            <textarea class="form-control" id="categoryDescription" name="description" rows="4" ></textarea>
+                            <span class="text-danger" id="categoryDescriptionError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="categoryOffer" class="form-label">Select Offer</label>
-                            <select class="form-select select2" id="categoryOffer" name="offer" required>
+                            <select class="form-select select2" id="categoryOffer" name="offer">
                                 <option value="{{ category.offer.id }}">{{ category.offer.name }}</option>
                                 {% for offer in offer %}
                                 <option value="{{ offer.id }}">{{ offer.name }}</option>
                                 {% endfor %}
                             </select>
+                            <span class="text-danger" id="categoryOfferError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="maxDiscount" class="form-label">Maximum Discount:</label>
-                            <input type="text" class="form-control" id="maxDiscount" name="maxdiscount" required>
+                            <input type="text" class="form-control" id="maxDiscount" name="maxdiscount" >
+                            <span class="text-danger" id="maxDiscountError"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <input type="submit" id="submitCategoryBtn" class="btn btn-primary" value="Submit">
+
+                        <div id="categoryMessage" class="mt-3"></div> <!-- Message container -->
                     </form>
-                    {% if messages %}
-                    <ul class="messages" style="red">
-                        {% for message in messages %}
-                        <li class="{{ message.tags }}" style="red">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    function validateForm() {
+        var name = document.getElementById("categoryName").value;
+        var image = document.getElementById("categoryImage").value;
+        var description = document.getElementById("categoryDescription").value;
+        var offer = document.getElementById("categoryOffer").value;
+        var maxDiscount = document.getElementById("maxDiscount").value;
+
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("categoryNameError").innerHTML = "";
+        document.getElementById("categoryImageError").innerHTML = "";
+        document.getElementById("categoryDescriptionError").innerHTML = "";
+        document.getElementById("categoryOfferError").innerHTML = "";
+        document.getElementById("maxDiscountError").innerHTML = "";
+
+        // Validate inputs
+        if (name === "") {
+            document.getElementById("categoryNameError").innerHTML = "Category Name is required";
+            error = true;
+        }
+        if (image === "") {
+            document.getElementById("categoryImageError").innerHTML = "Category Image is required";
+            error = true;
+        }
+        if (description === "") {
+            document.getElementById("categoryDescriptionError").innerHTML = "Description is required";
+            error = true;
+        }
+        if (offer === "") {
+            document.getElementById("categoryOfferError").innerHTML = "Please select an offer";
+            error = true;
+        }
+        if (maxDiscount === "") {
+            document.getElementById("maxDiscountError").innerHTML = "Maximum Discount is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
 {% endblock %}

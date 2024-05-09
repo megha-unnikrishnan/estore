@@ -486,7 +486,9 @@ def admin_add_category(request):
                         return redirect("admincategory")
                 except Exception as e:
                     print(e)
-
+                if Category.objects.filter(category_name=name).exists():
+                    messages.error(request, 'Category with this name already exists.')
+                    return redirect("admincategory")
                 category=Category(category_name=name,category_image=image,category_desc=description,offer_cat=offer_obj,max_discount=maxamount)
                 category.save()
                 messages.error(request, 'Saved Successfully')
@@ -576,21 +578,30 @@ def admin_delete_category(request, id):
 def admin_offer_add(request):
     if 'email' in request.session:
         try:
-            if request.method=='POST':
-                name=request.POST['name']
-                percentage = request.POST['percentage']
+            if request.method == 'POST':
+                name = request.POST['name']
+                percentage = float(request.POST['percentage'])  # Convert to float
                 startdate = request.POST['startdate']
                 enddate = request.POST['enddate']
-                offer=Offer(name=name,off_percent=percentage,start_date=startdate,end_date=enddate)
-                offer.save()
-                messages.success(request, 'Saved successfully')
-                return redirect("adminoffer")
+
+                if percentage <= 70:  # Check if percentage is not greater than 70
+                    offer = Offer(name=name, off_percent=percentage, start_date=startdate, end_date=enddate)
+                    offer.save()
+                    messages.success(request, 'Saved successfully')
+                    return redirect("adminoffer")
+                else:
+                    messages.error(request, 'Percentage cannot be greater than 70')
+                    return redirect("adminoffer")
+
+            # If method is not POST, render the form again
+            return render(request, 'adminview/admin-add-offer.html')
 
         except Exception as e:
             print(e)
-            messages.error(request,'saved failed')
-        return render(request, 'adminview/admin-add-offer.html')
+            messages.error(request, 'Saved failed')
+            return render(request, 'adminview/admin-add-offer.html')
     return redirect('adminlogin')
+
 
 
 @cache_control(no_cache=True, no_store=True)
@@ -736,6 +747,7 @@ def admin_add_edition(request):
 
             edition = Editions(edition_name=name, edition_desc=description, publisher=publisher,year=year)
             edition.save()
+            messages.success(request, "Succesfully saved")
             return redirect("adminedition")
         return render(request, 'adminview/admin-edition-add.html')
     return redirect('adminlogin')
