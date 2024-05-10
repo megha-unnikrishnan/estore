@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os.path
 from pathlib import Path
-from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,13 +80,15 @@ WSGI_APPLICATION = 'bookstore.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': config('DATABASE_NAME'),
+       'NAME': 'estore_db',
        'USER': 'postgres',
-       'PASSWORD': config('DATABASE_PASSWORD'),
+       'PASSWORD': '1111',
        'HOST': 'localhost',
        'PORT': '5433',
     }
 }
+
+
 
 
 # Password validation
@@ -138,8 +139,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Your SMTP server address
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address or username
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Your email password or app-specific password
+EMAIL_HOST_USER = 'meghaunnikrishnan96@gmail.com'  # Your email address or username
+EMAIL_HOST_PASSWORD = 'ycyt sdhz ycqk hckm'  # Your email password or app-specific password
 
 
 
@@ -152,8 +153,9 @@ AUTH_USER_MODEL = 'userapp.CustomUser'
 
 
 
-KEY=config('KEY')
-SECRET=config('SECRET')
+KEY='rzp_test_RaBoXTuzoN2GJs'
+SECRET='OAdTbtcZTAYPSIkT4vK5pcGZ'
+
 
 
 
