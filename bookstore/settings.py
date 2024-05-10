@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'bookstore.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'estore_db',
-       'USER': 'postgres',
-       'PASSWORD': '1111',
+       'NAME': 'djangostore',
+       'USER': 'admin',
+       'PASSWORD': 'password',
        'HOST': 'localhost',
-       'PORT': '5432',
+       'PORT': '',
     }
 }
 
