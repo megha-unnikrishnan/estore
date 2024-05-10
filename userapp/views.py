@@ -152,7 +152,7 @@ def user_signup(request):
                         wallet_acc.increment = True
                         wallet_acc.save()
                         print(f"Sign up bonus of {register.wallet} credited to {register.email}")
-                    otp_expiry_time = timezone.now() + timedelta(minutes=1)
+                    otp_expiry_time = timezone.now() + timedelta(minutes=4)
                     register.otp_expiry_time = otp_expiry_time
                     send_otp_email(email, otp)
                     register.save()
@@ -168,6 +168,36 @@ def user_signup(request):
     return render(request, 'userview/signup.html')
 
 
+# def otp_verification(request, id):
+#     try:
+#         user = CustomUser.objects.get(id=id)
+#         context = {'user': user}
+#
+#         if request.method == 'POST':
+#             otp = request.POST.get('otp')
+#
+#             if len(otp) == 6 and otp == user.otp and user.otp_expiry_time > timezone.now():
+#                 user.is_active = True
+#                 user.otp = ''
+#                 user.save()
+#                 if user.wallet > 0:
+#                     messages.success(request,
+#                                      f"Account verified.You got a referal amount of Rs.{user.wallet} in your wallet.")
+#                     return redirect('login')
+#                 else:
+#                     messages.success(request, "Account verified.")
+#                     return redirect('login')
+#
+#             else:
+#                 messages.error(request, "Invalid OTP or OTP expired. Please try again.")
+#                 return redirect('otp-verification', id=user.id)
+#
+#
+#     except Exception as e:
+#         print(e)
+#         messages.error(request, "Invalid OTP or OTP expired. Please try again.")
+#     return render(request, 'userview/otp-verification.html', context)
+
 def otp_verification(request, id):
     try:
         user = CustomUser.objects.get(id=id)
@@ -176,13 +206,16 @@ def otp_verification(request, id):
         if request.method == 'POST':
             otp = request.POST.get('otp')
 
-            if len(otp) == 6 and otp == user.otp and user.otp_expiry_time > timezone.now():
+            # Calculate OTP expiry time
+            otp_expiry_time = user.otp_expiry_time
+
+            if len(otp) == 6 and otp == user.otp and otp_expiry_time > timezone.now():
                 user.is_active = True
                 user.otp = ''
                 user.save()
                 if user.wallet > 0:
                     messages.success(request,
-                                     f"Account verified.You got a referal amount of Rs.{user.wallet} in your wallet.")
+                                     f"Account verified. You got a referral amount of Rs.{user.wallet} in your wallet.")
                     return redirect('login')
                 else:
                     messages.success(request, "Account verified.")
@@ -192,12 +225,18 @@ def otp_verification(request, id):
                 messages.error(request, "Invalid OTP or OTP expired. Please try again.")
                 return redirect('otp-verification', id=user.id)
 
+        # Calculate OTP expiry time
+        otp_expiry_time = user.otp_expiry_time
+
+        # Add OTP expiry time to context
+        context['otp_expiry_time'] = otp_expiry_time
 
     except Exception as e:
         print(e)
         messages.error(request, "Invalid OTP or OTP expired. Please try again.")
-    return render(request, 'userview/otp-verification.html', context)
+        return redirect('otp-verification', id=user.id)
 
+    return render(request, 'userview/otp-verification.html', context)
 
 def regenerate_otp(request, id):
     try:

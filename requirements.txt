@@ -1,0 +1,6 @@
+Django~=3.2.16
+requests~=2.31.0
+razorpay~=1.4.2
+xhtml2pdf~=0.2.15
+matplotlib~=3.7.5
+decouple~=0.0.7
