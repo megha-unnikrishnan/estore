@@ -278,6 +278,8 @@ def admin_dashboard(request):
 
 
 
+
+
 def admin_logout(request):
     logout(request)
     return redirect('adminlogin')
