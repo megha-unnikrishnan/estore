@@ -6,6 +6,13 @@
 
 
 <div class="container mt-5" style="width:50%">
+    <div class="row d-flex justify-content-center" style="align-items: center">
+                <span class="text-danger fw-5">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </span>
+            </div>
         <h2>Add Book Variant</h2>
         <form id="addBookVariantForm" action="" method="post" enctype="multipart/form-data" onsubmit="return validateBookVariantForm()">
             {% csrf_token %}
@@ -88,13 +95,7 @@
                 <span class="text-danger" id="imageError"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-            <div class="row d-flex justify-content-center" style="align-items: center">
-                <span class="text-danger fw-5">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </span>
-            </div>
+
         </form>
     </div>
 
