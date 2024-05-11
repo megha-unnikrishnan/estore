@@ -646,41 +646,35 @@ def add_product_variant(request):
         context = {}
 
         try:
-            product = Book.objects.all().order_by('id')
-            author = Author.objects.all().order_by('id')
-            offer = Offer.objects.all().order_by('id')
-            category = Category.objects.all().order_by('id')
-            edition=Editions.objects.all().order_by('id')
-
             if request.method == "POST":
-                product = request.POST.get('product')
-                category = request.POST.get('category')
-                author = request.POST.get('author')
-                offer = request.POST.get('offer')
-                edition = request.POST.get('edition')
+                product_id = request.POST.get('product')
+                category_id = request.POST.get('category')
+                author_id = request.POST.get('author')
+                offer_id = request.POST.get('offer')
+                edition_id = request.POST.get('edition')
                 price = request.POST.get('price')
                 stock = request.POST.get('stock')
                 rating = request.POST.get('rating')
 
-                prod_obj = Book.objects.get(id=product)
-                cat_obj = Category.objects.get(id=category)
-                author_obj = Author.objects.get(id=author)
-                offer_obj = Offer.objects.get(id=offer)
-                edition_obj=Editions.objects.get(id=edition)
-                print(prod_obj.product_name)
+                prod_obj = Book.objects.get(id=product_id)
+                cat_obj = Category.objects.get(id=category_id)
+                author_obj = Author.objects.get(id=author_id)
+                offer_obj = Offer.objects.get(id=offer_id)
+                edition_obj = Editions.objects.get(id=edition_id)
 
-                variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
+                # Check if a variant with the same product and category already exists
+                if Bookvariant.objects.filter(product=prod_obj).exists():
+                    # Get the name of the category to which the product is already allocated
+                    allocated_category = Bookvariant.objects.get(product=prod_obj).category.category_name
+                    messages.error(request,
+                                   f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+                    return redirect('productaddvariant')
 
 
-                try:
-
-                    variant = Bookvariant.objects.get(product=prod_obj, author=author_obj,edition=edition_obj)
-
-                    messages.error(request, "Variant already exists")
-                except Bookvariant.DoesNotExist:
+                else:
+                    variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
 
                     variant = Bookvariant(
-
                         variant_name=variant_name,
                         product=prod_obj,
                         author=author_obj,
@@ -694,37 +688,45 @@ def add_product_variant(request):
 
                     variant.save()
 
-                    try:
-                        multiple_images = request.FILES.getlist('multipleImage', None)
-                        if multiple_images:
-                            for image in multiple_images:
-                                photo = MultipleImages.objects.create(
-                                    product=variant,
-                                    images=image,
-                                )
+                # Handle multiple image upload
+                try:
+                    multiple_images = request.FILES.getlist('multipleImage', None)
+                    if multiple_images:
+                        for image in multiple_images:
+                            photo = MultipleImages.objects.create(
+                                product=variant,
+                                images=image,
+                            )
+                except Exception as e:
+                    print(e)
+                    messages.info(request, "Image Upload Failed")
 
-                    except Exception as e:
-                        print(e)
-                        messages.info(request, "Image Upload Failed")
-                        return redirect('productaddvariant')
+                messages.info(request, "Product variant saved successfully")
+                return redirect('productaddvariant')
 
-                    messages.info(request, "Product variant saved successfully")
-                    return redirect('productaddvariant')
+            # Fetch all necessary data for rendering the form
+            products = Book.objects.all().order_by('id')
+            authors = Author.objects.all().order_by('id')
+            offers = Offer.objects.all().order_by('id')
+            categories = Category.objects.all().order_by('id')
+            editions = Editions.objects.all().order_by('id')
 
             context = {
-                'product': product,
-                'author': author,
-                'offer': offer,
-                'category': category,
-                'edition':edition
+                'product': products,
+                'author': authors,
+                'offer': offers,
+                'category': categories,
+                'edition': editions
             }
 
         except Exception as e:
             print(e)
+            messages.error(request, "An error occurred while adding product variant.")
             return redirect('productaddvariant')
 
         return render(request, 'adminview/admin-add-product-variant.html', context)
     return redirect('adminlogin')
+
 
 
 def admin_edition(request):
