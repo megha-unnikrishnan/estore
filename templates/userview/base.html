@@ -94,13 +94,13 @@
                     </button>
                               <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
 <!--                                <div class="navbar-nav mr-auto">-->
-<!--    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/index/' %}active{% endif %}">Home</a>-->
+<!--    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '//' %}active{% endif %}">Home</a>-->
 <!--    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/product-list/' %}active{% endif %}">Products</a>-->
 <!--    &lt;!&ndash; Add more navbar items as needed &ndash;&gt;-->
 <!--</div>-->
                                   <div class="navbar-nav mr-auto">
-    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/user/index/' %}active{% endif %}">Home</a>
-    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/user/product-list/' %}active{% endif %}">Products</a>
+    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/product-list/' %}active{% endif %}">Products</a>
 
     <a href="{% url 'wishlist_view' %}" class="nav-item nav-link {% if request.path == '/shop/wishlist_view/' %}active{% endif %}">Wishlist</a>
     <a href="{% url 'checkout' %}" class="nav-item nav-link {% if request.path == '/cart/checkout/' %}active{% endif %}">Checkout</a>
