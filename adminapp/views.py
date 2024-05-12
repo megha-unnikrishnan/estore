@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from datetime import date
+from django.utils.datetime_safe import date
 from django.views.decorators.cache import cache_control
 import io
 import base64
