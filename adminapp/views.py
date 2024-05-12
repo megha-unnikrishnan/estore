@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from django.utils.datetime_safe import date
 from django.views.decorators.cache import cache_control
 import io
 import base64
@@ -275,8 +275,6 @@ def admin_dashboard(request):
             print(e)
         return render(request, 'adminview/admindashboard.html',context)
     return redirect('adminlogin')
-
-
 
 
 
@@ -643,6 +641,94 @@ def admin_edit_offer(request,id):
 
 @cache_control(no_cache=True, no_store=True)
 @staff_member_required(login_url='adminlogin')
+# def add_product_variant(request):
+#     if 'email' in request.session:
+#         context = {}
+#
+#         try:
+#             product = Book.objects.all().order_by('id')
+#             author = Author.objects.all().order_by('id')
+#             offer = Offer.objects.all().order_by('id')
+#             category = Category.objects.all().order_by('id')
+#             edition=Editions.objects.all().order_by('id')
+#
+#             if request.method == "POST":
+#                 product = request.POST.get('product')
+#                 category = request.POST.get('category')
+#                 author = request.POST.get('author')
+#                 offer = request.POST.get('offer')
+#                 edition = request.POST.get('edition')
+#                 price = request.POST.get('price')
+#                 stock = request.POST.get('stock')
+#                 rating = request.POST.get('rating')
+#
+#                 prod_obj = Book.objects.get(id=product)
+#                 cat_obj = Category.objects.get(id=category)
+#                 author_obj = Author.objects.get(id=author)
+#                 offer_obj = Offer.objects.get(id=offer)
+#                 edition_obj=Editions.objects.get(id=edition)
+#                 print(prod_obj.product_name)
+#
+#                 variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
+#
+#
+#                 try:
+#
+#                     variant = Bookvariant.objects.get(product=prod_obj, author=author_obj,edition=edition_obj)
+#
+#                     messages.error(request, "Variant already exists")
+#                 except Bookvariant.DoesNotExist:
+#                     if Bookvariant.objects.filter(product=prod_obj, category=cat_obj).exists():
+#                         messages.error(request, "This product is already selected for the category.")
+#                     else:
+#
+#                         variant = Bookvariant(
+#
+#                             variant_name=variant_name,
+#                             product=prod_obj,
+#                             author=author_obj,
+#                             category=cat_obj,
+#                             edition=edition_obj,
+#                             product_price=price,
+#                             stock=stock,
+#                             rating=rating,
+#                             offer=offer_obj
+#                         )
+#
+#                         variant.save()
+#
+#                     try:
+#                         multiple_images = request.FILES.getlist('multipleImage', None)
+#                         if multiple_images:
+#                             for image in multiple_images:
+#                                 photo = MultipleImages.objects.create(
+#                                     product=variant,
+#                                     images=image,
+#                                 )
+#
+#                     except Exception as e:
+#                         print(e)
+#                         messages.info(request, "Image Upload Failed")
+#                         return redirect('productaddvariant')
+#
+#                     messages.info(request, "Product variant saved successfully")
+#                     return redirect('productaddvariant')
+#
+#             context = {
+#                 'product': product,
+#                 'author': author,
+#                 'offer': offer,
+#                 'category': category,
+#                 'edition':edition
+#             }
+#
+#         except Exception as e:
+#             print(e)
+#             return redirect('productaddvariant')
+#
+#         return render(request, 'adminview/admin-add-product-variant.html', context)
+#     return redirect('adminlogin')
+
 def add_product_variant(request):
     if 'email' in request.session:
         context = {}
@@ -728,7 +814,6 @@ def add_product_variant(request):
 
         return render(request, 'adminview/admin-add-product-variant.html', context)
     return redirect('adminlogin')
-
 
 
 def admin_edition(request):
