@@ -1,4 +1,3 @@
-
 {% extends 'userview/base.html' %}
 {% load static %}
 {% block content %}
@@ -136,13 +135,13 @@
             {% for cart in cart_items %}
             <div class="card-title resize-text"><p class="cart-shop">{{cart.product.variant_name}}</p><span style="font-weight:600">{{cart.product.product_price}}*{{cart.quantity}}</span></div>
             {% endfor %}
-            <p class="sub-total resize-text">Sub Total<span><i class="fas fa-rupee-sign"></i>{{mrp|floatformat }}</span></p>
-            <p class="discount resize-text">Discount<span><i class="fas fa-rupee-sign"></i>{{discount|floatformat }}</span></p>
-             <p class="discount resize-text">Category Discount<span><i class="fas fa-rupee-sign"></i>{{category_offer_amount|floatformat }}</span></p>
-            <p class="coupon resize-text">Coupon<span><i class="fas fa-rupee-sign"></i>{{coupon|floatformat }}</span></p>
-            <p class="tax resize-text">Tax<span><i class="fas fa-rupee-sign"></i>{{tax|floatformat }}</span></p>
-            <p class="shipping resize-text">Shipping Cost<span><i class="fas fa-rupee-sign"></i>{{shipping|floatformat }}</span></p>
-            <h2 class="resize-text">Grand Total<span><i class="fas fa-rupee-sign"></i>{{grand_total|floatformat }}</span></h2>
+            <p class="sub-total resize-text">Sub Total<span><i class="fas fa-rupee-sign"></i>{{mrp}}</span></p>
+            <p class="discount resize-text">Discount<span><i class="fas fa-rupee-sign"></i>{{discount}}</span></p>
+             <p class="discount resize-text">Category Discount<span><i class="fas fa-rupee-sign"></i>{{category_offer_amount}}</span></p>
+            <p class="coupon resize-text">Coupon<span><i class="fas fa-rupee-sign"></i>{{coupon}}</span></p>
+            <p class="tax resize-text">Tax<span><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
+            <p class="shipping resize-text">Shipping Cost<span><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
+            <h2 class="resize-text">Grand Total<span><i class="fas fa-rupee-sign"></i>{{grand_total}}</span></h2>
         </div>
        </div>
                             <form action="" method="POST">
@@ -208,63 +207,84 @@
     }
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
-function handleRazorpayPayment() {
+    function handleRazorpayPayment(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
         var options = {
-            "key": "rzp_test_1VCPrSnUgNV6pU", // Enter the Key ID generated from the Dashboard
-            "amount": "{% widthratio grand_total 1 100 %}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "key": "rzp_test_1VCPrSnUgNV6pU", // Replace with your Razorpay API key
+            "amount": "{% widthratio grand_total 1 100 %}", // Amount in the smallest currency unit (e.g., paisa)
             "currency": "INR",
-            "name": "EStore",
+            "name": "estore",
             "description": "Test Transaction",
             "image": "https://example.com/your_logo",
-            "order_id": "{{razorpay_order_id}}",
-            "handler": function (response){
-                 var callbackURL = '{{ callback }}';
-            var razor_id = response.razorpay_payment_id;
-            // Append Razorpay payment method value and payment ID to the URL query string
-            callbackURL += '?payment_method=razorpay&razor_id=' + razor_id;
-            // Redirect to the callback URL
-            window.location.href = callbackURL;
-            },
+            "order_id": "{{ razorpay_order_id }}", // Replace with actual order ID
+            "handler": function (response) {
+                var callbackURL = '{{ callback }}';
+                var razor_id = response.razorpay_payment_id;
 
-  "theme": {
+                // Append Razorpay payment method value to the URL query string
+                callbackURL += '?payment_method=razorpay&razor_id=' + razor_id;
+
+                // Redirect to the callback URL
+                window.location.href = callbackURL;
+            },
+            "theme": {
                 "color": "#3399cc"
             }
         };
-        console.log(options)
-         var rzp1 = new Razorpay(options);
-         var rzp1 = new Razorpay(options);
 
-            rzp1.on('payment.failed', function (response){
+        var rzp1 = new Razorpay(options);
+
+        rzp1.on('payment.failed', function (response) {
+            // Handle payment failure
             var errorInfo = {
                 code: response.error.code,
                 description: response.error.description,
                 reason: response.error.reason,
                 order_id: response.error.metadata.order_id,
-                payment_id: response.error.metadata.payment_id
+                payment_id: response.error.metadata.payment_id,
+                source: response.error.source,
+                step: response.error.step,
             };
-            var errorURL = '{{ callback }}';
+
+            // Redirect to error URL with error details appended
+            var errorURL = '{{ callback_url }}';
             errorURL += '?payment_failed=true';
             errorURL += '&error_code=' + errorInfo.code;
             errorURL += '&error_description=' + errorInfo.description;
+
             // Redirect the user to the error view
             window.location.href = errorURL;
-         });
+        });
 
+        // Open Razorpay checkout form
         rzp1.open();
     }
-    // Event listener for radio button change
-    document.getElementById('place-order').addEventListener('click', function() {
-         // Check if Razorpay radio button is selected
-                var razorpayRadio = document.getElementById('payment-razorpay');
-         if (razorpayRadio.checked) {
-             handleRazorpayPayment();
-             event.preventDefault();
+
+    // Add event listener to the 'place-order' button
+    document.getElementById('place-order').addEventListener('click', function(event) {
+        // Check if Razorpay radio button is selected
+        var razorpayRadio = document.getElementById('payment-razorpay');
+
+        if (razorpayRadio.checked) {
+            // Handle Razorpay payment
+            handleRazorpayPayment(event);
         } else {
-             // Proceed with other payment methods
+            // Proceed with other payment methods
         }
     });
 </script>
+
+
+
+
+
+
+
 {% endblock %}
-
-
