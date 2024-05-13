@@ -1051,7 +1051,10 @@ def checkout_view(request, id):
 
         # grand total
 
-        grand_total = float(mrp - discount - discount_amount-category_offer_amount + tax + shipping_cost)
+        grand_total = Decimal(mrp) - Decimal(discount) - Decimal(discount_amount) - Decimal(
+            category_offer_amount) + Decimal(tax) + Decimal(shipping_cost)
+        # grand_total=grand_total * 100
+
         if request.method == "GET":
             # Check if payment failed
             payment_failed = request.GET.get('payment_failed', False)
