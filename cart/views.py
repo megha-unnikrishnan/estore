@@ -221,9 +221,9 @@ def update_cart_quantity(request):
         user_id = CustomUser.objects.get(id=request.user.id)
         cartitem = CartItem.objects.filter(user=user_id)
 
-        total = sum(item.product.discounted_price() * item.quantity for item in cartitem)
+        total = float(sum(item.product.discounted_price() * item.quantity for item in cartitem))
 
-        withoutoffertotal = sum(item.product.product_price * item.quantity for item in cartitem)
+        withoutoffertotal = float(sum(item.product.product_price * item.quantity for item in cartitem))
         print(withoutoffertotal)
 
         offer = withoutoffertotal - total
@@ -305,7 +305,7 @@ def update_cart_quantity(request):
         cart_obj.tax = tax
         cart_obj.save()
 
-        grand_total = withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost
+         grand_total = float(withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost)
 
         return JsonResponse(
             {'subtotal': sub_total, 'total': withoutoffertotal, 'offer': offer, 'shipping': shipping_cost,
