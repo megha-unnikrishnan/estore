@@ -221,9 +221,9 @@ def update_cart_quantity(request):
         user_id = CustomUser.objects.get(id=request.user.id)
         cartitem = CartItem.objects.filter(user=user_id)
 
-        total = float(sum(item.product.discounted_price() * item.quantity for item in cartitem))
+        total = sum(item.product.discounted_price() * item.quantity for item in cartitem)
 
-        withoutoffertotal = float(sum(item.product.product_price * item.quantity for item in cartitem))
+        withoutoffertotal = sum(item.product.product_price * item.quantity for item in cartitem)
         print(withoutoffertotal)
 
         offer = withoutoffertotal - total
