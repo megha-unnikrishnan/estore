@@ -46,7 +46,7 @@
                                                     >{{item.product.variant_name}}</small>
                                                 </div>
                                             </td>
-                                            <td>{{item.product.discounted_price|floatformat:"0"}}</td>
+                                            <td>{{item.product.discounted_price}}</td>
                                             <td>
 <!--                                                <div class="cart-item" style="display:flex">-->
 <!--                                                    <button class="btn-minus" data-item-id="{{ item.id }}"><i class="fa fa-minus"></i></button>-->
@@ -97,14 +97,14 @@
                                     <div class="cart-summary">
                                         <div class="cart-content">
                                             <h1>Cart Summary</h1>
-                                            <p>MRP<span id="total"><i class="fas fa-rupee-sign"></i>{{ total| floatformat}}</span></p>
-                                            <p>Discount<span id="offer"><i class="fas fa-rupee-sign"></i>{{ offer| floatformat:2 }}</span></p>
-                                             <p>Category Discount<span id="catoffer"><i class="fas fa-rupee-sign"></i>{{ category_offer_amount| floatformat }}</span></p>
-                                            <p>Coupon<span id="coupon"><i class="fas fa-rupee-sign"></i>{{coupon_offer|floatformat}}</span></p>
-                                            <p>Tax<span id="tax"><i class="fas fa-rupee-sign"></i>{{tax|floatformat}}</span></p>
-                                            <p>Shipping Cost<span id="shipping-cost"><i class="fas fa-rupee-sign"></i>{{shipping|floatformat}}</span></p>
+                                            <p>MRP<span id="total"><i class="fas fa-rupee-sign"></i>{{ total }}</span></p>
+                                            <p>Discount<span id="offer"><i class="fas fa-rupee-sign"></i>{{ offer }}</span></p>
+                                             <p>Category Discount<span id="catoffer"><i class="fas fa-rupee-sign"></i>{{ category_offer_amount }}</span></p>
+                                            <p>Coupon<span id="coupon"><i class="fas fa-rupee-sign"></i>{{coupon_offer}}</span></p>
+                                            <p>Tax<span id="tax"><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
+                                            <p>Shipping Cost<span id="shipping-cost"><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
 
-                                            <h2>Grand Total<span id="grand_total"><i class="fas fa-rupee-sign"></i>{{grand_total|floatformat}}</span></h2>
+                                            <h2>Grand Total<span id="grand_total"><i class="fas fa-rupee-sign"></i>{{grand_total}}</span></h2>
                                         </div>
                                         <div class="cart-btn">
 
@@ -176,5 +176,5 @@
 
 
         <!-- Cart End -->
+        </div>
 {% endblock %}
-
