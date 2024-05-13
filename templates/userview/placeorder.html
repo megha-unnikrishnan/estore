@@ -206,7 +206,7 @@
         }
     }
 </script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -218,7 +218,7 @@
 
         var options = {
             "key": "rzp_test_1VCPrSnUgNV6pU", // Replace with your Razorpay API key
-            "amount": "{% widthratio grand_total 1 100 %}", // Amount in the smallest currency unit (e.g., paisa)
+            "amount":"{% widthratio grand_total 1 100 %}", // Amount in the smallest currency unit (e.g., paisa)
             "currency": "INR",
             "name": "estore",
             "description": "Test Transaction",
@@ -280,11 +280,5 @@
         }
     });
 </script>
-
-
-
-
-
-
 
 {% endblock %}
