@@ -208,7 +208,7 @@ def update_cart_quantity(request):
             sub_total = int(cart_item.product.discounted_price()) * new_quantity
             print(sub_total)
         else:
-            sub_total = int(cart_item.product.discounted_price()) * cart_item.quantity
+            sub_total = float(cart_item.product.discounted_price()) * cart_item.quantity
         # subtotal = int(cart_item.product.discounted_price()) * new_quantity
         if new_quantity != 0:
             offerpricetotal = int(cart_item.product.product_price) * new_quantity
@@ -305,7 +305,7 @@ def update_cart_quantity(request):
         cart_obj.tax = tax
         cart_obj.save()
 
-         grand_total = float(withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost)
+        grand_total = float(withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost)
 
         return JsonResponse(
             {'subtotal': sub_total, 'total': withoutoffertotal, 'offer': offer, 'shipping': shipping_cost,
@@ -342,7 +342,7 @@ def checkout_view(request, id):
         add_id = id
         print(add_id)
         order_id = ''
-        callback = "http://" + "13.50.204.131" + "/cart/checkout-view/{}".format(add_id)
+        callback = "http://" + "127.0.0.1:8000" + "/cart/checkout-view/{}".format(add_id)
         payment_method = request.GET.get('payment_method')
 
         print(payment_method)
