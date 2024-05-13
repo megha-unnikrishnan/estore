@@ -136,7 +136,7 @@
             <div class="card-title resize-text"><p class="cart-shop">{{cart.product.variant_name}}</p><span style="font-weight:600">{{cart.product.product_price}}*{{cart.quantity}}</span></div>
             {% endfor %}
             <p class="sub-total resize-text">Sub Total<span><i class="fas fa-rupee-sign"></i>{{mrp}}</span></p>
-            <p class="discount resize-text">Discount<span><i class="fas fa-rupee-sign"></i>{{discount}}</span></p>
+            <p class="discount resize-text">Discount<span><i class="fas fa-rupee-sign"></i>{{discount|floatformat}}</span></p>
              <p class="discount resize-text">Category Discount<span><i class="fas fa-rupee-sign"></i>{{category_offer_amount}}</span></p>
             <p class="coupon resize-text">Coupon<span><i class="fas fa-rupee-sign"></i>{{coupon}}</span></p>
             <p class="tax resize-text">Tax<span><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
