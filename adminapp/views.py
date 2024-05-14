@@ -953,12 +953,11 @@ def admin_edit_product_variant(request, id):
                 offer_obj = Offer.objects.get(id=offer)
                 edition_obj = Editions.objects.get(id=edition)
 
-                existing_variant = Bookvariant.objects.filter(product=prod_obj, category=cat_obj).exclude(id=id).first()
-                if existing_variant:
-                    allocated_category = existing_variant.category.category_name
-                    messages.error(request,
-                                   f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
-                    return redirect('adminvariant')
+                if Bookvariant.objects.filter(product=prod_obj).exists():
+                        # Get the name of the category to which the product is already allocated
+                        allocated_category = Bookvariant.objects.get(product=prod_obj).category.category_name
+                        messages.error(request,f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+                return redirect('adminvariant')
 
                 variant.product = prod_obj
                 variant.category = cat_obj
