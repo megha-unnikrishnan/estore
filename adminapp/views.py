@@ -953,6 +953,13 @@ def admin_edit_product_variant(request, id):
                 offer_obj = Offer.objects.get(id=offer)
                 edition_obj = Editions.objects.get(id=edition)
 
+                existing_variant = Bookvariant.objects.filter(product=prod_obj, category=cat_obj).exclude(id=id).first()
+                if existing_variant:
+                    allocated_category = existing_variant.category.category_name
+                    messages.error(request,
+                                   f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+                    return redirect('adminvariant')
+
                 variant.product = prod_obj
                 variant.category = cat_obj
                 variant.author = author_obj
@@ -1004,6 +1011,8 @@ def admin_edit_product_variant(request, id):
 
         return render(request,'adminview/admin-edit-variant.html',context)
     return redirect('adminlogin')
+
+
 
 def delete_image(request, image_id):
     try:
