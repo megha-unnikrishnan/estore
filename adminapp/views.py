@@ -990,12 +990,12 @@ def admin_edit_product_variant(request, id):
                     messages.error(request,
                                    f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
                     return redirect('adminvariant')
-                else:
-                    variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
-                    variant.variant_name = variant_name
-                    variant.save()
-                    messages.success(request, "Edited Successfully")
-                    return redirect('adminvariant')
+               
+                variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
+                variant.variant_name = variant_name
+                variant.save()
+                messages.success(request, "Edited Successfully")
+                return redirect('adminvariant')
 
 
             context = {
