@@ -927,7 +927,7 @@ def admin_edit_product_variant(request, id):
         context = {}
 
         try:
-            variant=Bookvariant.objects.get(id=id)
+            variant = Bookvariant.objects.get(id=id)
             print(variant.variant_name,'uu')
 
             product = Book.objects.all().order_by('id')
@@ -938,25 +938,30 @@ def admin_edit_product_variant(request, id):
             object_image = MultipleImages.objects.filter(product=id)
 
             if request.method == "POST":
-                product = request.POST.get('product')
-                category = request.POST.get('category')
-                author = request.POST.get('author')
-                offer = request.POST.get('offer')
-                edition = request.POST.get('edition')
+                product_id = request.POST.get('product')
+                category_id = request.POST.get('category')
+
+                # Check if the product or category has been changed
+                if variant.product_id != int(product_id):
+                    if Bookvariant.objects.filter(product_id=product_id).exclude(id=id).exists():
+                        conflicting_variant = Bookvariant.objects.get(product_id=product_id)
+                        allocated_category = conflicting_variant.category.category_name
+                        messages.error(request, f'The product is already allocated to the category "{allocated_category}".')
+                        return redirect('adminvariant')
+
+                # Rest of your code for updating variant fields
+                author_id = request.POST.get('author')
+                offer_id = request.POST.get('offer')
+                edition_id = request.POST.get('edition')
                 price = request.POST.get('price')
                 stock = request.POST.get('stock')
                 rating = request.POST.get('rating')
 
-                prod_obj = Book.objects.get(id=product)
-                cat_obj = Category.objects.get(id=category)
-                author_obj = Author.objects.get(id=author)
-                offer_obj = Offer.objects.get(id=offer)
-                edition_obj = Editions.objects.get(id=edition)
-
-
-
-
-
+                prod_obj = Book.objects.get(id=product_id)
+                cat_obj = Category.objects.get(id=category_id)
+                author_obj = Author.objects.get(id=author_id)
+                offer_obj = Offer.objects.get(id=offer_id)
+                edition_obj = Editions.objects.get(id=edition_id)
 
                 variant.product = prod_obj
                 variant.category = cat_obj
@@ -984,19 +989,12 @@ def admin_edit_product_variant(request, id):
                                 product=variant,
                                 images=image
                             )
-                if Bookvariant.objects.filter(product=prod_obj).exists():
-                    # Get the name of the category to which the product is already allocated
-                    allocated_category = Bookvariant.objects.get(product=prod_obj).category.category_name
-                    messages.error(request,
-                                   f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
-                    return redirect('adminvariant')
-               
+
                 variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
                 variant.variant_name = variant_name
                 variant.save()
                 messages.success(request, "Edited Successfully")
                 return redirect('adminvariant')
-
 
             context = {
                 'variant': variant,
@@ -1006,15 +1004,11 @@ def admin_edit_product_variant(request, id):
                 'category': category,
                 'edition': edition,
                 'multiple_images': object_image,
-
             }
         except Exception as e:
             print(e)
 
-
-
-
-        return render(request,'adminview/admin-edit-variant.html',context)
+        return render(request, 'adminview/admin-edit-variant.html', context)
     return redirect('adminlogin')
 
 
