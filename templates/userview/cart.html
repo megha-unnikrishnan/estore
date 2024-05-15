@@ -97,14 +97,14 @@
                                     <div class="cart-summary">
                                         <div class="cart-content">
                                             <h1>Cart Summary</h1>
-                                            <p>MRP<span id="total"><i class="fas fa-rupee-sign"></i>{{ total }}</span></p>
-                                            <p>Discount<span id="offer"><i class="fas fa-rupee-sign"></i>{{ offer }}</span></p>
-                                             <p>Category Discount<span id="catoffer"><i class="fas fa-rupee-sign"></i>{{ category_offer_amount }}</span></p>
-                                            <p>Coupon<span id="coupon"><i class="fas fa-rupee-sign"></i>{{coupon_offer}}</span></p>
-                                            <p>Tax<span id="tax"><i class="fas fa-rupee-sign"></i>{{tax}}</span></p>
-                                            <p>Shipping Cost<span id="shipping-cost"><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
+                                            <p>MRP<span id="total"><i class="fas fa-rupee-sign"></i>{{ total|floatformat:"2" }}</span></p>
+                                            <p>Discount<span id="offer"><i class="fas fa-rupee-sign"></i>{{ offer|floatformat:"2" }}</span></p>
+                                             <p>Category Discount<span id="catoffer"><i class="fas fa-rupee-sign"></i>{{ category_offer_amount|floatformat:"2" }}</span></p>
+                                            <p>Coupon<span id="coupon"><i class="fas fa-rupee-sign"></i>{{coupon_offer|floatformat:"2"}}</span></p>
+                                            <p>Tax<span id="tax"><i class="fas fa-rupee-sign"></i>{{tax|floatformat:"2"}}</span></p>
+                                            <p>Shipping Cost<span id="shipping-cost"><i class="fas fa-rupee-sign"></i>{{shipping|floatformat:"2"}}</span></p>
 
-                                            <h2>Grand Total<span id="grand_total"><i class="fas fa-rupee-sign"></i>{{grand_total|floatformat:"1" }}</span></h2>
+                                            <h2>Grand Total<span id="grand_total"><i class="fas fa-rupee-sign"></i>{{grand_total|floatformat:"2" }}</span></h2>
                                         </div>
                                         <div class="cart-btn">
 
