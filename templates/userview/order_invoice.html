@@ -120,14 +120,14 @@
    <div class="row justify-content-end mt-4" style="text-align: right">
     <div class="col-md-4">
         <div class="border p-3 ">
-            <p>Total: <strong>Rs.</i>{{ order.subtotal }}</strong></p>
+            <p>Total: <strong>Rs.</i>{{ order.subtotalfloatformat:2 }}</strong></p>
             <p>Product Discount: <strong>Rs.{{ order.discount_amount|floatformat:2 }}</strong></p>
             <p>Category Discount: <strong>Rs.{{ order.category_amount|floatformat:2 }}</strong></p>
             <p>Coupon Discount: <strong>Rs.{{ order.coupon_mount|floatformat:2 }}</strong></p>
-            <p>Tax: <strong>Rs.{{ order.tax }}</strong></p>
-            <p>Shipping: <strong>Rs.{{ order.shipping }}</strong></p>
+            <p>Tax: <strong>Rs.{{ order.tax|floatformat:2 }}</strong></p>
+            <p>Shipping: <strong>Rs.{{ order.shipping|floatformat:2 }}</strong></p>
             <hr>
-            <p>Total Amount: <strong>Rs.{{ order.order_total }}</strong><strong></strong></p>
+            <p>Total Amount: <strong>Rs.{{ order.order_total|floatformat:2 }}</strong><strong></strong></p>
         </div>
     </div>
 </div>
