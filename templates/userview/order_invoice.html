@@ -121,7 +121,7 @@
     <div class="col-md-4">
         <div class="border p-3 ">
             <p>Total: <strong>Rs.</i>{{ order.subtotal }}</strong></p>
-            <p>Product Discount: <strong>Rs.{{ order.discount_amount }}</strong></p>
+            <p>Product Discount: <strong>Rs.{{ order.discount_amount|floatformat:2 }}</strong></p>
             <p>Category Discount: <strong>Rs.{{ order.category_amount|floatformat:2 }}</strong></p>
             <p>Coupon Discount: <strong>Rs.{{ order.coupon_mount|floatformat:2 }}</strong></p>
             <p>Tax: <strong>Rs.{{ order.tax }}</strong></p>
