@@ -309,7 +309,7 @@ def update_cart_quantity(request):
         cart_obj.tax = tax
         cart_obj.save()
 
-        grand_total = withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost
+        grand_total = float(withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost)
 
         return JsonResponse(
             {'subtotal': sub_total, 'total': withoutoffertotal, 'offer': offer, 'shipping': shipping_cost,
