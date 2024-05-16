@@ -134,6 +134,9 @@ function validateForm() {
     if (zipcode.trim() === "") {
         document.getElementById("zipcodeError").innerText = "Zipcode is required";
         isValid = false;
+    }else if (isNaN(zipcode) || zipcode.length !== 6) {
+        document.getElementById("zipcodeError").innerText = "Zipcode should be a 6-digit number";
+        isValid = false;
     }
 
     // Validate Nearby Location
