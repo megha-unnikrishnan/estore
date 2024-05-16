@@ -6,40 +6,46 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
+                <span class="text-danger fw-5">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </span>
                 <div class="card-header">
                     <h5 class="card-title text-center">Add Coupon</h5>
                 </div>
+
                 <div class="card-body">
                     <form id="addCouponForm" action="" method="post" enctype="multipart/form-data" onsubmit="return validateCouponForm()">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="coupon_code" class="form-label">Coupon Code</label>
-                            <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" >
+                            <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
                             <span class="text-danger" id="couponCodeError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="min_amount" class="form-label">Min Amount</label>
-                            <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount" >
+                            <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount">
                             <span class="text-danger" id="minAmountError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="off_percent" class="form-label">Off Percentage</label>
-                            <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage" >
+                            <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage">
                             <span class="text-danger" id="offPercentError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="max_discount" class="form-label">Max Discount</label>
-                            <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount" >
+                            <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount">
                             <span class="text-danger" id="maxDiscountError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="expiry_date" class="form-label">Expiry Date</label>
-                            <input type="date" class="form-control" id="expiry_date" name="expiry_date" >
+                            <input type="date" class="form-control" id="expiry_date" name="expiry_date">
                             <span class="text-danger" id="expiryDateError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="coupon_stock" class="form-label">Coupon Stock</label>
-                            <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock" >
+                            <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock">
                             <span class="text-danger" id="couponStockError"></span>
                         </div>
                         <div class="d-grid gap-2">
@@ -54,51 +60,61 @@
 
 <script>
     function validateCouponForm() {
-        var couponCode = document.getElementById("coupon_code").value;
-        var minAmount = document.getElementById("min_amount").value;
-        var offPercent = document.getElementById("off_percent").value;
-        var maxDiscount = document.getElementById("max_discount").value;
-        var expiryDate = document.getElementById("expiry_date").value;
-        var couponStock = document.getElementById("coupon_stock").value;
+        var couponCode = document.getElementById("coupon_code").value.trim();
+        var minAmount = document.getElementById("min_amount").value.trim();
+        var offPercent = document.getElementById("off_percent").value.trim();
+        var maxDiscount = document.getElementById("max_discount").value.trim();
+        var expiryDate = new Date(document.getElementById("expiry_date").value.trim());
+        var couponStock = document.getElementById("coupon_stock").value.trim();
 
         var error = false;
 
         // Clear previous error messages
-        document.getElementById("couponCodeError").innerHTML = "";
-        document.getElementById("minAmountError").innerHTML = "";
-        document.getElementById("offPercentError").innerHTML = "";
-        document.getElementById("maxDiscountError").innerHTML = "";
-        document.getElementById("expiryDateError").innerHTML = "";
-        document.getElementById("couponStockError").innerHTML = "";
+        document.getElementById("couponCodeError").textContent = "";
+        document.getElementById("minAmountError").textContent = "";
+        document.getElementById("offPercentError").textContent = "";
+        document.getElementById("maxDiscountError").textContent = "";
+        document.getElementById("expiryDateError").textContent = "";
+        document.getElementById("couponStockError").textContent = "";
 
         // Validate inputs
         if (couponCode === "") {
-            document.getElementById("couponCodeError").innerHTML = "Coupon Code is required";
+            document.getElementById("couponCodeError").textContent = "Coupon Code is required";
+            error = true;
+        } else if (/[a-z]/.test(couponCode)) {
+        document.getElementById("couponCodeError").textContent = "Coupon Code should not contain small letters";
+        error = true;
+        }
+        if (isNaN(minAmount) || minAmount <= 0) {
+        document.getElementById("minAmountError").textContent = "Minimum amount must be a number greater than 0";
+            error = true;
+        } else if (minAmount > 150) {
+            document.getElementById("minAmountError").textContent = "Minimum amount must be a number less than or equal to 150";
             error = true;
         }
-        if (minAmount === "") {
-            document.getElementById("minAmountError").innerHTML = "Min Amount is required";
+        if (isNaN(offPercent) || offPercent < 75 || offPercent > 100) {
+            document.getElementById("offPercentError").textContent = "Off percent must be a positive number between 75 and 100";
             error = true;
         }
-        if (offPercent === "") {
-            document.getElementById("offPercentError").innerHTML = "Off Percentage is required";
+        if (isNaN(maxDiscount) || maxDiscount > 2400) {
+            document.getElementById("maxDiscountError").textContent = "Max discount must be a number less than or equal to 2400";
             error = true;
         }
-        if (maxDiscount === "") {
-            document.getElementById("maxDiscountError").innerHTML = "Max Discount is required";
+
+             var currentDate = new Date();
+             if (expiryDate < currentDate) {
+            document.getElementById("expiryDateError").textContent = "Expiry date should be in the future";
             error = true;
         }
-        if (expiryDate === "") {
-            document.getElementById("expiryDateError").innerHTML = "Expiry Date is required";
+        if (isNaN(couponStock) || couponStock < 0) {
+            document.getElementById("couponStockError").textContent = "Coupon stock must be a non-negative number";
             error = true;
         }
-        if (couponStock === "") {
-            document.getElementById("couponStockError").innerHTML = "Coupon Stock is required";
-            error = true;
-        }
+
 
         return !error;
     }
 </script>
+
 
 {% endblock %}

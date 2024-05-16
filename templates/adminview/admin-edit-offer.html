@@ -40,7 +40,42 @@
     </div>
 </div>
 
+<script>
+    function validateOfferForm() {
+        var offerName = document.getElementById("offer_name").value;
+        var percentage = document.getElementById("off_percent").value;
+        var startDate = document.getElementById("start_date").value;
+        var endDate = document.getElementById("end_date").value;
 
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("offerNameError").innerHTML = "";
+        document.getElementById("percentageError").innerHTML = "";
+        document.getElementById("startDateError").innerHTML = "";
+        document.getElementById("endDateError").innerHTML = "";
+
+        // Validate inputs
+        if (offerName.trim() === "") {
+            document.getElementById("offerNameError").innerHTML = "Offer Name is required";
+            error = true;
+        }
+        if (percentage === "") {
+            document.getElementById("percentageError").innerHTML = "Percentage Discount is required";
+            error = true;
+        }
+        if (startDate === "") {
+            document.getElementById("startDateError").innerHTML = "Start Date is required";
+            error = true;
+        }
+        if (endDate === "") {
+            document.getElementById("endDateError").innerHTML = "End Date is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
     <!-- Bootstrap JS -->
 
 {% endblock %}

@@ -51,15 +51,22 @@
         document.getElementById("authorDescError").innerHTML = "";
 
         // Validate inputs
-        if (name === "") {
+        if (name.trim() === "") {
             document.getElementById("authorNameError").innerHTML = "Author Name is required";
             error = true;
         }
         if (image === "") {
             document.getElementById("authorImageError").innerHTML = "Author Image is required";
             error = true;
+        } else {
+            // Validate file type for author image
+            var allowedExtensions = /\.(png|jpe?g)$/i; // Adjusted regex to allow PNG and JPEG
+            if (!allowedExtensions.test(image)) {
+                document.getElementById("authorImageError").innerHTML = "Only PNG and JPEG files are allowed";
+                error = true;
+            }
         }
-        if (description === "") {
+        if (description.trim() === "") {
             document.getElementById("authorDescError").innerHTML = "Description is required";
             error = true;
         }
@@ -67,6 +74,7 @@
         return !error;
     }
 </script>
+
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

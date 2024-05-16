@@ -322,11 +322,14 @@ def admin_add_product(request):
     if 'email' in request.session:
         try:
             if request.method=='POST':
-                name=request.POST['name']
+                name=request.POST['name'].strip()
                 image = request.FILES.get('image')
                 description = request.POST['description']
                 review = request.POST['review']
-
+                existing_product = Book.objects.filter(product_name__iexact=name).first()
+                if existing_product:
+                    messages.error(request, f"product '{name}' already exists!!")
+                    return redirect('adminproduct')
                 book=Book(product_name=name,product_image=image,product_desc=description,review=review)
                 print(book)
                 book.save()
@@ -374,9 +377,17 @@ def admin_edit_product(request,id):
                 if request.FILES:
                     os.remove(book.product_image.path)
                     book.product_image = request.FILES['image']
-                book.product_name = request.POST['name']
-                book.product_desc = request.POST['description']
-                book.review = request.POST['review']
+                name = request.POST['name'].strip()
+                desc = request.POST['description']
+                review = request.POST['review']
+                if name != book.product_name:
+                    existsproduct = Book.objects.filter(product_name__iexact=name)
+                    if existsproduct.exists():
+                        messages.error(request, f'{name} is already exists')
+                        return redirect('adminproduct')
+                book.product_name=name
+                book.product_desc=desc
+                book.review=review
                 book.save()
                 messages.success(request, "Succesfully updated all details")
                 return redirect('adminproduct')
@@ -387,7 +398,7 @@ def admin_edit_product(request,id):
         except Exception as e:
             print(e)
             messages.error(request, "Saved failed")
-            return redirect('admincategory')
+            return redirect('adminproduct')
     return redirect('adminlogin')
 
 @cache_control(no_cache=True, no_store=True)
@@ -409,10 +420,13 @@ def admin_add_author(request):
     if 'email' in request.session:
         try:
             if request.method=='POST':
-                name=request.POST['name']
+                name=request.POST['name'].strip()
                 image = request.FILES.get('image')
                 description = request.POST['description']
-
+                existing_author = Author.objects.filter(author_name__iexact=name).first()
+                if existing_author:
+                    messages.error(request, f"Author '{name}' already exists!!")
+                    return redirect('adminauthor')
                 author=Author(author_name=name,author_image=image,author_desc=description)
                 author.save()
                 messages.success(request, "Succesfully added")
@@ -438,8 +452,15 @@ def admin_edit_author(request, id):
                 if request.FILES:
                     os.remove(author.author_image.path)
                     author.author_image = request.FILES['image']
-                author.author_name = request.POST['name']
-                author.author_desc = request.POST['description']
+                name = request.POST['name'].strip()
+                desc = request.POST['description']
+                if name != author.author_name:
+                    existsauthor = Author.objects.filter(author_name__iexact=name)
+                    if existsauthor.exists():
+                        messages.error(request, f'{name} is already exists')
+                        return redirect('adminauthor')
+                author.author_name=name
+                author.author_desc=desc
                 author.save()
                 messages.info(request, "Succesfully updated all details")
                 return redirect('adminauthor')
@@ -449,7 +470,7 @@ def admin_edit_author(request, id):
 
         except Exception as e:
             print(e)
-            return redirect('admincategory')
+            return redirect('adminauthor')
     return redirect('adminlogin')
 
 
@@ -474,27 +495,32 @@ def admin_add_category(request):
         try:
             offer = Offer.objects.all()
             if request.method=='POST':
-                name=request.POST['name']
+                name=request.POST['name'].strip()
                 image = request.FILES.get('image')
                 description = request.POST['description']
                 offer=request.POST['offer']
-                offer_obj=Offer.objects.get(id=offer)
-                maxamount=request.POST['maxdiscount']
-                try:
+                if offer:
+                    offer_obj = Offer.objects.get(id=offer)
                     if offer_obj.is_expired():
-                        messages.error(request, 'Offer is expired. Please select a valid offer.')
-                        return redirect("admincategory")
-                except Exception as e:
-                    print(e)
-                if Category.objects.filter(category_name=name).exists():
-                    messages.error(request, 'Category with this name already exists.')
-                    return redirect("admincategory")
+                        messages.error(request, 'Offer expired')
+                        return redirect('admincategory')
+                else:
+                    offer_obj = None
+                maxamount=request.POST['maxdiscount']
+
+
+                existing_category = Category.objects.filter(category_name__iexact=name).first()
+                if existing_category:
+                    messages.error(request, f"Category '{name}' already exists!!")
+                    return redirect('admincategory')
+
                 category=Category(category_name=name,category_image=image,category_desc=description,offer_cat=offer_obj,max_discount=maxamount)
                 category.save()
                 messages.error(request, 'Saved Successfully')
                 return redirect("admincategory")
 
         except Exception as e:
+            print(e)
             messages.error(request,'Saved failed')
             return redirect("admincategory")
         context={
@@ -524,7 +550,6 @@ def admin_category(request):
 def admin_edit_category(request, id):
     if 'email' in request.session:
         context = {}
-        print("call fucntion")
         try:
             category = Category.objects.get(id=id)
             offer=Offer.objects.all()
@@ -532,23 +557,36 @@ def admin_edit_category(request, id):
             context = {'category': category,
                        'offer':offer}
             if request.method == "POST":
-                print(request.POST)
                 if request.FILES:
                     os.remove(category.category_image.path)
                     category.category_image = request.FILES['catimage']
-                category.category_name = request.POST['catname']
-                category.category_desc = request.POST['description']
+                name = request.POST['catname'].strip()
+                desc = request.POST['description']
                 category_offer=request.POST['offer_cat']
-                offer_obj = Offer.objects.get(id=category_offer)
-                category.max_discount=request.POST['maxdiscount']
-                try:
+                maxdiscount=request.POST['maxdiscount']
+                if name != category.category_name:
+                    exitscat = Category.objects.filter(category_name__iexact=name)
+                    if exitscat.exists():
+                        messages.error(request, "Category already exists")
+                        return redirect('admincategory', id=id)
+
+                category.category_name = name
+                category.category_desc = desc
+
+                if maxdiscount != '':
+                    category.max_discount = maxdiscount
+
+                # Check if a new offer has been selected
+                if category_offer != '':
+                    offer_obj = Offer.objects.get(id=category_offer)
                     if offer_obj.is_expired():
-                        messages.error(request, 'Offer is expired. Please select a valid offer.')
-                        return redirect("admincategory")
-                except Exception as e:
-                    print(e)
-                category.offer_cat=offer_obj
-                category.offer = 12
+                        messages.error(request, 'Offer expired')
+                        return redirect('admincategory', id=id)
+                    else:
+                        category.offer_cat = offer_obj
+                else:
+                    category.offer_cat=None
+
 
                 category.save()
                 print('after save')
@@ -585,6 +623,10 @@ def admin_offer_add(request):
                 enddate = request.POST['enddate']
 
                 if percentage <= 70:  # Check if percentage is not greater than 70
+                    existing_offer = Offer.objects.filter(name__iexact=name).first()
+                    if existing_offer:
+                        messages.error(request, f"Offer '{name}' already exists!!")
+                        return redirect('adminoffer')
                     offer = Offer(name=name, off_percent=percentage, start_date=startdate, end_date=enddate)
                     offer.save()
                     messages.success(request, 'Saved successfully')
@@ -622,10 +664,18 @@ def admin_edit_offer(request,id):
             offer = Offer.objects.get(id=id)
             context = {'offer': offer}
             if request.method == "POST":
-                offer.name = request.POST['offer_name']
-                offer.off_percent = request.POST['off_percent']
-                offer.start_date = request.POST['start_date']
-                offer.end_date = request.POST['end_date']
+                name = request.POST['offer_name']
+                percent = request.POST['off_percent']
+                start_date = request.POST['start_date']
+                end_date = request.POST['end_date']
+                if name != offer.name:
+                    existsoffer = Offer.objects.filter(name__iexact=name)
+                    if existsoffer.exists():
+                        messages.error(request,  f' Offer {name} is already exists')
+                        return redirect('adminoffer')
+                offer.off_percent=percent
+                offer.end_date=end_date
+                offer.start_date=start_date
                 offer.save()
                 messages.info(request, "Succesfully updated all details")
                 return redirect('adminoffer')
@@ -639,48 +689,251 @@ def admin_edit_offer(request,id):
 
 
 
-@cache_control(no_cache=True, no_store=True)
-@staff_member_required(login_url='adminlogin')
+# @cache_control(no_cache=True, no_store=True)
+# @staff_member_required(login_url='adminlogin')
+# def add_product_variant(request):
+#     if 'email' in request.session:
+#         context = {}
+#
+#         try:
+#             product = Book.objects.all().order_by('id')
+#             author = Author.objects.all().order_by('id')
+#             offer = Offer.objects.all().order_by('id')
+#             category = Category.objects.all().order_by('id')
+#             edition=Editions.objects.all().order_by('id')
+#
+#             if request.method == "POST":
+#                 product = request.POST.get('product')
+#                 category = request.POST.get('category')
+#                 author = request.POST.get('author')
+#                 offer = request.POST.get('offer')
+#                 edition = request.POST.get('edition')
+#                 price = request.POST.get('price')
+#                 stock = request.POST.get('stock')
+#                 rating = request.POST.get('rating')
+#
+#                 prod_obj = Book.objects.get(id=product)
+#                 cat_obj = Category.objects.get(id=category)
+#                 author_obj = Author.objects.get(id=author)
+#
+#                 edition_obj=Editions.objects.get(id=edition)
+#
+#                 if offer != '':
+#                     offer_obj = Offer.objects.get(id=offer)
+#                 else:
+#                     offer_obj = None
+#
+#                 if Bookvariant.objects.filter(product=prod_obj,author=author_obj).exists():
+#                     # Get the name of the category to which the product is already allocated
+#                     allocated_category = Bookvariant.objects.get(product=prod_obj).category.category_name
+#                     if allocated_category!=cat_obj.category_name:
+#                         messages.error(request,
+#                                        f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+#                         return redirect('adminvariant')
+#
+#                 variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
+#
+#
+#                 try:
+#
+#                     variant = Bookvariant.objects.get(product=prod_obj, author=author_obj,edition=edition_obj)
+#
+#                     messages.error(request, "Variant already exists")
+#                 except Bookvariant.DoesNotExist:
+#                     if Bookvariant.objects.filter(product=prod_obj, category=cat_obj).exists():
+#                         messages.error(request, "This product is already selected for the category.")
+#                     else:
+#
+#                         variant = Bookvariant(
+#
+#                             variant_name=variant_name,
+#                             product=prod_obj,
+#                             author=author_obj,
+#                             category=cat_obj,
+#                             edition=edition_obj,
+#                             product_price=price,
+#                             stock=stock,
+#                             rating=rating,
+#                             offer=offer_obj
+#                         )
+#
+#                         variant.save()
+#
+#                     try:
+#                         multiple_images = request.FILES.getlist('multipleImage', None)
+#                         if multiple_images:
+#                             for image in multiple_images:
+#                                 photo = MultipleImages.objects.create(
+#                                     product=variant,
+#                                     images=image,
+#                                 )
+#
+#                     except Exception as e:
+#                         print(e)
+#                         messages.info(request, "Image Upload Failed")
+#                         return redirect('productaddvariant')
+#
+#                     messages.info(request, "Product variant saved successfully")
+#                     return redirect('productaddvariant')
+#
+#             context = {
+#                 'product': product,
+#                 'author': author,
+#                 'offer': offer,
+#                 'category': category,
+#                 'edition':edition
+#             }
+#
+#         except Exception as e:
+#             print(e)
+#             return redirect('productaddvariant')
+#
+#         return render(request, 'adminview/admin-add-product-variant.html', context)
+#     return redirect('adminlogin')
+
+# def add_product_variant(request):
+#     if 'email' in request.session:
+#         context = {}
+#
+#         try:
+#             if request.method == "POST":
+#                 product_id = request.POST.get('product')
+#                 category_id = request.POST.get('category')
+#                 author_id = request.POST.get('author')
+#                 offer_id = request.POST.get('offer')
+#                 edition_id = request.POST.get('edition')
+#                 price = request.POST.get('price')
+#                 stock = request.POST.get('stock')
+#                 rating = request.POST.get('rating')
+#
+#
+#                 prod_obj = Book.objects.get(id=product_id)
+#                 cat_obj = Category.objects.get(id=category_id)
+#                 author_obj = Author.objects.get(id=author_id)
+#                 edition_obj = Editions.objects.get(id=edition_id)
+#
+#                 if offer_id != '':
+#                     offer_obj = Offer.objects.get(id=offer_id)
+#                 else:
+#                     offer_obj = None
+#                 # Check if a variant with the same product and category already exists
+#                 if Bookvariant.objects.filter(product=prod_obj,author=author_obj).exists():
+#                     # Get the name of the category to which the product is already allocated
+#                     allocated_category = Bookvariant.objects.get(product=prod_obj).category.category_name
+#                     if allocated_category!=cat_obj.category_name:
+#                         messages.error(request,
+#                                        f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+#                         return redirect('adminvariant')
+#
+#
+#
+#                 try:
+#                     variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
+#                     messages.error(request, "This book variant already exists")
+#                     return redirect('productaddvariant')
+#
+#                 except Bookvariant.DoesNotExist:
+#                     variant = Bookvariant(
+#                         variant_name=variant_name,
+#                         product=prod_obj,
+#                         author=author_obj,
+#                         category=cat_obj,
+#                         edition=edition_obj,
+#                         product_price=price,
+#                         stock=stock,
+#                         rating=rating,
+#                         offer=offer_obj
+#                     )
+#
+#                     variant.save()
+#
+#                 # Handle multiple image upload
+#                 try:
+#                     multiple_images = request.FILES.getlist('multipleImage', None)
+#                     if multiple_images:
+#                         for image in multiple_images:
+#                             photo = MultipleImages.objects.create(
+#                                 product=variant,
+#                                 images=image,
+#                             )
+#                 except Exception as e:
+#                     print(e)
+#                     messages.info(request, "Image Upload Failed")
+#
+#                 messages.info(request, "Product variant saved successfully")
+#                 return redirect('adminvariant')
+#
+#             # Fetch all necessary data for rendering the form
+#             products = Book.objects.all().order_by('id')
+#             authors = Author.objects.all().order_by('id')
+#             offers = Offer.objects.all().order_by('id')
+#             categories = Category.objects.all().order_by('id')
+#             editions = Editions.objects.all().order_by('id')
+#
+#             context = {
+#                 'product': products,
+#                 'author': authors,
+#                 'offer': offers,
+#                 'category': categories,
+#                 'edition': editions
+#             }
+#
+#         except Exception as e:
+#             print(e)
+#             messages.error(request, "An error occurred while adding product variant.")
+#             return redirect('productaddvariant')
+#
+#         return render(request, 'adminview/admin-add-product-variant.html', context)
+#     return redirect('adminlogin')
+
+
 def add_product_variant(request):
     if 'email' in request.session:
         context = {}
 
         try:
-            product = Book.objects.all().order_by('id')
-            author = Author.objects.all().order_by('id')
-            offer = Offer.objects.all().order_by('id')
-            category = Category.objects.all().order_by('id')
-            edition=Editions.objects.all().order_by('id')
-
             if request.method == "POST":
-                product = request.POST.get('product')
-                category = request.POST.get('category')
-                author = request.POST.get('author')
-                offer = request.POST.get('offer')
-                edition = request.POST.get('edition')
+                product_id = request.POST.get('product')
+                category_id = request.POST.get('category')
+                author_id = request.POST.get('author')
+                offer_id = request.POST.get('offer')
+                edition_id = request.POST.get('edition')
                 price = request.POST.get('price')
                 stock = request.POST.get('stock')
                 rating = request.POST.get('rating')
 
-                prod_obj = Book.objects.get(id=product)
-                cat_obj = Category.objects.get(id=category)
-                author_obj = Author.objects.get(id=author)
-                offer_obj = Offer.objects.get(id=offer)
-                edition_obj=Editions.objects.get(id=edition)
-                print(prod_obj.product_name)
+                prod_obj = Book.objects.get(id=product_id)
+                cat_obj = Category.objects.get(id=category_id)
+                author_obj = Author.objects.get(id=author_id)
+                edition_obj = Editions.objects.get(id=edition_id)
+
+                if offer_id:
+                    offer_obj = Offer.objects.get(id=offer_id)
+                else:
+                    offer_obj = None
+
+                # Check if a variant with the same product and author already exists
+                if Bookvariant.objects.filter(product=prod_obj, author=author_obj).exists():
+                    # Get the name of the category to which the product is already allocated
+                    allocated_variant = Bookvariant.objects.filter(product=prod_obj, author=author_obj).first()
+                    if allocated_variant:
+                            allocated_category=allocated_variant.category.category_name
+                            if allocated_category != cat_obj.category_name:
+                                messages.error(request,
+                                               f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+                                return redirect('adminvariant')
 
                 variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
 
-
                 try:
+                    # Attempt to retrieve a single Bookvariant
+                    variant = Bookvariant.objects.get(product=prod_obj, author=author_obj, edition=edition_obj)
 
-                    variant = Bookvariant.objects.get(product=prod_obj, author=author_obj,edition=edition_obj)
-
-                    messages.error(request, "Variant already exists")
+                    messages.error(request, "This book variant already exists")
+                    return redirect('productaddvariant')
                 except Bookvariant.DoesNotExist:
-
+                    # If the variant doesn't exist, create it
                     variant = Bookvariant(
-
                         variant_name=variant_name,
                         product=prod_obj,
                         author=author_obj,
@@ -691,41 +944,46 @@ def add_product_variant(request):
                         rating=rating,
                         offer=offer_obj
                     )
-
                     variant.save()
 
-                    try:
-                        multiple_images = request.FILES.getlist('multipleImage', None)
-                        if multiple_images:
-                            for image in multiple_images:
-                                photo = MultipleImages.objects.create(
-                                    product=variant,
-                                    images=image,
-                                )
+                # Handle multiple image upload
+                try:
+                    multiple_images = request.FILES.getlist('multipleImage', None)
+                    if multiple_images:
+                        for image in multiple_images:
+                            photo = MultipleImages.objects.create(
+                                product=variant,
+                                images=image,
+                            )
+                except Exception as e:
+                    print(e)
+                    messages.error(request, "Image Upload Failed")
 
-                    except Exception as e:
-                        print(e)
-                        messages.info(request, "Image Upload Failed")
-                        return redirect('productaddvariant')
+                messages.success(request, "Product variant saved successfully")
+                return redirect('adminvariant')
 
-                    messages.info(request, "Product variant saved successfully")
-                    return redirect('productaddvariant')
+            # Fetch all necessary data for rendering the form
+            products = Book.objects.all().order_by('id')
+            authors = Author.objects.all().order_by('id')
+            offers = Offer.objects.all().order_by('id')
+            categories = Category.objects.all().order_by('id')
+            editions = Editions.objects.all().order_by('id')
 
             context = {
-                'product': product,
-                'author': author,
-                'offer': offer,
-                'category': category,
-                'edition':edition
+                'product': products,
+                'author': authors,
+                'offer': offers,
+                'category': categories,
+                'edition': editions
             }
 
         except Exception as e:
             print(e)
+            messages.error(request, "An error occurred while adding product variant.")
             return redirect('productaddvariant')
 
         return render(request, 'adminview/admin-add-product-variant.html', context)
     return redirect('adminlogin')
-
 
 def admin_edition(request):
     if 'email' in request.session:
@@ -744,7 +1002,10 @@ def admin_add_edition(request):
             description = request.POST['description']
             publisher = request.POST['publisher']
             year = request.POST['year']
-
+            existing_edition = Editions.objects.filter(edition_name__iexact=name).first()
+            if existing_edition:
+                messages.error(request, f" '{name}' already exists!!")
+                return redirect('adminedition')
             edition = Editions(edition_name=name, edition_desc=description, publisher=publisher,year=year)
             edition.save()
             messages.success(request, "Succesfully saved")
@@ -761,10 +1022,19 @@ def admin_edit_edition(request,id):
             context = {'edition': edition}
             if request.method == "POST":
 
-                edition.edition_name = request.POST['name']
-                edition.edition_desc = request.POST['description']
-                edition.publisher=request.POST.get('publisher')
-                edition.year=request.POST['year']
+                name = request.POST['name']
+                desc = request.POST['description']
+                publisher=request.POST.get('publisher')
+                year=request.POST['year']
+                if name != edition.edition_name:
+                    existedition = Editions.objects.filter(edition_name__iexact=name)
+                    if existedition.exists():
+                        messages.error(request,  f'{name} is already exists')
+                        return redirect('adminedition')
+
+                edition.edition_desc=desc
+                edition.publisher=publisher
+                edition.year=year
                 edition.save()
                 messages.info(request, "Succesfully updated all details")
                 return redirect('adminedition')
@@ -833,36 +1103,61 @@ def admin_variant_edition_action(request, id):
 
     return redirect('adminvariant')
 
+
+
 def admin_edit_product_variant(request, id):
     if 'email' in request.session:
         context = {}
 
         try:
-            variant=Bookvariant.objects.get(id=id)
+            variant = Bookvariant.objects.get(id=id)
             print(variant.variant_name,'uu')
 
             product = Book.objects.all().order_by('id')
             author = Author.objects.all().order_by('id')
             offer = Offer.objects.all().order_by('id')
+
+
             category = Category.objects.all().order_by('id')
             edition = Editions.objects.all().order_by('id')
             object_image = MultipleImages.objects.filter(product=id)
 
             if request.method == "POST":
-                product = request.POST.get('product')
-                category = request.POST.get('category')
-                author = request.POST.get('author')
-                offer = request.POST.get('offer')
-                edition = request.POST.get('edition')
+                product_id = request.POST.get('product')
+                category_id = request.POST.get('category')
+
+
+                # Check if the product or category has been changed
+
+
+                # Rest of your code for updating variant fields
+                author_id = request.POST.get('author')
+                offer_id = request.POST.get('offer')
+
+                edition_id = request.POST.get('edition')
                 price = request.POST.get('price')
                 stock = request.POST.get('stock')
                 rating = request.POST.get('rating')
 
-                prod_obj = Book.objects.get(id=product)
-                cat_obj = Category.objects.get(id=category)
-                author_obj = Author.objects.get(id=author)
-                offer_obj = Offer.objects.get(id=offer)
-                edition_obj = Editions.objects.get(id=edition)
+                prod_obj = Book.objects.get(id=product_id)
+                cat_obj = Category.objects.get(id=category_id)
+                author_obj = Author.objects.get(id=author_id)
+
+                edition_obj = Editions.objects.get(id=edition_id)
+                if offer_id != 'nooffer' and offer_id != '':
+                    offer_obj = Offer.objects.get(id=offer_id)
+                else:
+                    offer_obj = None
+
+                if Bookvariant.objects.filter(product=product_id, author=author_id).exists():
+                    # Get the name of the category to which the product is already allocated
+                    allocated_variant = Bookvariant.objects.filter(product=product_id, author=author_id).first()
+                    if allocated_variant:
+                            allocated_category=allocated_variant.category.category_name
+                            if allocated_category != cat_obj.category_name:
+                                messages.error(request,
+                                               f'{prod_obj.product_name} is already allocated to the category "{allocated_category}".')
+                                return redirect('adminvariant')
 
                 variant.product = prod_obj
                 variant.category = cat_obj
@@ -890,12 +1185,12 @@ def admin_edit_product_variant(request, id):
                                 product=variant,
                                 images=image
                             )
+
                 variant_name = f"{prod_obj.product_name} {author_obj.author_name} {edition_obj.edition_name}"
                 variant.variant_name = variant_name
                 variant.save()
                 messages.success(request, "Edited Successfully")
                 return redirect('adminvariant')
-
 
             context = {
                 'variant': variant,
@@ -905,16 +1200,13 @@ def admin_edit_product_variant(request, id):
                 'category': category,
                 'edition': edition,
                 'multiple_images': object_image,
-
             }
         except Exception as e:
             print(e)
 
-
-
-
-        return render(request,'adminview/admin-edit-variant.html',context)
+        return render(request, 'adminview/admin-edit-variant.html', context)
     return redirect('adminlogin')
+
 
 def delete_image(request, image_id):
     try:
@@ -962,37 +1254,37 @@ def add_coupon(request):
 
                 # Validate coupon_code
                 if coupon_code and coupon_code.islower():
-                    messages.warning(request, "Coupon code cannot contain small letters!")
+                    messages.error(request, "Coupon code cannot contain small letters!")
                     return redirect("addcoupon")
 
                 if Coupons.objects.filter(coupon_code=coupon_code).exists():
-                    messages.warning(request, "This coupon is already in your account!")
+                    messages.error(request, "This coupon is already in your account!")
                     return redirect("addcoupon")
 
                 # Validate min_amount
-                if not min_amount.isdigit() or int(min_amount) < 500:
-                    messages.warning(request, "Minimum amount must be a number greater than or equal to 500!")
+                if not min_amount.isdigit() or int(min_amount) >150:
+                    messages.error(request, "Minimum amount must be a number less than or equal to 150!")
                     return redirect("addcoupon")
 
                 # Validate off_percent
-                if not off_percent.isdigit() or int(off_percent) <= 0:
-                    messages.warning(request, "Off percent must be a positive number greater than 0!")
+                if not off_percent.isdigit() or int(off_percent) <= 0 or int(off_percent) < 75 or int(off_percent) > 100:
+                    messages.error(request, "Off percent must be a positive number between 75 and 100!")
                     return redirect("addcoupon")
 
                 # Validate max_discount
-                if not max_discount.isdigit() or int(max_discount) < int(off_percent):
-                    messages.warning(request, "Max discount must be a number greater than or equal to Off percent!")
+                if not max_discount.isdigit() or int(max_discount) > 2400:
+                    messages.error(request, "Max discount must be a number greater than or equal to 2400!")
                     return redirect("addcoupon")
 
                 # Validate expiry_date
                 try:
                     expiry_date = datetime.strptime(expiry_date, "%Y-%m-%d").date()
                 except ValueError:
-                    messages.warning(request, "Invalid expiry date format. Please use YYYY-MM-DD.")
+                    messages.error(request, "Invalid expiry date format. Please use YYYY-MM-DD.")
                     return redirect("addcoupon")
 
                 if expiry_date <= timezone.now().date():
-                    messages.warning(request, "Expiry date should be in the future!")
+                    messages.error(request, "Expiry date should be in the future!")
                     return redirect("addcoupon")
 
                 # Validate coupon_stock
@@ -1002,7 +1294,7 @@ def add_coupon(request):
                         if coupon_stock < 0:
                             raise ValueError
                     except ValueError:
-                        messages.warning(request, "Coupon stock must be a non-negative integer!")
+                        messages.error(request, "Coupon stock must be a non-negative integer!")
                         return redirect("addcoupon")
                 else:
                     coupon_stock = None
@@ -1053,7 +1345,7 @@ def admin_edit_coupon(request, id):
 
             # Check if the edited coupon code is unique
             if Coupons.objects.exclude(id=id).filter(coupon_code=coupon_code).exists():
-                messages.error(request, 'Coupon code must be unique.')
+                messages.error(request, 'Coupon code already exists.')
                 return redirect('couponedit', id=id)
 
             # Update the coupon

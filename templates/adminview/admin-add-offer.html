@@ -55,7 +55,7 @@
         document.getElementById("endDateError").innerHTML = "";
 
         // Validate inputs
-        if (offerName === "") {
+        if (offerName.trim() === "") {
             document.getElementById("offerNameError").innerHTML = "Offer Name is required";
             error = true;
         }

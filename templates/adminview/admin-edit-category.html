@@ -21,14 +21,14 @@
 
                 <!-- Edit category form  -->
 
-                <form enctype="multipart/form-data" method="post" style="border:1px solid black">
+                <form enctype="multipart/form-data" method="post" style="border:1px solid black" id="addCategoryForm" onsubmit="return validateForm()">
                     {% csrf_token %}
                     <div class="row mb-4">
                         <div class="col">
                           <div class="form-outline">
                                   <label class="form-label" for="form6Example1">Category Name</label>
-                              <input type="text" id="form6Example1" value="{{ category.category_name }}" class="form-control bg-grey text-black" name="catname" required/>
-
+                              <input type="text" id="form6Example1" value="{{ category.category_name }}" class="form-control bg-grey text-black" name="catname" />
+                                <span class="text-danger" id="categoryNameError"></span>
                           </div>
                         </div>
                     </div>
@@ -43,11 +43,13 @@
                                     <img src="{{ category.category_image.url }}"
                                     alt="category image" style="width: 10vw;" id="currentFile" />
                                 {% endif %}
+
                             </div>
                             <div class="d-flex justify-content-center">
                                 <div class="mb-3">
                                     <input class="form-control bg-grey text-black" type="file" id="formFile" name="catimage">
                                     <label for="formFile" class="form-label">Choose your image</label>
+                                    <span class="text-danger" id="categoryImageError"></span>
                                 </div>
                             </div>
                         </div>
@@ -57,35 +59,37 @@
                     <div class="form-outline mb-4">
                         <label class="form-label" for="productDesc"> Description</label>
                         <textarea class="form-control bg-grey text-black" id="productDesc" rows="4" name="description"> {{ category.category_desc }} </textarea>
-
+                        <span class="text-danger" id="categoryDescriptionError"></span>
                     </div>
                     <div>
-                          <select class="form-select select2" id="offertName" name="offer_cat" required>
+                          <select class="form-select select2" id="offertName" name="offer_cat" >
 <!--                        <option value="{{ category.offer_cat.id }}">{{ category.offer_cat }}</option>-->
-                        {% for offer in offer %}
-                        <option value="{{offer.id}}">{{offer.name}}</option>
-                         <option value="{{ o.id }}" {% if category.offer_cat == o.id %} selected {% endif %}>{{ o.offer_cat }}</option>-->
-                        {% endfor %}
+<!--                        {% for offer in offer %}-->
+<!--                        <option value="{{offer.id}}">{{offer.name}}</option>-->
+<!--                         <option value="{{ o.id }}" {% if category.offer_cat == o.id %} selected {% endif %}>{{ o.offer_cat }}</option>&ndash;&gt;-->
+<!--                        {% endfor %}-->
+                              {% if category.offer_cat %}
+                            <option value="{{category.offer_cat.id}}">{{category.offer_cat.name}}</option>
+
+                            <option value="">--No offer--</option>
+                            {% else %}
+                               <option value="">--Select--</option>
+
+                            {% endif %}
+
+                            {% for offer in offer %}
+                            <option value="{{offer.id}}">{{offer.name}}</option>
+                              {% endfor %}
                    </select>
                     </div>
 
 
-
-<!--                    <div class="mb-3">-->
-<!--            <label for="offerName" class="form-label">Select Offer</label>-->
-<!--            <select class="form-select select2" id="offerName" name="offer_cat" required>-->
-<!--    <option value="">Select offer</option>-->
-<!--    {% for o in offer %}-->
-<!--        <option value="{{ o.id }}" {% if category.offer_cat == o.id %} selected {% endif %}>{{ o.offer_cat }}</option>-->
-<!--    {% endfor %}-->
-<!--</select>-->
-<!--        </div>-->
                     <div class="row mb-4">
                         <div class="col">
                           <div class="form-outline">
                                   <label class="form-label" for="form6Example1">Maximum AMount</label>
-                              <input type="text" id="form6Example2" value="{{ category.max_discount }}" class="form-control bg-grey text-black" name="maxdiscount" required/>
-
+                              <input type="text" id="form6Example2" value="{{ category.max_discount }}" class="form-control bg-grey text-black" name="maxdiscount" />
+                                 <span class="text-danger" id="maxDiscountError"></span>
                           </div>
                         </div>
       </div>
@@ -102,5 +106,54 @@
     </div>
 </div>
     <!-- Bootstrap JS -->
+<script>
+    function validateForm() {
+        var categoryName = document.getElementById("form6Example1").value.trim();
+        var categoryImage = document.getElementById("formFile").value.trim();
+        var maxDiscount = document.getElementById("form6Example2").value.trim();
+
+        var categoryNameError = document.getElementById("categoryNameError");
+        var categoryImageError = document.getElementById("categoryImageError");
+        var maxDiscountError = document.getElementById("maxDiscountError");
+
+        // Reset error messages
+        categoryNameError.textContent = "";
+        categoryImageError.textContent = "";
+        maxDiscountError.textContent = "";
+
+        // Validate category name
+
+
+         if (categoryName.trim() === "") {
+            document.getElementById("categoryNameError").innerHTML = "Category Name is required";
+            error = true;
+        }
+
+        // Check if a file is selected
+        if (categoryImage !== "") {
+            // Validate category image
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedExtensions.exec(categoryImage)) {
+                categoryImageError.textContent = "Only JPG, JPEG, or PNG files are allowed";
+                return false;
+            }
+        }
+
+        // Validate maximum discount
+        if (maxDiscount.trim() === "") {
+            maxDiscountError.textContent = "Maximum discount amount is required.";
+            return false;
+        } else {
+            // Check if max discount is a valid number
+            if (isNaN(maxDiscount)) {
+                maxDiscountError.textContent = "Please enter a valid number.";
+                return false;
+            }
+        }
+
+        return true; // Form is valid
+    }
+</script>
+
 
 {% endblock %}

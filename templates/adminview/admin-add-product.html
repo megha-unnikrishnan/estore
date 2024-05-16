@@ -57,13 +57,20 @@
         document.getElementById("reviewError").innerHTML = "";
 
         // Validate inputs
-        if (productName === "") {
+        if (productName.trim() === "") {
             document.getElementById("productNameError").innerHTML = "Product Name is required";
             error = true;
         }
         if (productImage === "") {
             document.getElementById("productImageError").innerHTML = "Product Image is required";
             error = true;
+        } else {
+            // Validate file type for product image
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedExtensions.exec(productImage)) {
+                document.getElementById("productImageError").innerHTML = "Only JPG, JPEG, or PNG files are allowed";
+                error = true;
+            }
         }
         if (description === "") {
             document.getElementById("descriptionError").innerHTML = "Description is required";
@@ -77,5 +84,6 @@
         return !error;
     }
 </script>
+
 
 {% endblock %}

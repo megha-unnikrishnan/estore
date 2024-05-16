@@ -1,7 +1,7 @@
 from django.urls import path
 from .import views
 urlpatterns=[
-    path('index/',views.index,name='userindex'),
+    path('',views.index,name='userindex'),
     path('login/',views.user_login,name='login'),
     path('register/',views.user_signup,name='register'),
     path('logout/',views.user_logout,name='logout'),
@@ -11,6 +11,7 @@ urlpatterns=[
     path('change-password/<token>/',views.change_password,name='change-password'),
     path('product-detail/<int:id>/',views.product_detail,name='productdetail'),
     path('regenerate-otp/<int:id>/', views.regenerate_otp, name="regenerateotp"),
+
     path('product-list/',views.product_list,name='productlist'),
     path('product-list-detail/<int:id>/', views.product_list_detail, name='productlistdetail'),
     path('search/',views.search_view,name='search'),

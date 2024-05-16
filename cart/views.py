@@ -1,3 +1,7 @@
+
+
+
+
 import datetime
 
 import requests
@@ -16,6 +20,7 @@ import uuid
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from order.models import Order, Payments, OrderProduct
+from decimal import Decimal
 import pdb
 import razorpay
 from django.conf import settings
@@ -221,9 +226,9 @@ def update_cart_quantity(request):
         user_id = CustomUser.objects.get(id=request.user.id)
         cartitem = CartItem.objects.filter(user=user_id)
 
-        total = sum(item.product.discounted_price() * item.quantity for item in cartitem)
+        total = int(sum(item.product.discounted_price() * item.quantity for item in cartitem))
 
-        withoutoffertotal = sum(item.product.product_price * item.quantity for item in cartitem)
+        withoutoffertotal = int(sum(item.product.product_price * item.quantity for item in cartitem))
         print(withoutoffertotal)
 
         offer = withoutoffertotal - total
@@ -265,7 +270,7 @@ def update_cart_quantity(request):
             coupon_applied = True
             message = f'Applied coupon code{cart_obj.coupon.coupon_code} successfully'
 
-            discount_amount = total * int(cart_obj.coupon.off_percent) / 100
+            discount_amount = total * float(cart_obj.coupon.off_percent) / 100
             print('discount', discount_amount)
 
             if discount_amount > cart_obj.coupon.max_discount:
@@ -305,7 +310,7 @@ def update_cart_quantity(request):
         cart_obj.tax = tax
         cart_obj.save()
 
-        grand_total = withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost
+        grand_total = float(withoutoffertotal - offer - discount_amount-category_offer_amount + tax + shipping_cost)
 
         return JsonResponse(
             {'subtotal': sub_total, 'total': withoutoffertotal, 'offer': offer, 'shipping': shipping_cost,
@@ -366,17 +371,19 @@ def checkout_view(request, id):
 
         print(user)
         print(cart_items)
-        shipping_cost = 0
+
         discount_amount = 0
         discount = 0
-        tax = 0
+
         mrp = 0
         offerprice = 0
 
-        for i in cart_items:
-            mrp = mrp + int(i.product.product_price) * i.quantity
-            offerprice = offerprice + int(i.product.discounted_price()) * i.quantity
-            discount = mrp - offerprice
+        for item in cart_items:
+            mrp += int(item.product.product_price) * item.quantity
+            offerprice += int(item.product.discounted_price()) * item.quantity
+
+            discount = int(mrp - offerprice)
+
         # coupon
 
         # category
@@ -384,7 +391,7 @@ def checkout_view(request, id):
         cat_ofr_obj = CartItem.objects.filter(cart=cart_obj)
         for items in cat_ofr_obj:
             if not items.product.category.offer_cat.is_expired():
-                category_offer_amount += items.sub_total_with_category_offer()
+                category_offer_amount += int(items.sub_total_with_category_offer())
 
         if cart_obj.coupon:
             discount_amount = offerprice * int(cart_obj.coupon.off_percent) / 100
@@ -403,13 +410,16 @@ def checkout_view(request, id):
         shipping_cost = 0
         if offerprice < 3000:
             shipping_cost = 150
-            offerprice = offerprice + shipping_cost
+            offerprice = float(offerprice + shipping_cost)
 
 
 
         # grand total
 
-        grand_total = mrp - discount - discount_amount-category_offer_amount + tax + shipping_cost
+        grand_total = mrp - discount - discount_amount - category_offer_amount + tax + shipping_cost
+        grand_total=float(grand_total)
+        # grand_total=grand_total * 100
+        print(grand_total)
         if request.method == "GET":
             # Check if payment failed
             payment_failed = request.GET.get('payment_failed', False)

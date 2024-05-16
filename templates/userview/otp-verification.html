@@ -1,39 +1,8 @@
 {% extends 'userview/base.html' %}
 {% load static %}
 {% block content %}
-<!--<h2 class="text-center mt-5"> <u>Account verification</u>  </h2>-->
-<!--  <div class="container p-5">-->
-<!--        <div class="row">-->
-<!--            <div class="col-md-3"></div>-->
-<!--            <div class="col-md-6">-->
-<!--                <div class="text-center">-->
-<!--                    <div class="card text-center p-5">-->
-<!--                        <form action="" method="post">-->
-<!--                            {% csrf_token %}-->
-<!--                            <div class="card-header mb-4">-->
-<!--                                <p> An OTP has been send to  your account </p>-->
-<!--                            </div>-->
-<!--                            <div class="card-body">-->
-<!--                                <h5 class="nb-4 card-title">User email address :</h5> <h4 class="card-text"> {{ user.email }} </h4>-->
-<!--                                <input class="mt-5 form-control" type="text" name="otp" placeholder="Enter your 6 digit OTP">-->
-<!--                                <button class="btn btn-warning mt-3" type="submit">Submit</button>-->
-<!--                            </div>-->
-<!--                            <div class="card-footer text-muted">-->
 
-<!--                                <a href="{% url 'regenerateotp' user.id %}" class="btn btn-primary">Regenerate OTP</a>-->
-<!--                            </div>-->
 
-<!--                                                           <div class="messages" style="color:red;text-align:center">-->
-<!--                                                                 {% for message in messages %}-->
-<!--                                                                                        {{ message }}-->
-<!--                                                                                    {% endfor %}-->
-<!--                                                             </div>-->
-<!--                        </form>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 <h2 class="text-center mt-5"> <u>Account verification</u> </h2>
 <div class="container p-5">
     <div class="row">
@@ -55,6 +24,8 @@
                         <div class="card-footer text-muted">
                             <a href="{% url 'regenerateotp' user.id %}" class="btn btn-primary">Regenerate OTP</a>
                         </div>
+                        <div id="timer" class="text-center mt-3">Time remaining: <span id="countdown">60</span> seconds</div>
+
                         <div class="messages" style="color:red;text-align:center">
                             {% for message in messages %}
                             {{ message }}
@@ -63,11 +34,40 @@
                     </form>
                 </div>
                 <!-- OTP Timer -->
-
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Function to start the countdown timer
+    function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        var intervalId = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(intervalId); // Stop the timer when it reaches zero
+                display.textContent = "Time expired"; // Update the display
+            }
+        }, 1000);
+    }
+
+    // Set the timer duration to 3 minutes (180 seconds)
+    var timerDuration = 180; // 3 minutes * 60 seconds per minute
+
+    // Get the countdown display element
+    var countdownDisplay = document.getElementById('countdown');
+
+    // Start the timer with the specified duration
+    startTimer(timerDuration, countdownDisplay);
+</script>
 
 
 

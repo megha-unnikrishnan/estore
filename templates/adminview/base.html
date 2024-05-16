@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="{% url 'admindashboard' %}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="{% url 'admindashboard' %}" class="nav-item nav-link  {% if request.path == '/admin-dashboard/' %}active{% endif %}"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
 <!--                    <div class="nav-item dropdown">-->
 <!--                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Product</a>-->
 <!--                        <div class="dropdown-menu bg-transparent border-0">-->
@@ -74,16 +74,17 @@
 
 <!--                        </div>-->
 <!--                    </div>-->
-                    <a href="{% url 'users' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Users</a>
-                    <a href="{% url 'adminproduct' %}"  class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Product</a>
-                    <a href="{% url 'adminauthor' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Author</a>
-                    <a href="{% url 'admincategory' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Category</a>
-                    <a href="{% url 'adminoffer' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Offer</a>
-                    <a href="{% url 'adminvariant' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Variant</a>
-                    <a href="{% url 'adminedition' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Edition</a>
-                    <a href="{% url 'adminorder' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Orders</a>
-                    <a href="{% url 'adminreports' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Stock Reports</a>
-                    <a href="{% url 'coupon' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Coupon</a>
+                     <a href="{% url 'users' %}" class="nav-item nav-link {% if request.path == '/admin-users/' %}active{% endif %}"><i class="fa fa-th me-2"></i>Users</a>
+
+                    <a href="{% url 'adminproduct' %}"  class="nav-item nav-link {% if request.path == '/admin-product/' %}active{% endif %}"><i class="fa fa-keyboard me-2"></i>Product</a>
+                    <a href="{% url 'adminauthor' %}" class="nav-item nav-link {% if request.path == '/admin-author/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Author</a>
+                    <a href="{% url 'admincategory' %}" class="nav-item nav-link {% if request.path == '/admin-category/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Category</a>
+                    <a href="{% url 'adminoffer' %}" class="nav-item nav-link {% if request.path == '/admin-offer/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Offer</a>
+                    <a href="{% url 'adminvariant' %}" class="nav-item nav-link {% if request.path == '/admin-variant/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Variant</a>
+                    <a href="{% url 'adminedition' %}" class="nav-item nav-link {% if request.path == '/admin-edition/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Edition</a>
+                    <a href="{% url 'adminorder' %}" class="nav-item nav-link {% if request.path == '/admin-orders/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Orders</a>
+                    <a href="{% url 'adminreports' %}" class="nav-item nav-link {% if request.path == '/admin-sales-reports/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Stock Reports</a>
+                    <a href="{% url 'coupon' %}" class="nav-item nav-link {% if request.path == '/admincoupon/' %}active{% endif %}"><i class="fa fa-table me-2"></i>Coupon</a>
 
 
 

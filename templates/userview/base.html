@@ -17,8 +17,8 @@
         <!-- CSS Libraries -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="{% static 'lib/slick/slick.css" rel="stylesheet">
-        <link href="{% static 'lib/slick/slick-theme.css' %}" rel="stylesheet">
+       <link rel="stylesheet" type="text/css" href="{% static 'lib/slick/slick.css' %}">
+        <link href="{% static 'lib/slick/slick-theme.css' %}" rel="stylesheet" type="text/css">
 
 
 
@@ -93,17 +93,13 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                               <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-<!--                                <div class="navbar-nav mr-auto">-->
-<!--    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/index/' %}active{% endif %}">Home</a>-->
-<!--    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/product-list/' %}active{% endif %}">Products</a>-->
-<!--    &lt;!&ndash; Add more navbar items as needed &ndash;&gt;-->
-<!--</div>-->
                                   <div class="navbar-nav mr-auto">
-    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/user/index/' %}active{% endif %}">Home</a>
-    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/user/product-list/' %}active{% endif %}">Products</a>
+    <a href="{% url 'userindex' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+    <a href="{% url 'productlist' %}" class="nav-item nav-link {% if request.path == '/product-list/' %}active{% endif %}">Products</a>
 
     <a href="{% url 'wishlist_view' %}" class="nav-item nav-link {% if request.path == '/shop/wishlist_view/' %}active{% endif %}">Wishlist</a>
     <a href="{% url 'checkout' %}" class="nav-item nav-link {% if request.path == '/cart/checkout/' %}active{% endif %}">Checkout</a>
+     <a href="{% url 'contacts' %}" class="nav-item nav-link {% if request.path == '/contacts/' %}active{% endif %}">Contacts</a>
 </div>
 
 
@@ -116,7 +112,7 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User Account</a>
                                   {% if request.user.is_authenticated and not request.user.is_superuser %}
 									<li>Hello {{request.user.first_name}}</li>
-                                <div class="dropdown-menu">
+                                <div class="dropdown-menu" >
 									 <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
                                  <a href="{% url 'userprofile' %}" class="nav-item nav-link">My Account</a>
                                 </div>
@@ -240,27 +236,8 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Company Info</h2>
-                            <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Terms & Condition</a></li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-widget">
-                            <h2>Purchase Info</h2>
-                            <ul>
-                                <li><a href="#">Pyament Policy</a></li>
-                                <li><a href="#">Shipping Policy</a></li>
-                                <li><a href="#">Return Policy</a></li>
-                            </ul>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="row payment align-items-center">
@@ -303,8 +280,8 @@
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/slick/slick.min.js"></script>
+        <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+        <script src="{% static 'lib/slick/slick.min.js' %}"></script>
 
         <!-- Template Javascript -->
         <script src="{% static 'js/main.js' %}"></script>

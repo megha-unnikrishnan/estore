@@ -56,15 +56,15 @@
         document.getElementById("yearError").innerHTML = "";
 
         // Validate inputs
-        if (productName === "") {
+        if (productName.trim() === "") {
             document.getElementById("productNameError").innerHTML = "Edition Name is required";
             error = true;
         }
-        if (description === "") {
+        if (description.trim() === "") {
             document.getElementById("descriptionError").innerHTML = "Description is required";
             error = true;
         }
-        if (publish === "") {
+        if (publish.trim() === "") {
             document.getElementById("publishError").innerHTML = "Publisher Name is required";
             error = true;
         }

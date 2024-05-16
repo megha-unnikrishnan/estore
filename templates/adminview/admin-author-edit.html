@@ -11,13 +11,14 @@
                     <h2 class="card-title text-center">EDIT AUTHOR</h2>
                 </div>
                 <div class="card-body bg-grey">
-                    <form enctype="multipart/form-data" method="post" style="border:1px solid black">
+                    <form enctype="multipart/form-data" method="post" style="border:1px solid black"  id="addAuthorForm" onsubmit="return validateAuthorForm()">
                         {% csrf_token %}
                         <div class="row mb-4">
                             <div class="col">
                                 <div class="form-outline">
                                     <label class="form-label" for="authorName">Author Name</label>
                                     <input type="text" id="authorName" value="{{ author.author_name }}" class="form-control bg-grey text-black" name="name" required/>
+                                    <span class="text-danger" id="authorNameError"></span>
                                 </div>
                             </div>
                         </div>
@@ -33,6 +34,7 @@
                                     <div class="mb-3">
                                         <input class="form-control bg-grey text-black" type="file" id="formFile" name="image">
                                         <label for="formFile" class="form-label">Choose your image</label>
+                                        <span class="text-danger" id="authorImageError"></span>
                                     </div>
                                 </div>
                             </div>
@@ -41,6 +43,7 @@
                         <div class="form-outline mb-4">
                             <label class="form-label" for="authorDesc">Description</label>
                             <textarea class="form-control bg-grey text-black" id="authorDesc" rows="4" name="description">{{ author.author_desc }}</textarea>
+                            <span class="text-danger" id="authorDescError"></span>
                         </div>
                         <!-- Submit button -->
                         <div class="text-end">
@@ -55,5 +58,38 @@
     </div>
 </div>
     <!-- Bootstrap JS -->
+<script>
+    function validateAuthorForm() {
+        var name = document.getElementById("authorName").value;
+        var image = document.getElementById("authorImage").value;
+        var description = document.getElementById("authorDesc").value;
 
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("authorNameError").innerHTML = "";
+        document.getElementById("authorImageError").innerHTML = "";
+        document.getElementById("authorDescError").innerHTML = "";
+
+        // Validate inputs
+        if (name.trim() === "") {
+            document.getElementById("authorNameError").innerHTML = "Author Name is required";
+            error = true;
+        }
+        if (image !== "") { // Check if image field is not empty
+            // Validate file type for author image
+            var allowedExtensions = /\.(png|jpe?g)$/i; // Adjusted regex to allow PNG and JPEG
+            if (!allowedExtensions.test(image)) {
+                document.getElementById("authorImageError").innerHTML = "Only PNG and JPEG files are allowed";
+                error = true;
+            }
+        }
+        if (description.trim() === "") {
+            document.getElementById("authorDescError").innerHTML = "Description is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
 {% endblock %}

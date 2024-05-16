@@ -11,37 +11,43 @@
         {% endfor %}
     </div>
 
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data" id="addCouponForm" onsubmit="return validateCouponForm()">
         {% csrf_token %}
 
         <div class="mb-3">
             <label for="coupon_code">Coupon Code</label>
             <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" value="{{coupon.coupon_code}}" required>
+            <span class="text-danger" id="couponCodeError"></span>
         </div>
 
         <div class="mb-3">
             <label for="min_amount">Min Amount</label>
             <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="Enter minimum amount" value="{{coupon.min_amount}}" required>
+              <span class="text-danger" id="minAmountError"></span>
         </div>
 
         <div class="mb-3">
             <label for="off_percent">Off Percentage</label>
             <input type="text" class="form-control" id="off_percent" name="off_percent" placeholder="Enter off percentage"  value="{{coupon.off_percent}}" required>
+            <span class="text-danger" id="offPercentError"></span>
         </div>
 
         <div class="mb-3">
             <label for="max_discount">Max Discount</label>
             <input type="text" class="form-control" id="max_discount" name="max_discount" placeholder="Enter maximum discount" value="{{coupon.max_discount}}" required>
+            <span class="text-danger" id="maxDiscountError"></span>
         </div>
 
         <div class="mb-3">
             <label for="expiry_date">Expiry Date</label>
             <input type="date" class="form-control" id="expiry_date" name="expiry_date" placeholder="Enter expiry date of the coupon" value="{{coupon.expiry_date| date:'Y-m-d'}}" required>
+            <span class="text-danger" id="expiryDateError"></span>
         </div>
 
         <div class="mb-3">
             <label for="coupon_stock">Coupon Stock</label>
             <input type="number" class="form-control" id="coupon_stock" name="coupon_stock" placeholder="Enter coupon stock" value="{{coupon.coupon_stock}}" required>
+            <span class="text-danger" id="couponStockError"></span>
         </div>
 
         <div class="mb-3">
@@ -49,5 +55,62 @@
         </div>
     </form>
 </div>
+<script>
+    function validateCouponForm() {
+        var couponCode = document.getElementById("coupon_code").value.trim();
+        var minAmount = document.getElementById("min_amount").value.trim();
+        var offPercent = document.getElementById("off_percent").value.trim();
+        var maxDiscount = document.getElementById("max_discount").value.trim();
+        var expiryDate = new Date(document.getElementById("expiry_date").value.trim());
+        var couponStock = document.getElementById("coupon_stock").value.trim();
+
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("couponCodeError").textContent = "";
+        document.getElementById("minAmountError").textContent = "";
+        document.getElementById("offPercentError").textContent = "";
+        document.getElementById("maxDiscountError").textContent = "";
+        document.getElementById("expiryDateError").textContent = "";
+        document.getElementById("couponStockError").textContent = "";
+
+        // Validate inputs
+        if (couponCode === "") {
+            document.getElementById("couponCodeError").textContent = "Coupon Code is required";
+            error = true;
+        } else if (/[a-z]/.test(couponCode)) {
+        document.getElementById("couponCodeError").textContent = "Coupon Code should not contain small letters";
+        error = true;
+        }
+        if (isNaN(minAmount) || minAmount <= 0) {
+        document.getElementById("minAmountError").textContent = "Minimum amount must be a number greater than 0";
+            error = true;
+        } else if (minAmount > 150) {
+            document.getElementById("minAmountError").textContent = "Minimum amount must be a number less than or equal to 150";
+            error = true;
+        }
+        if (isNaN(offPercent) || offPercent < 75 || offPercent > 100) {
+            document.getElementById("offPercentError").textContent = "Off percent must be a positive number between 75 and 100";
+            error = true;
+        }
+        if (isNaN(maxDiscount) || maxDiscount > 2400) {
+            document.getElementById("maxDiscountError").textContent = "Max discount must be a number less than or equal to 2400";
+            error = true;
+        }
+
+             var currentDate = new Date();
+             if (expiryDate < currentDate) {
+            document.getElementById("expiryDateError").textContent = "Expiry date should be in the future";
+            error = true;
+        }
+        if (isNaN(couponStock) || couponStock < 0) {
+            document.getElementById("couponStockError").textContent = "Coupon stock must be a non-negative number";
+            error = true;
+        }
+
+
+        return !error;
+    }
+</script>
 
 {% endblock %}

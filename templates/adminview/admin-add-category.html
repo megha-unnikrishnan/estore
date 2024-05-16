@@ -32,6 +32,7 @@
                         <div class="mb-3">
                             <label for="categoryOffer" class="form-label">Select Offer</label>
                             <select class="form-select select2" id="categoryOffer" name="offer">
+                                   <option value="">--Select--</option>
                                 <option value="{{ category.offer.id }}">{{ category.offer.name }}</option>
                                 {% for offer in offer %}
                                 <option value="{{ offer.id }}">{{ offer.name }}</option>
@@ -72,23 +73,31 @@
         document.getElementById("maxDiscountError").innerHTML = "";
 
         // Validate inputs
-        if (name === "") {
+        if (name.trim() === "") {
             document.getElementById("categoryNameError").innerHTML = "Category Name is required";
             error = true;
         }
-        if (image === "") {
-            document.getElementById("categoryImageError").innerHTML = "Category Image is required";
+
+
+
+<!--        if (image === "") {-->
+<!--            document.getElementById("categoryImageError").innerHTML = "Category Image is required";-->
+<!--            error = true;-->
+<!--        }-->
+
+         var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        if (!allowedExtensions.exec(image)) {
+            document.getElementById("categoryImageError").innerHTML = "Only JPG, JPEG, or PNG files are allowed";
             error = true;
         }
-        if (description === "") {
+
+
+        if (description.trim() === "") {
             document.getElementById("categoryDescriptionError").innerHTML = "Description is required";
             error = true;
         }
-        if (offer === "") {
-            document.getElementById("categoryOfferError").innerHTML = "Please select an offer";
-            error = true;
-        }
-        if (maxDiscount === "") {
+
+        if (maxDiscount.trim() === "") {
             document.getElementById("maxDiscountError").innerHTML = "Maximum Discount is required";
             error = true;
         }

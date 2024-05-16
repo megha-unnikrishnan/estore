@@ -3,129 +3,43 @@
 
 {% block content %}
 
-<!--<div class="container mt-5" style="width:50%">-->
-<!--    <h2>Add Book Variant</h2>-->
-<!--    <form action="" method="post" enctype="multipart/form-data">-->
-<!--        {% csrf_token %}-->
-<!--        <div class="mb-3">-->
-<!--            <label for="categoryName" class="form-label">Select Category</label>-->
-<!--            <select class="form-select select2" id="categoryName" name="category" required>-->
-<!--                <option value="">Select Category</option>-->
-<!--                {% for i in category %}-->
-<!--                <option value="{{i.id}}">{{i.category_name}}</option>-->
-<!--                {% endfor %}-->
-<!--            </select>-->
-<!--        </div>-->
 
-<!--      <div class="mb-3">-->
-<!--            <label for="productName" class="form-label">Select Product</label>-->
-<!--            <select class="form-select select2" id="productName" name="product" required>-->
-<!--                <option value="">Select Product</option>-->
-<!--                {% for i in product %}-->
-<!--                <option value="{{i.id}}">{{i.product_name}}</option>-->
-<!--                {% endfor %}-->
-<!--            </select>-->
-
-<!--        </div>-->
-<!--        <div class="mb-3">-->
-<!--            <label for="offerName" class="form-label">Select Offer</label>-->
-<!--            <select class="form-select select2" id="offerName" name="offer" required>-->
-<!--                <option value="">Select Offer</option>-->
-<!--                {% for i in offer %}-->
-<!--                <option value="{{i.id}}">{{i.name}}</option>-->
-<!--                {% endfor %}-->
-<!--            </select>-->
-<!--        </div>-->
-<!--           <div class="mb-3">-->
-<!--            <label for="offerName" class="form-label">Select Edition</label>-->
-<!--            <select class="form-select select2" id="editionName" name="edition" required>-->
-<!--                <option value="">Select Edition</option>-->
-<!--                {% for i in edition %}-->
-<!--                <option value="{{i.id}}">{{i.edition_name}}</option>-->
-<!--                {% endfor %}-->
-<!--            </select>-->
-<!--        </div>-->
-<!--         <div class="mb-3">-->
-<!--            <label for="productName" class="form-label">Select Author</label>-->
-<!--            <select class="form-select select2" id="authorName" name="author" required>-->
-<!--                <option value="">Select Author</option>-->
-<!--                {% for i in author %}-->
-<!--                <option value="{{i.id}}">{{i.author_name}}</option>-->
-<!--                {% endfor %}-->
-<!--            </select>-->
-<!--        </div>-->
-
-
-<!--        <div class="mb-3">-->
-<!--            <label for="price" class="form-label">Price</label>-->
-<!--            <input type="number" class="form-control" id="price" name="price" required>-->
-<!--        </div>-->
-<!--        <div class="mb-3">-->
-<!--            <label for="stock" class="form-label">Stock</label>-->
-<!--             <input type="number" class="form-control" id="stock" name="stock" required>-->
-<!--        </div>-->
-<!--        <div class="mb-3">-->
-<!--            <label for="rating" class="form-label">Rating</label>-->
-<!--            <input type="number" class="form-control" id="rating" name="rating" required>-->
-<!--        </div>-->
-<!--        <div class="mb-3">-->
-<!--            <label class="text-danger">*Select three images for products*</label>-->
-<!--            <div class="mb-3">-->
-<!--                <input class="form-control" type="file" id="formFile" multiple id="formFile" name="multipleImage">-->
-<!--                <label for="formFile" class="form-label">Choose your image</label>-->
-<!--            </div>-->
-<!--        <button type="submit" class="btn btn-primary">Submit</button>-->
-<!--        <div class="row d-flex justify-content-center" style="align-items: center"> <span class="text-danger fw-5">-->
-<!--            {% for message in messages %}-->
-<!--                {{ message }}-->
-<!--            {% endfor %}-->
-<!--        </span></div>-->
-<!--    </form>-->
-<!--</div>-->
 
 <div class="container mt-5" style="width:50%">
+    <div class="row d-flex justify-content-center" style="align-items: center">
+                <span class="text-danger fw-5">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </span>
+            </div>
         <h2>Add Book Variant</h2>
         <form id="addBookVariantForm" action="" method="post" enctype="multipart/form-data" onsubmit="return validateBookVariantForm()">
             {% csrf_token %}
-<!--            <div class="mb-3">-->
-<!--                <label for="categoryName" class="form-label">Select Category</label>-->
-<!--                <select class="form-select select2" id="categoryName" name="category" >-->
-<!--                    <option value="">Select Category</option>-->
-<!--                    {% for i in category %}-->
-<!--                    <option value="{{i.id}}">{{i.category_name}}</option>-->
-<!--                    {% endfor %}-->
-<!--                </select>-->
-<!--                <span class="text-danger" id="categoryError"></span>-->
-<!--            </div>-->
-<!--            <div class="mb-3">-->
-<!--                <label for="productName" class="form-label">Select Product</label>-->
-<!--                <select class="form-select select2" id="productName" name="product" >-->
-<!--                    <option value="">Select Product</option>-->
-<!--                    {% for i in product %}-->
-<!--                    <option value="{{i.id}}">{{i.product_name}}</option>-->
-<!--                    {% endfor %}-->
-<!--                </select>-->
-<!--                <span class="text-danger" id="productError"></span>-->
-<!--            </div>-->
+            <div class="mb-3">
+                <label for="categoryName" class="form-label">Select Category</label>
+                <select class="form-select select2" id="categoryName" name="category" >
+                    <option value="">Select Category</option>
+                    {% for i in category %}
+                    <option value="{{i.id}}">{{i.category_name}}</option>
+                    {% endfor %}
+                </select>
+                <span class="text-danger" id="categoryError"></span>
+            </div>
+            <div class="mb-3">
+                <label for="productName" class="form-label">Select Product</label>
+                <select class="form-select select2" id="productName" name="product" >
+                    <option value="">Select Product</option>
+                    {% for i in product %}
+                    <option value="{{i.id}}">{{i.product_name}}</option>
+                    {% endfor %}
+                </select>
+                <span class="text-danger" id="productError"></span>
+            </div>
 
-<div class="mb-3">
-    <label for="categoryName" class="form-label">Select Category</label>
-    <select class="form-select select2" id="categoryName" name="category" onchange="updateProductOptions()">
-        <option value="">Select Category</option>
-        {% for i in category %}
-        <option value="{{i.id}}">{{i.category_name}}</option>
-        {% endfor %}
-    </select>
-    <span class="text-danger" id="categoryError"></span>
-</div>
-<div class="mb-3">
-    <label for="productName" class="form-label">Select Product</label>
-    <select class="form-select select2" id="productName" name="product">
-        <option value="">Select Product</option>
-        <!-- Product options will be dynamically updated using JavaScript -->
-    </select>
-    <span class="text-danger" id="productError"></span>
-</div>
+
+
+
 
             <div class="mb-3">
                 <label for="offerName" class="form-label">Select Offer</label>
@@ -181,13 +95,7 @@
                 <span class="text-danger" id="imageError"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-            <div class="row d-flex justify-content-center" style="align-items: center">
-                <span class="text-danger fw-5">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </span>
-            </div>
+
         </form>
     </div>
 
@@ -225,10 +133,7 @@
                 document.getElementById("productError").innerHTML = "Product is required";
                 error = true;
             }
-            if (offer === "") {
-                document.getElementById("offerError").innerHTML = "Offer is required";
-                error = true;
-            }
+
             if (edition === "") {
                 document.getElementById("editionError").innerHTML = "Edition is required";
                 error = true;
@@ -267,40 +172,7 @@
         }
     </script>
 
-<script>
-    // Function to update product options based on selected category
-    function updateProductOptions() {
-        var productNameSelect = document.getElementById("productName");
-        var selectedProducts = JSON.parse(localStorage.getItem("selectedProducts")) || {};
 
-        // Remove existing options
-        productNameSelect.innerHTML = '<option value="">Select Product</option>';
 
-        // Iterate over products and add options if not selected for any category
-        {% for i in product %}
-            var productId = "{{ i.id }}";
-            var productName = "{{ i.product_name }}";
-
-            // Check if the product is not selected for any category
-            var isProductAvailable = !(productId in selectedProducts);
-
-            // Add the product to options only if it's available
-            if (isProductAvailable) {
-                productNameSelect.innerHTML += '<option value="' + productId + '">' + productName + '</option>';
-            }
-        {% endfor %}
-    }
-
-    // Save selected product in local storage
-    document.getElementById("productName").addEventListener("change", function() {
-        var selectedProductId = this.value;
-        var selectedProducts = JSON.parse(localStorage.getItem("selectedProducts")) || {};
-        selectedProducts[selectedProductId] = true; // Mark product as selected
-        localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
-    });
-
-    // Update product options when the page loads
-    window.onload = updateProductOptions;
-</script>
 {% endblock %}
 

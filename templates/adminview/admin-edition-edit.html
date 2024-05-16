@@ -26,24 +26,29 @@
                         <div class="mb-3">
                             <label for="editionName" class="form-label">Edition Name</label>
                             <input type="text" id="editionName" value="{{ edition.edition_name }}" class="form-control" name="name" required/>
+                            <span class="text-danger" id="productNameError"></span>
                         </div>
+
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="editionDesc" class="form-label">Description</label>
                             <textarea class="form-control" id="editionDesc" rows="4" name="description">{{ edition.edition_desc }}</textarea>
+                            <span class="text-danger" id="descriptionError"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="editionPublisher" class="form-label">Edition Publisher</label>
                             <input type="text" id="editionPublisher" value="{{ edition.publisher }}" class="form-control" name="publisher" required/>
+                            <span class="text-danger" id="publishError"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="editionYear" class="form-label">Edition Year</label>
                             <input type="text" id="editionYear" value="{{ edition.year }}" class="form-control" name="year" required/>
+                            <span class="text-danger" id="yearError"></span>
                         </div>
                     </div>
                 </div>
@@ -57,6 +62,42 @@
         </div>
     </div>
 </div>
+<script>
+    function validateEditionForm() {
+        var productName = document.getElementById("editionName").value;
+        var description = document.getElementById("editionDesc").value;
+        var publish = document.getElementById("editionPublisher").value;
+        var year = document.getElementById("editionYear").value;
+
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("productNameError").innerHTML = "";
+        document.getElementById("descriptionError").innerHTML = "";
+        document.getElementById("publishError").innerHTML = "";
+        document.getElementById("yearError").innerHTML = "";
+
+        // Validate inputs
+        if (productName.trim() === "") {
+            document.getElementById("productNameError").innerHTML = "Edition Name is required";
+            error = true;
+        }
+        if (description.trim() === "") {
+            document.getElementById("descriptionError").innerHTML = "Description is required";
+            error = true;
+        }
+        if (publish.trim() === "") {
+            document.getElementById("publishError").innerHTML = "Publisher Name is required";
+            error = true;
+        }
+        if (year === "") {
+            document.getElementById("yearError").innerHTML = "Year is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
 
     <!-- Bootstrap JS -->
 

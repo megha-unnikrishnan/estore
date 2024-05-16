@@ -5,73 +5,81 @@
 
 <div class="container mt-5" style="width:50%">
     <h2>Edit Book Variant</h2>
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data" id="addBookVariantForm" onsubmit="return validateBookVariantForm()">
         {% csrf_token %}
-        <div class="mb-3">
+          <div class="mb-3">
             <label for="price" class="form-label">Variant</label>
-            <input type="text" class="form-control" id="varinat" name="variant"value="{{variant.variant_name}}" required>
+            <input type="text" class="form-control" id="variant" name="variant"value="{{variant.variant_name}}">
+             <span class="text-danger" id="variantError"></span>
         </div>
         <div class="mb-3">
             <label for="categoryName" class="form-label">Select Category</label>
-            <select class="form-select select2" id="categoryName" name="category" required>
+            <select class="form-select select2" id="categoryName" name="category" >
                 <option value="">Select Category</option>
                 {% for i in category %}
               <option value="{{ i.id }}" {% if i.id == variant.category.id %} selected {% endif %}>{{ i.category_name }}</option>
                 {% endfor %}
             </select>
+              <span class="text-danger" id="categoryError"></span>
         </div>
 
       <div class="mb-3">
             <label for="productName" class="form-label">Select Product</label>
-            <select class="form-select select2" id="productName" name="product" required>
+            <select class="form-select select2" id="productName" name="product" >
                 <option value="">Select Product</option>
                 {% for i in product %}
                 <option value="{{ i.id }}" {% if i.id == variant.product.id %} selected {% endif %}>{{ i.product_name }}</option>
                 {% endfor %}
             </select>
-
+            <span class="text-danger" id="productError"></span>
         </div>
 
         <div class="mb-3">
             <label for="offerName" class="form-label">Select Offer</label>
-            <select class="form-select select2" id="offerName" name="offer" required>
-                <option value="">Select Offer</option>
+            <select class="form-select select2" id="offerName" name="offer" >
+                <option value="">No Offer</option>
                 {% for i in offer %}
                       <option value="{{ i.id }}" {% if i.id == variant.offer.id %} selected {% endif %}>{{ i.name }}</option>
                 {% endfor %}
             </select>
+            <span class="text-danger" id="offerError"></span>
         </div>
            <div class="mb-3">
             <label for="offerName" class="form-label">Select Edition</label>
-            <select class="form-select select2" id="editionName" name="edition" required>
+            <select class="form-select select2" id="editionName" name="edition" >
                 <option value="">Select Edition</option>
                 {% for i in edition %}
              <option value="{{ i.id }}" {% if i.id == variant.edition.id %} selected {% endif %}>{{ i.edition_name }}</option>
                 {% endfor %}
             </select>
+               <span class="text-danger" id="editionError"></span>
         </div>
          <div class="mb-3">
             <label for="productName" class="form-label">Select Author</label>
-            <select class="form-select select2" id="authorName" name="author" required>
+            <select class="form-select select2" id="authorName" name="author" >
                 <option value="">Select Author</option>
                 {% for i in author %}
                 <option value="{{ i.id }}" {% if i.id == variant.author.id %} selected {% endif %}>{{ i.author_name }}</option>
                 {% endfor %}
             </select>
+             <span class="text-danger" id="authorError"></span>
         </div>
 
 
         <div class="mb-3">
             <label for="price" class="form-label">Price</label>
-            <input type="number" class="form-control" id="price" name="price" required value="{{variant.product_price}}">
+            <input type="number" class="form-control" id="price" name="price"  value="{{variant.product_price}}">
+                   <span class="text-danger" id="priceError"></span>
         </div>
         <div class="mb-3">
             <label for="stock" class="form-label">Stock</label>
-             <input type="number" class="form-control" id="stock" name="stock" required value="{{variant.stock}}">
+             <input type="number" class="form-control" id="stock" name="stock"  value="{{variant.stock}}">
+             <span class="text-danger" id="stockError"></span>
         </div>
         <div class="mb-3">
             <label for="rating" class="form-label">Rating</label>
-            <input type="number" class="form-control" id="rating" name="rating" required value="{{variant.rating}}">
+            <input type="number" class="form-control" id="rating" name="rating"  value="{{variant.rating}}">
+            <span class="text-danger" id="ratingError"></span>
         </div>
          <div class="d-flex justify-content-center">
                                     <div class="mb-3">
@@ -103,13 +111,93 @@
 
 
                             </div>
-
+                            <span class="text-danger" id="imageError"></span>
                         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
 
 </div>
+ <script>
+        function validateBookVariantForm() {
+            var variant=document.getElementById("variant").value;
+            var category = document.getElementById("categoryName").value;
+            var product = document.getElementById("productName").value;
+            var offer = document.getElementById("offerName").value;
+            var edition = document.getElementById("editionName").value;
+            var author = document.getElementById("authorName").value;
+            var price = document.getElementById("price").value;
+            var stock = document.getElementById("stock").value;
+            var rating = document.getElementById("rating").value;
+            var image = document.getElementById("formFile").files.length;
+
+            var error = false;
+
+            // Clear previous error messages
+            document.getElementById("variantError").innerHTML = "";
+            document.getElementById("categoryError").innerHTML = "";
+            document.getElementById("productError").innerHTML = "";
+            document.getElementById("offerError").innerHTML = "";
+            document.getElementById("editionError").innerHTML = "";
+            document.getElementById("authorError").innerHTML = "";
+            document.getElementById("priceError").innerHTML = "";
+            document.getElementById("stockError").innerHTML = "";
+            document.getElementById("ratingError").innerHTML = "";
+            document.getElementById("imageError").innerHTML = "";
+
+            // Validate inputs
+            if (variant === "") {
+                document.getElementById("variantError").innerHTML = "Variant is required";
+                error = true;
+            }
+            if (category === "") {
+                document.getElementById("categoryError").innerHTML = "Category is required";
+                error = true;
+            }
+            if (product === "") {
+                document.getElementById("productError").innerHTML = "Product is required";
+                error = true;
+            }
+
+            if (edition === "") {
+                document.getElementById("editionError").innerHTML = "Edition is required";
+                error = true;
+            }
+            if (author === "") {
+                document.getElementById("authorError").innerHTML = "Author is required";
+                error = true;
+            }
+            if (price === "") {
+            document.getElementById("priceError").innerHTML = "Price is required";
+            error = true;
+        } else if (parseFloat(price) < 0) {
+            document.getElementById("priceError").innerHTML = "Price must be a non-negative value";
+            error = true;
+        }
+        if (stock === "") {
+            document.getElementById("stockError").innerHTML = "Stock is required";
+            error = true;
+        } else if (parseFloat(stock) < 0) {
+            document.getElementById("stockError").innerHTML = "Stock must be a non-negative value";
+            error = true;
+        }
+        if (rating === "") {
+            document.getElementById("ratingError").innerHTML = "Rating is required";
+            error = true;
+        } else if (parseFloat(rating) < 0) {
+            document.getElementById("ratingError").innerHTML = "Rating must be a non-negative value";
+            error = true;
+        }
+            if (image < 3) {
+                document.getElementById("imageError").innerHTML = "Please select three images";
+                error = true;
+            }
+
+            return !error;
+        }
+    </script>
+
+
 
 {% endblock %}
 

@@ -11,15 +11,17 @@
                     <h2 class="card-title text-center">EDIT YOUR PRODUCT</h2>
                 </div>
                 <div class="card-body bg-grey">
-                    <form enctype="multipart/form-data" method="post">
+                    <form enctype="multipart/form-data" method="post" id="addProductForm" onsubmit="return validateProductForm()">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="productName" class="form-label">Product Name</label>
                             <input type="text" class="form-control" id="productName" name="name" value="{{ book.product_name }}" required>
+                            <span class="text-danger" id="productNameError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="productImage" class="form-label">Product Image</label>
                             <input type="file" class="form-control" id="productImage" name="image">
+                             <span class="text-danger" id="productImageError"></span>
                         </div>
                         {% if book.product_image %}
                         <div class="mb-3">
@@ -30,10 +32,12 @@
                         <div class="mb-3">
                             <label for="productDesc" class="form-label">Description</label>
                             <textarea class="form-control" id="productDesc" rows="4" name="description" required>{{ book.product_desc }}</textarea>
+                             <span class="text-danger" id="descriptionError"></span>
                         </div>
                         <div class="mb-3">
                             <label for="productReview" class="form-label">Review</label>
                             <textarea class="form-control" id="productReview" rows="4" name="review" required>{{ book.review }}</textarea>
+                            <span class="text-danger" id="reviewError"></span>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Update</button>
@@ -45,5 +49,46 @@
     </div>
 </div>
     <!-- Bootstrap JS -->
+<script>
+    function validateProductForm() {
+        var productName = document.getElementById("productName").value;
+        var productImage = document.getElementById("productImage").value;
+        var description = document.getElementById("productDesc").value;
+        var review = document.getElementById("productReview").value;
+
+        var error = false;
+
+        // Clear previous error messages
+        document.getElementById("productNameError").innerHTML = "";
+        document.getElementById("productImageError").innerHTML = "";
+        document.getElementById("descriptionError").innerHTML = "";
+        document.getElementById("reviewError").innerHTML = "";
+
+        // Validate inputs
+        if (productName === "") {
+            document.getElementById("productNameError").innerHTML = "Product Name is required";
+            error = true;
+        }
+        if (productImage !== "") {
+            // Validate file type for product image if an image is provided
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!allowedExtensions.exec(productImage)) {
+                document.getElementById("productImageError").innerHTML = "Only JPG, JPEG, or PNG files are allowed";
+                error = true;
+            }
+        }
+        if (description === "") {
+            document.getElementById("descriptionError").innerHTML = "Description is required";
+            error = true;
+        }
+        if (review === "") {
+            document.getElementById("reviewError").innerHTML = "Review is required";
+            error = true;
+        }
+
+        return !error;
+    }
+</script>
+
 
 {% endblock %}
