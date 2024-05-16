@@ -135,13 +135,13 @@
             {% for cart in cart_items %}
             <div class="card-title resize-text"><p class="cart-shop">{{cart.product.variant_name}}</p><span style="font-weight:600">{{cart.product.product_price}}*{{cart.quantity}}</span></div>
             {% endfor %}
-            <p class="sub-total resize-text">Sub Total<span><i class="fas fa-rupee-sign"></i>{{mrp|floatformat}}</span></p>
+            <p class="sub-total resize-text">Sub Total<span><i class="fas fa-rupee-sign"></i>{{mrp|floatformat:"0"}}</span></p>
             <p class="discount resize-text">Discount<span><i class="fas fa-rupee-sign"></i>{{discount|floatformat:"0"}}</span></p>
-             <p class="discount resize-text">Category Discount<span><i class="fas fa-rupee-sign"></i>{{category_offer_amount}}</span></p>
-            <p class="coupon resize-text">Coupon<span><i class="fas fa-rupee-sign"></i>{{coupon}}</span></p>
-            <p class="tax resize-text">Tax<span><i class="fas fa-rupee-sign"></i>{{tax|floatformat}}</span></p>
-            <p class="shipping resize-text">Shipping Cost<span><i class="fas fa-rupee-sign"></i>{{shipping}}</span></p>
-            <h2 class="resize-text">Grand Total<span><i class="fas fa-rupee-sign"></i>{{grand_total}}</span></h2>
+             <p class="discount resize-text">Category Discount<span><i class="fas fa-rupee-sign"></i>{{category_offer_amount|floatformat:"0"}}</span></p>
+            <p class="coupon resize-text">Coupon<span><i class="fas fa-rupee-sign"></i>{{coupon|floatformat:"0"}}</span></p>
+            <p class="tax resize-text">Tax<span><i class="fas fa-rupee-sign"></i>{{tax|floatformat:"0"}}</span></p>
+            <p class="shipping resize-text">Shipping Cost<span><i class="fas fa-rupee-sign"></i>{{shipping|floatformat:"0"}}</span></p>
+            <h2 class="resize-text">Grand Total<span><i class="fas fa-rupee-sign"></i>{{grand_total|floatformat:"0"}}</span></h2>
         </div>
        </div>
                             <form action="" method="POST">
