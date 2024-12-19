@@ -14,7 +14,7 @@ An ecommerce platform for buying and selling books online. Built with Django, de
 
 - Order Management: Place orders and view order history.
 
-- Payment Gateway: Secure payment integration (PayPal).
+- Payment Gateway: Secure payment integration (Razorpay).
 
 - Admin Panel: Manage books, orders, and users.
 
